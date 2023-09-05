@@ -1,0 +1,11 @@
+node_modules
+dist
+package-lock.json
+*.tgz
+sandbox
+test-results
+playwright-report
+
+.yarn/*
+yarn.lock
+yarn-error.log
