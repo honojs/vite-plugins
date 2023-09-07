@@ -16,6 +16,13 @@ export type DevServerOptions = {
   >
 }
 
+interface ExecutionContext {
+  waitUntil(promise: Promise<unknown>): void
+  passThroughOnException(): void
+}
+
+type Fetch = (request: Request, env: {}, executionContext: ExecutionContext) => Promise<Response>
+
 const nullScript =
   'addEventListener("fetch", (event) => event.respondWith(new Response(null, { status: 404 })));'
 
@@ -55,7 +62,7 @@ export function devServer(options?: DevServerOptions): Plugin[] {
             }
 
             const appModule = await server.ssrLoadModule(entry)
-            const app = appModule['default']
+            const app = appModule['default'] as { fetch: Fetch }
 
             if (!app) {
               console.error(`Failed to find a named export "default" from ${entry}`)
@@ -63,7 +70,13 @@ export function devServer(options?: DevServerOptions): Plugin[] {
             }
 
             getRequestListener(async (request) => {
-              const response = await app.fetch(request, await mf.getBindings())
+              const response = await app.fetch(request, await mf.getBindings(), {
+                waitUntil: async (fn) => fn,
+                passThroughOnException: () => {
+                  throw new Error('`passThroughOnException` is not supported')
+                },
+              })
+              console.log(response.status)
               if (
                 options?.injectClientScript !== false &&
                 // If the response is a streaming, it does not inject the script:

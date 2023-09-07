@@ -31,3 +31,11 @@ test('Should have Cloudflare bindings', async ({ page }) => {
   const content = await page.textContent('body')
   expect(content).toBe('My name is Hono')
 })
+
+test('Should not throw an error if using `waitUntil`', async ({ page }) => {
+  const response = await page.goto('/wait-until')
+  expect(response?.status()).toBe(200)
+
+  const content = await page.textContent('body')
+  expect(content).toBe('Hello Vite!')
+})
