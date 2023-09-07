@@ -23,7 +23,7 @@ export function devServer(options?: DevServerOptions): Plugin[] {
   const entry = options?.entry ?? './src/index.ts'
   const plugins: Plugin[] = [
     {
-      name: 'sonik-dev-server',
+      name: '@hono/vite-dev-server',
       config: () => {
         return {
           build: {

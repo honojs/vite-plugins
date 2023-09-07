@@ -12,7 +12,7 @@
 
 ## Demo
 
-https://github.com/honojs/vite-plugins/assets/10682/b8511340-1973-4697-bf43-1458f6347e01
+https://github.com/honojs/vite-plugins/assets/10682/a93ee4c5-2e1a-4b17-8bb2-64f955f2f0b0
 
 ## Supported applications
 
