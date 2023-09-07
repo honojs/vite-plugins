@@ -108,7 +108,7 @@ You can use Cloudflare Bindings like variables, KV, D1, and others.
 export default defineConfig({
   plugins: [
     devServer({
-      entry: './test/mock/worker.ts',
+      entry: 'src/index.ts',
       cf: {
         bindings: {
           NAME: 'Hono',
