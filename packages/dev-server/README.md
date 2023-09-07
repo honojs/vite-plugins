@@ -10,6 +10,10 @@
 - HMR.
 - Supporting Cloudflare Bindings.
 
+## Demo
+
+https://github.com/honojs/vite-plugins/assets/10682/b8511340-1973-4697-bf43-1458f6347e01
+
 ## Supported applications
 
 You can run any application on `@hono/vite-dev-server` that uses `fetch` and is built with Web Standard APIs. The minimal application is the following.
