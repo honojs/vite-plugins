@@ -1,11 +1,23 @@
 import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
+import type { WorkerOptions } from 'miniflare'
+import { Miniflare } from 'miniflare'
 import type { Plugin, ViteDevServer, Connect } from 'vite'
 
 export type DevServerOptions = {
   entry?: string
   injectClientScript?: boolean
+  cf?: Partial<
+    Omit<
+      WorkerOptions,
+      // We can ignore these properties:
+      'name' | 'script' | 'scriptPath' | 'modules' | 'modulesRoot' | 'modulesRules'
+    >
+  >
 }
+
+const nullScript =
+  'addEventListener("fetch", (event) => event.respondWith(new Response(null, { status: 404 })));'
 
 export function devServer(options?: DevServerOptions): Plugin[] {
   const entry = options?.entry ?? './src/index.ts'
@@ -22,6 +34,11 @@ export function devServer(options?: DevServerOptions): Plugin[] {
         }
       },
       configureServer: async (server) => {
+        const mf = new Miniflare({
+          script: nullScript,
+          ...options?.cf,
+        })
+
         async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
           return async function (
             req: http.IncomingMessage,
@@ -46,7 +63,7 @@ export function devServer(options?: DevServerOptions): Plugin[] {
             }
 
             getRequestListener(async (request) => {
-              const response = await app.fetch(request)
+              const response = await app.fetch(request, await mf.getBindings())
               if (
                 options?.injectClientScript !== false &&
                 // If the response is a streaming, it does not inject the script:
@@ -66,6 +83,7 @@ export function devServer(options?: DevServerOptions): Plugin[] {
             })(req, res)
           }
         }
+
         server.middlewares.use(await createMiddleware(server))
       },
     },
