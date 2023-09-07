@@ -1,3 +1,3 @@
-import { devServer } from './dev-server'
-export type { DevServerOptions } from './dev-server'
+import { devServer } from './dev-server.js'
+export type { DevServerOptions } from './dev-server.js'
 export default devServer

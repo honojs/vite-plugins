@@ -50,7 +50,7 @@ npm i -D vite @hono/vite-dev-server
 
 ### Settings
 
-Create `vite.config.ts` and edit it.
+Add `"type": "module"` to your `package.json`. Then, create `vite.config.ts` and edit it.
 
 ```ts
 import { defineConfig } from 'vite'
