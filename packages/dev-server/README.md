@@ -145,7 +145,7 @@ These Bindings are emulated by Miniflare in the local.
 
 ### `cf` option with Bun
 
-If properties are set in the `cf`` option and it's running on Bun, an error will be thrown.
+If properties are set in the `cf` option and it's running on Bun, an error will be thrown.
 
 ## Authors
 
