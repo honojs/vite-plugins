@@ -1,7 +1,7 @@
 import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
+import type { Miniflare } from 'miniflare'
 import type { WorkerOptions } from 'miniflare'
-import { Miniflare } from 'miniflare'
 import type { Plugin, ViteDevServer, Connect } from 'vite'
 
 export type DevServerOptions = {
@@ -40,10 +40,16 @@ export function devServer(options?: DevServerOptions): Plugin {
       }
     },
     configureServer: async (server) => {
-      const mf = new Miniflare({
-        script: nullScript,
-        ...options?.cf,
-      })
+      let mf: undefined | Miniflare = undefined
+
+      // Dynamic import Miniflare for environments like Bun.
+      if (options?.cf) {
+        const { Miniflare } = await import('miniflare')
+        mf = new Miniflare({
+          script: nullScript,
+          ...options?.cf,
+        })
+      }
 
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
         return async function (
@@ -69,13 +75,16 @@ export function devServer(options?: DevServerOptions): Plugin {
           }
 
           getRequestListener(async (request) => {
-            const response = await app.fetch(request, await mf.getBindings(), {
+            let bindings = {}
+            if (mf) {
+              bindings = await mf.getBindings()
+            }
+            const response = await app.fetch(request, bindings, {
               waitUntil: async (fn) => fn,
               passThroughOnException: () => {
                 throw new Error('`passThroughOnException` is not supported')
               },
             })
-            console.log(response.status)
             if (
               options?.injectClientScript !== false &&
               // If the response is a streaming, it does not inject the script:
