@@ -66,12 +66,12 @@ export function devServer(options?: DevServerOptions): Plugin {
         ): Promise<void> {
           const exclude = options?.exclude ?? defaultOptions.exclude
 
-          exclude.map((pattern) => {
+          for (const pattern of exclude) {
             const regExp = new RegExp(`^${pattern}$`)
             if (req.url && regExp.test(req.url)) {
               return next()
             }
-          })
+          }
 
           const appModule = await server.ssrLoadModule(entry)
           const app = appModule['default'] as { fetch: Fetch }
