@@ -102,6 +102,7 @@ import type { WorkerOptions } from 'miniflare'
 export type DevServerOptions = {
   entry?: string
   injectClientScript?: boolean
+  exclude?: (string | RegExp)[]
   cf?: Partial<
     Omit<
       WorkerOptions,
@@ -111,9 +112,23 @@ export type DevServerOptions = {
 }
 ```
 
+Default values:
+
+```ts
+export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
+  entry: './src/index.ts',
+  injectClientScript: true,
+  exclude: ['.*.ts', '.*.tsx', '/@.+', '/node_modules/.*'],
+}
+```
+
 ### `injectClientScript`
 
 If it's `true` and the response content-type is "HTML", inject the script that enables Hot-reload. default is `true`.
+
+### `exclude`
+
+The paths which are not served by the dev-server.
 
 ## Cloudflare Bindings
 

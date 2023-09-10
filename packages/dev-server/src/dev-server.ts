@@ -7,6 +7,7 @@ import type { Plugin, ViteDevServer, Connect } from 'vite'
 export type DevServerOptions = {
   entry?: string
   injectClientScript?: boolean
+  exclude?: (string | RegExp)[]
   cf?: Partial<
     Omit<
       WorkerOptions,
@@ -14,6 +15,12 @@ export type DevServerOptions = {
       'name' | 'script' | 'scriptPath' | 'modules' | 'modulesRoot' | 'modulesRules'
     >
   >
+}
+
+export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
+  entry: './src/index.ts',
+  injectClientScript: true,
+  exclude: ['.*.ts', '.*.tsx', '/@.+', '/node_modules/.*'],
 }
 
 interface ExecutionContext {
@@ -27,7 +34,7 @@ const nullScript =
   'addEventListener("fetch", (event) => event.respondWith(new Response(null, { status: 404 })));'
 
 export function devServer(options?: DevServerOptions): Plugin {
-  const entry = options?.entry ?? './src/index.ts'
+  const entry = options?.entry ?? defaultOptions.entry
   const plugin: Plugin = {
     name: '@hono/vite-dev-server',
     config: () => {
@@ -47,7 +54,7 @@ export function devServer(options?: DevServerOptions): Plugin {
         const { Miniflare } = await import('miniflare')
         mf = new Miniflare({
           script: nullScript,
-          ...options?.cf,
+          ...options.cf,
         })
       }
 
@@ -57,14 +64,14 @@ export function devServer(options?: DevServerOptions): Plugin {
           res: http.ServerResponse,
           next: Connect.NextFunction
         ): Promise<void> {
-          if (
-            req.url?.endsWith('.ts') ||
-            req.url?.endsWith('.tsx') ||
-            req.url?.startsWith('/@') ||
-            req.url?.startsWith('/node_modules')
-          ) {
-            return next()
-          }
+          const exclude = options?.exclude ?? defaultOptions.exclude
+
+          exclude.map((pattern) => {
+            const regExp = new RegExp(`^${pattern}$`)
+            if (req.url && regExp.test(req.url)) {
+              return next()
+            }
+          })
 
           const appModule = await server.ssrLoadModule(entry)
           const app = appModule['default'] as { fetch: Fetch }

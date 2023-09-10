@@ -13,5 +13,11 @@ app.get('/wait-until', (c) => {
   c.executionCtx.waitUntil(fn())
   return c.html('<h1>Hello Vite!</h1>')
 })
+app.get('/file.ts', (c) => {
+  return c.text('console.log("exclude me!")')
+})
+app.get('/app/foo', (c) => {
+  return c.html('<h1>exclude me!</h1>')
+})
 
 export default app

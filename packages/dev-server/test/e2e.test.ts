@@ -6,9 +6,6 @@ test('Should return 200 response', async ({ page }) => {
 
   const content = await page.textContent('body')
   expect(content).toBe('Hello Vite!')
-
-  const scriptContent = await page.textContent('script')
-  console.log(scriptContent)
 })
 
 test('Should contain an injected script tag', async ({ page }) => {
@@ -38,4 +35,12 @@ test('Should not throw an error if using `waitUntil`', async ({ page }) => {
 
   const content = await page.textContent('body')
   expect(content).toBe('Hello Vite!')
+})
+
+test('Should exclude the file specified in the config file', async ({ page }) => {
+  let response = await page.goto('/file.ts')
+  expect(response?.status()).toBe(404)
+
+  response = await page.goto('/app/foo')
+  expect(response?.status()).toBe(404)
 })
