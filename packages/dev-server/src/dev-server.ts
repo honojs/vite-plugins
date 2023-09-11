@@ -20,7 +20,7 @@ export type DevServerOptions = {
 export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
   entry: './src/index.ts',
   injectClientScript: true,
-  exclude: ['.*.ts', '.*.tsx', '/@.+', '/node_modules/.*'],
+  exclude: ['.*.ts', '.*.tsx', '/@.+', '/node_modules/.*', '/inc/.*', '.*.txt', '.*.ico' ],
 }
 
 interface ExecutionContext {
