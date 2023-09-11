@@ -37,15 +37,6 @@ export function devServer(options?: DevServerOptions): Plugin {
   const entry = options?.entry ?? defaultOptions.entry
   const plugin: Plugin = {
     name: '@hono/vite-dev-server',
-    config: () => {
-      return {
-        build: {
-          rollupOptions: {
-            input: [entry],
-          },
-        },
-      }
-    },
     configureServer: async (server) => {
       let mf: undefined | Miniflare = undefined
 
