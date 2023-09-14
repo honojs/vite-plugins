@@ -25,4 +25,5 @@ jobs:
           version: 8
       - run: pnpm install
       - run: pnpm build
+      - run: npx playwright install --with-deps
       - run: pnpm test
