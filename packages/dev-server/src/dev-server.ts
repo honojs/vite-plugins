@@ -30,8 +30,7 @@ interface ExecutionContext {
 
 type Fetch = (request: Request, env: {}, executionContext: ExecutionContext) => Promise<Response>
 
-const nullScript =
-  'addEventListener("fetch", (event) => event.respondWith(new Response(null, { status: 404 })));'
+const nullScript = 'export default { fetch: () => new Response(null, { status: 404 }) };'
 
 export function devServer(options?: DevServerOptions): Plugin {
   const entry = options?.entry ?? defaultOptions.entry
@@ -44,6 +43,7 @@ export function devServer(options?: DevServerOptions): Plugin {
       if (options?.cf) {
         const { Miniflare } = await import('miniflare')
         mf = new Miniflare({
+          modules: true,
           script: nullScript,
           ...options.cf,
         })
