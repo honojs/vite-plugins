@@ -1,7 +1,6 @@
 import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
-import type { Miniflare } from 'miniflare'
-import type { WorkerOptions } from 'miniflare'
+import type { Miniflare, MiniflareOptions, WorkerOptions } from 'miniflare'
 import type { Plugin, ViteDevServer, Connect } from 'vite'
 
 export type DevServerOptions = {
@@ -13,7 +12,11 @@ export type DevServerOptions = {
       WorkerOptions,
       // We can ignore these properties:
       'name' | 'script' | 'scriptPath' | 'modules' | 'modulesRoot' | 'modulesRules'
-    >
+    > &
+      Pick<
+        MiniflareOptions,
+        'cachePersist' | 'd1Persist' | 'durableObjectsPersist' | 'kvPersist' | 'r2Persist'
+      >
   >
 }
 

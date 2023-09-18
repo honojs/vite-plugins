@@ -97,7 +97,7 @@ bunx --bun vite
 The options are below. `WorkerOptions` imported from `miniflare` are used for Cloudflare Bindings.
 
 ```ts
-import type { WorkerOptions } from 'miniflare'
+import type { MiniflareOptions, WorkerOptions } from 'miniflare'
 
 export type DevServerOptions = {
   entry?: string
@@ -106,8 +106,13 @@ export type DevServerOptions = {
   cf?: Partial<
     Omit<
       WorkerOptions,
+      // We can ignore these properties:
       'name' | 'script' | 'scriptPath' | 'modules' | 'modulesRoot' | 'modulesRules'
-    >
+    > &
+      Pick<
+        MiniflareOptions,
+        'cachePersist' | 'd1Persist' | 'durableObjectsPersist' | 'kvPersist' | 'r2Persist'
+      >
   >
 }
 ```
@@ -129,6 +134,21 @@ If it's `true` and the response content-type is "HTML", inject the script that e
 ### `exclude`
 
 The paths which are not served by the dev-server.
+
+If you have static files in `public/static/*` and want to return them, exclude `/static/*` as follows:
+
+```ts
+import devServer, { defaultOptions } from '@hono/vite-dev-server'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [
+    devServer({
+      exclude: ['^/static/.*', ...defaultOptions.exclude],
+    }),
+  ],
+})
+```
 
 ## Cloudflare Bindings
 
@@ -152,11 +172,28 @@ export default defineConfig({
 
 These Bindings are emulated by Miniflare in the local.
 
+### D1
+
+When using D1, your app will read `.mf/d1/DB/db.sqlite` which is generated automatically with the following configuration:
+
+```ts
+export default defineConfig({
+  plugins: [
+    devServer({
+      cf: {
+        d1Databases: ['DB'],
+        d1Persist: true,
+      },
+    }),
+  ],
+})
+```
+
 ## Notes
 
 ### Depending on Miniflare
 
-`@hono/vite-dev-server` depends on `miniflare` for certain platforms you may want to run on. For example, if you want to run your applications on Node.js, the `miniflare` is not needed. However, it's necessary for Cloudflare Workers/Pages, which are important platforms for Hono. And `miniflare` is needed just for development; it will not be bundled for production. We allow including `miniflare` in `@hono/vite-dev-server`.
+`@hono/vite-dev-server` depends on `miniflare` for certain platforms you may want to run on. For example, if you want to run your applications on Node.js, the `miniflare` is not needed. However, it's necessary for Cloudflare Workers/Pages, which are important platforms for Hono. And `miniflare` is needed just for development; it will not be bundled for production.
 
 ### `cf` option with Bun
 
