@@ -54,7 +54,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@hono/node-server": "^1.1.1",
+    "@hono/node-server": "^1.2.0",
     "miniflare": "^3.20230904.0"
   }
 }
