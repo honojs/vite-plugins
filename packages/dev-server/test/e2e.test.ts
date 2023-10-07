@@ -41,6 +41,9 @@ test('Should exclude the file specified in the config file', async ({ page }) =>
   let response = await page.goto('/file.ts')
   expect(response?.status()).toBe(404)
 
+  response = await page.goto('/ends-in-ts')
+  expect(response?.status()).toBe(200)
+
   response = await page.goto('/app/foo')
   expect(response?.status()).toBe(404)
 })
