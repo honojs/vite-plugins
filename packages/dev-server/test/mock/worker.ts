@@ -19,5 +19,8 @@ app.get('/file.ts', (c) => {
 app.get('/app/foo', (c) => {
   return c.html('<h1>exclude me!</h1>')
 })
+app.get('/ends-in-ts', (c) => {
+  return c.text('this should not be excluded')
+})
 
 export default app
