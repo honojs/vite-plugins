@@ -9,7 +9,7 @@
     "test": "playwright test -c test/playwright.config.ts test/e2e.test.ts",
     "build": "rimraf dist && tsup && publint",
     "watch": "tsup --watch",
-    "prepublishOnly": "pnpm run build && pnpm run test",
+    "prepublishOnly": "yarn build && yarn test",
     "release": "bumpp --tag \"@hono/vite-dev-server@v%s\" --commit \"chore(dev-server): release v%s\" && pnpm publish"
   },
   "files": [
