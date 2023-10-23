@@ -22,5 +22,11 @@ app.get('/app/foo', (c) => {
 app.get('/ends-in-ts', (c) => {
   return c.text('this should not be excluded')
 })
+app.get('/favicon.ico', (c) => {
+  return c.text('a good favicon')
+})
+app.get('/static/foo.png', (c) => {
+  return c.text('a good image')
+})
 
 export default app

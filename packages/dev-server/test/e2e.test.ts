@@ -46,4 +46,10 @@ test('Should exclude the file specified in the config file', async ({ page }) =>
 
   response = await page.goto('/app/foo')
   expect(response?.status()).toBe(404)
+
+  response = await page.goto('/favicon.ico')
+  expect(response?.status()).toBe(404)
+
+  response = await page.goto('/static/foo.png')
+  expect(response?.status()).toBe(404)
 })
