@@ -266,7 +266,7 @@ __metadata:
     bumpp: ^9.2.0
     glob: ^10.3.4
     hono: ^3.5.8
-    miniflare: ^3.20230904.0
+    miniflare: ^3.20231016.0
     publint: ^0.1.12
     rimraf: ^5.0.1
     tsup: ^7.2.0
@@ -2952,7 +2952,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"miniflare@npm:^3.20230904.0":
+"miniflare@npm:^3.20231016.0":
   version: 3.20231016.0
   resolution: "miniflare@npm:3.20231016.0"
   dependencies:

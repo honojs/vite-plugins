@@ -23,7 +23,7 @@ export type DevServerOptions = {
 export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
   entry: './src/index.ts',
   injectClientScript: true,
-  exclude: ['.*\\.ts', '.*\\.tsx', '\\/@.+', '\\/node_modules\\/.*'],
+  exclude: [/.*\.ts$/, /.*\.tsx$/, /^\/@.+$/, /^\/node_modules\/.*/],
 }
 
 interface ExecutionContext {
@@ -61,7 +61,7 @@ export function devServer(options?: DevServerOptions): Plugin {
           const exclude = options?.exclude ?? defaultOptions.exclude
 
           for (const pattern of exclude) {
-            const regExp = new RegExp(`^${pattern}$`)
+            const regExp = pattern instanceof RegExp ? pattern : new RegExp(`^${pattern}$`)
             if (req.url && regExp.test(req.url)) {
               return next()
             }
