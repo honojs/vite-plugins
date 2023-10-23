@@ -123,7 +123,14 @@ Default values:
 export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
   entry: './src/index.ts',
   injectClientScript: true,
-  exclude: ['.*.ts', '.*.tsx', '/@.+', '/node_modules/.*'],
+  exclude: [
+    /.*\.ts$/,
+    /.*\.tsx$/,
+    /^\/@.+$/,
+    /^\/favicon\.ico$/,
+    /^\/static\/.+/,
+    /^\/node_modules\/.*/,
+  ],
 }
 ```
 
@@ -135,7 +142,7 @@ If it's `true` and the response content-type is "HTML", inject the script that e
 
 The paths which are not served by the dev-server.
 
-If you have static files in `public/static/*` and want to return them, exclude `/static/*` as follows:
+If you have static files in `public/assets/*` and want to return them, exclude `/assets/*` as follows:
 
 ```ts
 import devServer, { defaultOptions } from '@hono/vite-dev-server'
@@ -144,7 +151,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [
     devServer({
-      exclude: ['^/static/.*', ...defaultOptions.exclude],
+      exclude: ['/assets/.*', ...defaultOptions.exclude],
     }),
   ],
 })
