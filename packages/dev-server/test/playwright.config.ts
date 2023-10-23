@@ -17,7 +17,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm exec vite --port 6173 -c ./test/vite.config.ts',
+    command: 'yarn vite --port 6173 -c ./vite.config.ts',
     port: 6173,
     reuseExistingServer: !process.env.CI,
   },

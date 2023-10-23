@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
+  "packageManager": "yarn@3.6.4",
+  "workspaces": [
+    "packages/*"
+  ],
   "engines": {
-    "node": ">=18.14.1",
-    "pnpm": ">=8.7.0"
+    "node": ">=18.14.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.6.0",

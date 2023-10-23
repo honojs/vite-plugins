@@ -6,7 +6,7 @@
   "module": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test": "pnpm exec playwright test -c test/playwright.config.ts test/e2e.test.ts",
+    "test": "playwright test -c test/playwright.config.ts test/e2e.test.ts",
     "build": "rimraf dist && tsup && publint",
     "watch": "tsup --watch",
     "prepublishOnly": "pnpm run build && pnpm run test",
@@ -51,7 +51,7 @@
     "vitest": "^0.31.4"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.14.1"
   },
   "dependencies": {
     "@hono/node-server": "^1.2.0",
