@@ -6,6 +6,11 @@ sandbox
 test-results
 playwright-report
 
+# yarn
 .yarn/*
-yarn.lock
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 yarn-error.log
