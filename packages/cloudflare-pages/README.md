@@ -99,6 +99,7 @@ export default defineConfig(({ mode }) => {
             dir: './dist/static',
           },
         },
+        emptyOutDir: false,
         copyPublicDir: false,
       },
     }
