@@ -257,6 +257,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hono/vite-cloudflare-pages@workspace:packages/cloudflare-pages":
+  version: 0.0.0-use.local
+  resolution: "@hono/vite-cloudflare-pages@workspace:packages/cloudflare-pages"
+  dependencies:
+    bumpp: ^9.2.0
+    glob: ^10.3.10
+    hono: ^3.8.3
+    publint: ^0.1.12
+    rimraf: ^5.0.1
+    tsup: ^7.2.0
+    vite: ^4.4.9
+  peerDependencies:
+    hono: "*"
+  languageName: unknown
+  linkType: soft
+
 "@hono/vite-dev-server@workspace:packages/dev-server":
   version: 0.0.0-use.local
   resolution: "@hono/vite-dev-server@workspace:packages/dev-server"
@@ -2158,7 +2174,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2, glob@npm:^10.3.4, glob@npm:^10.3.7":
+"glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.3.4, glob@npm:^10.3.7":
   version: 10.3.10
   resolution: "glob@npm:10.3.10"
   dependencies:
@@ -2333,7 +2349,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"hono@npm:^3.5.8":
+"hono@npm:^3.5.8, hono@npm:^3.8.3":
   version: 3.8.3
   resolution: "hono@npm:3.8.3"
   checksum: cd1c70527f016b8e40216337386aa5871483c1cc8e55297e41d7cea974659d688dea0752779f77f1af2b4ae1184955cecb2851504e3d84cd869896f34423ee0e
