@@ -51,13 +51,13 @@ So, any Hono application will run on `@hono/vite-dev-server`.
 
 You can install `vite` and `@hono/vite-dev-server` via npm.
 
-```plain
+```text
 npm i -D vite @hono/vite-dev-server
 ```
 
 Or you can install them with Bun.
 
-```plain
+```text
 bun add vite @hono/vite-dev-server
 ```
 
@@ -82,13 +82,13 @@ export default defineConfig({
 
 Just run `vite`.
 
-```plain
+```text
 npm exec vite
 ```
 
 Or
 
-```plain
+```text
 bunx --bun vite
 ```
 
@@ -194,6 +194,80 @@ export default defineConfig({
     }),
   ],
 })
+```
+
+## Client-side
+
+You can write client-side scripts and import them into your application using Vite's features.
+If `/src/client.ts` is the entry point, simply write it in the `script` tag.
+Additionally, `import.meta.env.PROD` is useful for detecting whether it's running on a dev server or in the build phase.
+
+```tsx
+app.get('/', (c) => {
+  return c.html(
+    <html>
+      <head>
+        {import.meta.env.PROD ? (
+          <>
+            <script type='module' src='/static/client.js'></script>
+          </>
+        ) : (
+          <>
+            <script type='module' src='/src/client.ts'></script>
+          </>
+        )}
+      </head>
+      <body>
+        <h1>Hello</h1>
+      </body>
+    </html>
+  )
+})
+```
+
+In order to build the script properly, you can use the example config file `vite.config.ts` as shown below.
+
+```ts
+import { defineConfig } from 'vite'
+import devServer from '@hono/vite-dev-server'
+import pages from '@hono/vite-cloudflare-pages'
+
+export default defineConfig(({ mode }) => {
+  if (mode === 'client') {
+    return {
+      build: {
+        lib: {
+          entry: './src/client.ts',
+          formats: ['es'],
+          fileName: 'client',
+          name: 'client',
+        },
+        rollupOptions: {
+          output: {
+            dir: './dist/static',
+          },
+        },
+        emptyOutDir: false,
+        copyPublicDir: false,
+      },
+    }
+  } else {
+    return {
+      plugins: [
+        pages(),
+        devServer({
+          entry: 'src/index.tsx',
+        }),
+      ],
+    }
+  }
+})
+```
+
+You can run the following command to build the client script.
+
+```text
+vite build --mode client
 ```
 
 ## Notes
