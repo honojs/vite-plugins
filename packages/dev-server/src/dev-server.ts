@@ -95,18 +95,10 @@ export function devServer(options?: DevServerOptions): Plugin {
             })
             if (
               options?.injectClientScript !== false &&
-              // If the response is a streaming, it does not inject the script:
-              !response.headers.get('transfer-encoding')?.match('chunked') &&
               response.headers.get('content-type')?.match(/^text\/html/)
             ) {
-              const body =
-                (await response.text()) + '<script type="module" src="/@vite/client"></script>'
-              const headers = new Headers(response.headers)
-              headers.delete('content-length')
-              return new Response(body, {
-                status: response.status,
-                headers,
-              })
+              const script = '<script>import("/@vite/client")</script>'
+              return injectStringToResponse(response, script)
             }
             return response
           })(req, res)
@@ -117,4 +109,50 @@ export function devServer(options?: DevServerOptions): Plugin {
     },
   }
   return plugin
+}
+
+function injectStringToResponse(response: Response, content: string) {
+  const stream = response.body
+  const newContent = new TextEncoder().encode(content)
+
+  if (!stream) return null
+
+  const reader = stream.getReader()
+  const newContentReader = new ReadableStream({
+    start(controller) {
+      controller.enqueue(newContent)
+      controller.close()
+    },
+  }).getReader()
+
+  const combinedStream = new ReadableStream({
+    async start(controller) {
+      for (;;) {
+        const [existingResult, newContentResult] = await Promise.all([
+          reader.read(),
+          newContentReader.read(),
+        ])
+
+        if (existingResult.done && newContentResult.done) {
+          controller.close()
+          break
+        }
+
+        if (!existingResult.done) {
+          controller.enqueue(existingResult.value)
+        }
+        if (!newContentResult.done) {
+          controller.enqueue(newContentResult.value)
+        }
+      }
+    },
+  })
+
+  const headers = new Headers(response.headers)
+  headers.delete('content-length')
+
+  return new Response(combinedStream, {
+    headers,
+    status: response.status,
+  })
 }

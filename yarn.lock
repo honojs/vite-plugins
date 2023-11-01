@@ -283,6 +283,7 @@ __metadata:
     glob: ^10.3.4
     hono: ^3.5.8
     miniflare: ^3.20231016.0
+    playwright: ^1.39.0
     publint: ^0.1.12
     rimraf: ^5.0.1
     tsup: ^7.2.0
@@ -3546,7 +3547,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright@npm:1.39.0":
+"playwright@npm:1.39.0, playwright@npm:^1.39.0":
   version: 1.39.0
   resolution: "playwright@npm:1.39.0"
   dependencies:
