@@ -64,3 +64,19 @@ test('Should return 200 response - /stream', async ({ page }) => {
   const content = await page.textContent('h1')
   expect(content).toBe('Hello Vite!')
 })
+
+test('Should serve static files in `public/static`', async ({ page }) => {
+  const response = await page.goto('/static/hello.json')
+  expect(response?.status()).toBe(200)
+
+  const data = await response?.json()
+  expect(data['message']).toBe('Hello')
+})
+
+test('Should handle `env.ASSETS.fetch` function', async ({ page }) => {
+  const response = await page.goto('/assets/hello.json')
+  expect(response?.status()).toBe(200)
+
+  const data = await response?.json()
+  expect(data['message']).toBe('Hello')
+})
