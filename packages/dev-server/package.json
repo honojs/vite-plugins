@@ -56,6 +56,8 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.2.0",
-    "miniflare": "^3.20231016.0"
+    "@iarna/toml": "^2.2.5",
+    "dotenv": "^16.3.1",
+    "miniflare": "^3.20231025.1"
   }
 }
