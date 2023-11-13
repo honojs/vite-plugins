@@ -1,26 +1,16 @@
 import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
-import type { Miniflare, MiniflareOptions, WorkerOptions } from 'miniflare'
+import type { Miniflare } from 'miniflare'
 import type { Plugin, ViteDevServer, Connect } from 'vite'
+import { prepareMiniflare, type PrepareMiniflareOptions } from './miniflare'
 
 export type DevServerOptions = {
   entry?: string
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
-  cf?: Partial<
-    Omit<
-      WorkerOptions,
-      // We can ignore these properties:
-      'name' | 'script' | 'scriptPath' | 'modules' | 'modulesRoot' | 'modulesRules'
-    > &
-      Pick<
-        MiniflareOptions,
-        'cachePersist' | 'd1Persist' | 'durableObjectsPersist' | 'kvPersist' | 'r2Persist'
-      >
-  >
-}
+} & PrepareMiniflareOptions
 
-export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
+export const defaultOptions: Required<Omit<DevServerOptions, 'cf' | 'wranglerTomlPath'>> = {
   entry: './src/index.ts',
   injectClientScript: true,
   exclude: [
@@ -40,8 +30,6 @@ interface ExecutionContext {
 
 type Fetch = (request: Request, env: {}, executionContext: ExecutionContext) => Promise<Response>
 
-const nullScript = 'export default { fetch: () => new Response(null, { status: 404 }) };'
-
 export function devServer(options?: DevServerOptions): Plugin {
   const entry = options?.entry ?? defaultOptions.entry
   const plugin: Plugin = {
@@ -50,13 +38,8 @@ export function devServer(options?: DevServerOptions): Plugin {
       let mf: undefined | Miniflare = undefined
 
       // Dynamic import Miniflare for environments like Bun.
-      if (options?.cf) {
-        const { Miniflare } = await import('miniflare')
-        mf = new Miniflare({
-          modules: true,
-          script: nullScript,
-          ...options.cf,
-        })
+      if (options?.cf || options?.wranglerTomlPath) {
+        mf = await prepareMiniflare(options)
       }
 
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
