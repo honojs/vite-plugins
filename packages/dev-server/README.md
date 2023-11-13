@@ -112,7 +112,10 @@ export type DevServerOptions = {
       Pick<
         MiniflareOptions,
         'cachePersist' | 'd1Persist' | 'durableObjectsPersist' | 'kvPersist' | 'r2Persist'
-      >
+      > & {
+        // Enable `env.ASSETS.fetch()` function for Cloudflare Pages.
+        assets?: boolean
+      }
   >
 }
 ```

@@ -16,7 +16,10 @@ export type DevServerOptions = {
       Pick<
         MiniflareOptions,
         'cachePersist' | 'd1Persist' | 'durableObjectsPersist' | 'kvPersist' | 'r2Persist'
-      >
+      > & {
+        // Enable `env.ASSETS.fetch()` function for Cloudflare Pages.
+        assets?: boolean
+      }
   >
 }
 
@@ -83,11 +86,27 @@ export function devServer(options?: DevServerOptions): Plugin {
           }
 
           getRequestListener(async (request) => {
-            let bindings = {}
+            let env = {}
             if (mf) {
-              bindings = await mf.getBindings()
+              env = await mf.getBindings()
+              if (options?.cf?.assets) {
+                env = {
+                  // `env.ASSETS.fetch()` function for Cloudflare Pages.
+                  ASSETS: {
+                    async fetch(input: RequestInfo | URL, init?: RequestInit | undefined) {
+                      try {
+                        return await fetch(new Request(input, init))
+                      } catch (e) {
+                        console.error('Failed to execute ASSETS.fetch: ', e)
+                        return new Response(null, { status: 500 })
+                      }
+                    },
+                  },
+                  ...env,
+                }
+              }
             }
-            const response = await app.fetch(request, bindings, {
+            const response = await app.fetch(request, env, {
               waitUntil: async (fn) => fn,
               passThroughOnException: () => {
                 throw new Error('`passThroughOnException` is not supported')

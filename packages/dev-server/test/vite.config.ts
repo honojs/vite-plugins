@@ -10,6 +10,7 @@ export default defineConfig({
         bindings: {
           NAME: 'Hono',
         },
+        assets: true,
       },
     }),
   ],
