@@ -10,7 +10,7 @@
     "build": "rimraf dist && tsup && yarn build:entry && publint",
     "watch": "tsup --watch",
     "prepublishOnly": "yarn build",
-    "release": "bumpp --tag \"@hono/cloudflare-pages@v%s\" --commit \"chore(cloudflare-pages): release v%s\" && npm publish"
+    "release": "bumpp --tag \"@hono/vite-cloudflare-pages@v%s\" --commit \"chore(cloudflare-pages): release v%s\" && npm publish"
   },
   "files": [
     "dist"
