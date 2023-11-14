@@ -97,26 +97,11 @@ bunx --bun vite
 The options are below. `WorkerOptions` imported from `miniflare` are used for Cloudflare Bindings.
 
 ```ts
-import type { MiniflareOptions, WorkerOptions } from 'miniflare'
-
 export type DevServerOptions = {
   entry?: string
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
-  cf?: Partial<
-    Omit<
-      WorkerOptions,
-      // We can ignore these properties:
-      'name' | 'script' | 'scriptPath' | 'modules' | 'modulesRoot' | 'modulesRules'
-    > &
-      Pick<
-        MiniflareOptions,
-        'cachePersist' | 'd1Persist' | 'durableObjectsPersist' | 'kvPersist' | 'r2Persist'
-      > & {
-        // Enable `env.ASSETS.fetch()` function for Cloudflare Pages.
-        assets?: boolean
-      }
-  >
+  env?: Env | EnvFunc
 }
 ```
 
@@ -160,21 +145,31 @@ export default defineConfig({
 })
 ```
 
-## Cloudflare Bindings
+### `env`
 
-You can use Cloudflare Bindings like variables, KV, D1, and others.
+You can pass `ENV` variables to your application by setting the `env` option.
+`ENV` values can be accessed using `c.env` in your Hono application.
+
+Presets are available to define the `ENV`.
+
+## `ENV` presets
+
+### Cloudflare Pages
+
+You can use Cloudflare Pages `ENV` presets, which allow you to access bindings such as variables, KV, D1, and others.
 
 ```ts
+import { getEnv } from '@hono/vite-dev-server/cloudflare-pages'
+
 export default defineConfig({
   plugins: [
     devServer({
-      entry: 'src/index.ts',
-      cf: {
+      env: getEnv({
         bindings: {
           NAME: 'Hono',
         },
         kvNamespaces: ['MY_KV'],
-      },
+      }),
     }),
   ],
 })
@@ -182,7 +177,7 @@ export default defineConfig({
 
 These Bindings are emulated by Miniflare in the local.
 
-### D1
+#### D1
 
 When using D1, your app will read `.mf/d1/DB/db.sqlite` which is generated automatically with the following configuration:
 
@@ -272,16 +267,6 @@ You can run the following command to build the client script.
 ```text
 vite build --mode client
 ```
-
-## Notes
-
-### Depending on Miniflare
-
-`@hono/vite-dev-server` depends on `miniflare` for certain platforms you may want to run on. For example, if you want to run your applications on Node.js, the `miniflare` is not needed. However, it's necessary for Cloudflare Workers/Pages, which are important platforms for Hono. And `miniflare` is needed just for development; it will not be bundled for production.
-
-### `cf` option with Bun
-
-If properties are set in the `cf` option and it's running on Bun, an error will be thrown.
 
 ## Authors
 

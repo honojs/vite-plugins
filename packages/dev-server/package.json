@@ -6,8 +6,10 @@
   "module": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test": "playwright test -c test/playwright.config.ts test/e2e.test.ts",
-    "build": "rimraf dist && tsup && publint",
+    "test:unit": "vitest --run",
+    "test:e2e": "playwright test -c e2e/playwright.config.ts e2e/e2e.test.ts",
+    "test": "yarn test:unit && yarn test:e2e",
+    "build": "rimraf dist && tsup --format esm,cjs --dts && publint",
     "watch": "tsup --watch",
     "prepublishOnly": "yarn build && yarn test",
     "release": "bumpp --tag \"@hono/vite-dev-server@v%s\" --commit \"chore(dev-server): release v%s\" && npm publish"
@@ -17,14 +19,28 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./cloudflare-pages": {
+      "types": "./dist/cloudflare-pages/index.d.ts",
+      "require": "./dist/cloudflare-pages/index.cjs",
+      "import": "./dist/cloudflare-pages/index.js"
     }
   },
   "typesVersions": {
     "*": {
       "types": [
         "./dist/types"
+      ],
+      "cloudflare-pages": [
+        "./dist/cloudflare-pages/index.d.ts"
       ]
     }
   },
@@ -45,11 +61,11 @@
     "glob": "^10.3.4",
     "hono": "^3.5.8",
     "playwright": "^1.39.0",
-    "publint": "^0.1.12",
+    "publint": "^0.2.5",
     "rimraf": "^5.0.1",
     "tsup": "^7.2.0",
     "vite": "^4.4.9",
-    "vitest": "^0.31.4"
+    "vitest": "^0.34.6"
   },
   "engines": {
     "node": ">=18.14.1"

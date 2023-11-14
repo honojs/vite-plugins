@@ -1,29 +1,20 @@
 import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
-import type { Miniflare, MiniflareOptions, WorkerOptions } from 'miniflare'
 import type { Plugin, ViteDevServer, Connect } from 'vite'
+import { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
+import type { Env, Fetch, EnvFunc } from './types.js'
 
 export type DevServerOptions = {
   entry?: string
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
-  cf?: Partial<
-    Omit<
-      WorkerOptions,
-      // We can ignore these properties:
-      'name' | 'script' | 'scriptPath' | 'modules' | 'modulesRoot' | 'modulesRules'
-    > &
-      Pick<
-        MiniflareOptions,
-        'cachePersist' | 'd1Persist' | 'durableObjectsPersist' | 'kvPersist' | 'r2Persist'
-      > & {
-        // Enable `env.ASSETS.fetch()` function for Cloudflare Pages.
-        assets?: boolean
-      }
-  >
+  env?: Env | EnvFunc
+} & {
+  // The `cf` option is for backward compatibility. Typically, you should use `env`.
+  cf?: Parameters<typeof cloudflarePagesGetEnv>[0]
 }
 
-export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
+export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf'>> = {
   entry: './src/index.ts',
   injectClientScript: true,
   exclude: [
@@ -36,32 +27,11 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
   ],
 }
 
-interface ExecutionContext {
-  waitUntil(promise: Promise<unknown>): void
-  passThroughOnException(): void
-}
-
-type Fetch = (request: Request, env: {}, executionContext: ExecutionContext) => Promise<Response>
-
-const nullScript = 'export default { fetch: () => new Response(null, { status: 404 }) };'
-
 export function devServer(options?: DevServerOptions): Plugin {
   const entry = options?.entry ?? defaultOptions.entry
   const plugin: Plugin = {
     name: '@hono/vite-dev-server',
     configureServer: async (server) => {
-      let mf: undefined | Miniflare = undefined
-
-      // Dynamic import Miniflare for environments like Bun.
-      if (options?.cf) {
-        const { Miniflare } = await import('miniflare')
-        mf = new Miniflare({
-          modules: true,
-          script: nullScript,
-          ...options.cf,
-        })
-      }
-
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
         return async function (
           req: http.IncomingMessage,
@@ -86,26 +56,18 @@ export function devServer(options?: DevServerOptions): Plugin {
           }
 
           getRequestListener(async (request) => {
-            let env = {}
-            if (mf) {
-              env = await mf.getBindings()
-              if (options?.cf?.assets) {
-                env = {
-                  // `env.ASSETS.fetch()` function for Cloudflare Pages.
-                  ASSETS: {
-                    async fetch(input: RequestInfo | URL, init?: RequestInit | undefined) {
-                      try {
-                        return await fetch(new Request(input, init))
-                      } catch (e) {
-                        console.error('Failed to execute ASSETS.fetch: ', e)
-                        return new Response(null, { status: 500 })
-                      }
-                    },
-                  },
-                  ...env,
-                }
+            let env: Env = {}
+
+            if (options?.env) {
+              if (typeof options.env === 'function') {
+                env = await options.env()
+              } else {
+                env = options.env
               }
+            } else if (options?.cf) {
+              env = await cloudflarePagesGetEnv(options.cf)()
             }
+
             const response = await app.fetch(request, env, {
               waitUntil: async (fn) => fn,
               passThroughOnException: () => {
