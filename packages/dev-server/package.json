@@ -9,7 +9,7 @@
     "test": "playwright test -c test/playwright.config.ts test/e2e.test.ts",
     "build": "rimraf dist && tsup && publint",
     "watch": "tsup --watch",
-    "prerelease": "yarn build",
+    "prerelease": "yarn build && yarn test",
     "release": "yarn publish"
   },
   "files": [
