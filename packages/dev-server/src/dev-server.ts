@@ -1,5 +1,6 @@
 import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
+import { minimatch } from 'minimatch'
 import type { Plugin, ViteDevServer, Connect } from 'vite'
 import { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
 import type { Env, Fetch, EnvFunc } from './types.js'
@@ -45,9 +46,14 @@ export function devServer(options?: DevServerOptions): Plugin {
           const exclude = options?.exclude ?? defaultOptions.exclude
 
           for (const pattern of exclude) {
-            const regExp = pattern instanceof RegExp ? pattern : new RegExp(`^${pattern}$`)
-            if (req.url && regExp.test(req.url)) {
-              return next()
+            if (req.url) {
+              if (pattern instanceof RegExp) {
+                if (pattern.test(req.url)) {
+                  return next()
+                }
+              } else if (minimatch(req.url?.toString(), pattern)) {
+                return next()
+              }
             }
           }
 
