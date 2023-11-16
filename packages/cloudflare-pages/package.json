@@ -1,7 +1,7 @@
 {
   "name": "@hono/vite-cloudflare-pages",
   "description": "Vite plugin to build your Hono app for Cloudflare Pages",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
   "type": "module",
@@ -9,8 +9,8 @@
     "build:entry": "tsup --no-config --format esm --external /src/index -d dist/entry ./src/entry/_worker.js",
     "build": "rimraf dist && tsup && yarn build:entry && publint",
     "watch": "tsup --watch",
-    "prepublishOnly": "yarn build",
-    "release": "bumpp --tag \"@hono/vite-cloudflare-pages@v%s\" --commit \"chore(cloudflare-pages): release v%s\" && npm publish"
+    "prerelease": "yarn build",
+    "release": "yarn publish"
   },
   "files": [
     "dist"
@@ -40,7 +40,6 @@
   },
   "homepage": "https://github.com/honojs/vite-plugins",
   "devDependencies": {
-    "bumpp": "^9.2.0",
     "glob": "^10.3.10",
     "hono": "^3.8.3",
     "publint": "^0.1.12",
