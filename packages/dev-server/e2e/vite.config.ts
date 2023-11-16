@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     devServer({
       entry: './mock/worker.ts',
-      exclude: [...defaultOptions.exclude, '/app/.*'],
+      exclude: [...defaultOptions.exclude, '/app/**'],
       env: getEnv({
         bindings: {
           NAME: 'Hono',
