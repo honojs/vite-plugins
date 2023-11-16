@@ -10,7 +10,11 @@ export type DevServerOptions = {
   exclude?: (string | RegExp)[]
   env?: Env | EnvFunc
 } & {
-  // The `cf` option is for backward compatibility. Typically, you should use `env`.
+  /**
+   * @deprecated
+   * The `cf` option is maintained for backward compatibility, but it will be obsolete in the future.
+   * Instead, use the `env` option.
+   */
   cf?: Parameters<typeof cloudflarePagesGetEnv>[0]
 }
 
