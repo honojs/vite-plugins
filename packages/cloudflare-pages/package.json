@@ -40,7 +40,6 @@
   },
   "homepage": "https://github.com/honojs/vite-plugins",
   "devDependencies": {
-    "bumpp": "^9.2.0",
     "glob": "^10.3.10",
     "hono": "^3.8.3",
     "publint": "^0.1.12",
