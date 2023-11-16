@@ -9,8 +9,8 @@
     "test": "playwright test -c test/playwright.config.ts test/e2e.test.ts",
     "build": "rimraf dist && tsup && publint",
     "watch": "tsup --watch",
-    "prepublishOnly": "yarn build && yarn test",
-    "release": "bumpp --tag \"@hono/vite-dev-server@v%s\" --commit \"chore(dev-server): release v%s\" && npm publish"
+    "prerelease": "yarn build && yarn test",
+    "release": "yarn publish"
   },
   "files": [
     "dist"
@@ -41,7 +41,6 @@
   "homepage": "https://github.com/honojs/vite-plugins",
   "devDependencies": {
     "@playwright/test": "^1.37.1",
-    "bumpp": "^9.2.0",
     "glob": "^10.3.4",
     "hono": "^3.5.8",
     "playwright": "^1.39.0",
