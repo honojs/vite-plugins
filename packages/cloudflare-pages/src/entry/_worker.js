@@ -7,5 +7,6 @@ worker.get('/favicon.ico', serveStatic())
 worker.get('/static/*', serveStatic())
 
 worker.route('/', app)
+worker.notFound(app.notFoundHandler)
 
 export default worker
