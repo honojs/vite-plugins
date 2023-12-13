@@ -704,9 +704,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/eslint-config@npm:^0.0.1":
-  version: 0.0.1
-  resolution: "@hono/eslint-config@npm:0.0.1"
+"@hono/eslint-config@npm:^0.0.2":
+  version: 0.0.2
+  resolution: "@hono/eslint-config@npm:0.0.2"
   dependencies:
     "@typescript-eslint/eslint-plugin": ^6.14.0
     "@typescript-eslint/parser": ^6.14.0
@@ -718,7 +718,7 @@ __metadata:
   peerDependencies:
     eslint: ^8.0.0
     typescript: ^5.0.0
-  checksum: bfe4918da710122f4dd4feee680f894637dd7c5f3631207c9958d6f2ad9d2e46fcd72a58a724d45d153e9a2943f3880c1a1cf95fe275b160a875ad46508ce2ed
+  checksum: 6ad03c0b0d6a58dbfaff2b91e4446969ab933ede79e980f0ad385dbe4f2a689f96443c799a6a0c302020f63a7c0080df038697b399e2975e2fb78be8a320d4f7
   languageName: node
   linkType: hard
 
@@ -3223,7 +3223,7 @@ __metadata:
   dependencies:
     "@changesets/changelog-github": ^0.4.8
     "@changesets/cli": ^2.26.2
-    "@hono/eslint-config": ^0.0.1
+    "@hono/eslint-config": ^0.0.2
     "@typescript-eslint/eslint-plugin": ^6.6.0
     "@typescript-eslint/parser": ^6.6.0
     eslint: ^8.55.0
