@@ -734,13 +734,13 @@ __metadata:
   resolution: "@hono/vite-cloudflare-pages@workspace:packages/cloudflare-pages"
   dependencies:
     glob: ^10.3.10
-    hono: ^3.8.3
+    hono: ^3.11.7
     publint: ^0.1.12
     rimraf: ^5.0.1
     tsup: ^7.2.0
     vite: ^4.4.9
   peerDependencies:
-    hono: "*"
+    hono: ">=3.11.7"
   languageName: unknown
   linkType: soft
 
@@ -751,7 +751,7 @@ __metadata:
     "@hono/node-server": ^1.2.0
     "@playwright/test": ^1.37.1
     glob: ^10.3.10
-    hono: ^3.5.8
+    hono: ^3.11.7
     miniflare: ^3.20231016.0
     minimatch: ^9.0.3
     playwright: ^1.39.0
@@ -760,6 +760,8 @@ __metadata:
     tsup: ^7.2.0
     vite: ^4.4.9
     vitest: ^0.34.6
+  peerDependencies:
+    hono: ">=3.11.7"
   languageName: unknown
   linkType: soft
 
@@ -3232,10 +3234,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"hono@npm:^3.5.8, hono@npm:^3.8.3":
-  version: 3.11.6
-  resolution: "hono@npm:3.11.6"
-  checksum: d3f48c8db9fa40cba49b4a4c8c6e6a090fe844c716d14d6ce90d6a96a181f43fc3cb09513086315d0200fce7b986a7663ce0903f377cb305026c371fdac67bba
+"hono@npm:^3.11.7":
+  version: 3.11.7
+  resolution: "hono@npm:3.11.7"
+  checksum: 4d78f7be76cee442e5fad924826c708d59f26c4d4ced840d4eccc431bfc79109f60df4b743f3da4950447eb31eabfdd52ffb4a5fff2ee3988b896295d3c6e4bf
   languageName: node
   linkType: hard
 
