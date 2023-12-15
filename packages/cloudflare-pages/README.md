@@ -88,15 +88,11 @@ export default defineConfig(({ mode }) => {
   if (mode === 'client') {
     return {
       build: {
-        lib: {
-          entry: './src/client.ts',
-          formats: ['es'],
-          fileName: 'client',
-          name: 'client',
-        },
         rollupOptions: {
+          input: './src/client.ts',
           output: {
             dir: './dist/static',
+            entryFileNames: 'client.js',
           },
         },
         emptyOutDir: false,
