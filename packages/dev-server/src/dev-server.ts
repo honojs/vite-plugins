@@ -57,12 +57,18 @@ export function devServer(options?: DevServerOptions): Plugin {
             }
           }
 
-          const appModule = await server.ssrLoadModule(entry)
+          let appModule
+
+          try {
+            appModule = await server.ssrLoadModule(entry)
+          } catch (e) {
+            return next(e)
+          }
+
           const app = appModule['default'] as { fetch: Fetch }
 
           if (!app) {
-            console.error(`Failed to find a named export "default" from ${entry}`)
-            return next()
+            return next(new Error(`Failed to find a named export "default" from ${entry}`))
           }
 
           getRequestListener(async (request) => {
