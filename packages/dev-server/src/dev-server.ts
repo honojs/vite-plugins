@@ -91,6 +91,9 @@ export function devServer(options?: DevServerOptions): Plugin {
               },
             })
 
+            /**
+             * If the response is not instance of `Response`, it returns simple HTML with error messages.
+             */
             if (!(response instanceof Response)) {
               const message = 'The response is not an instance of "Response", but: ' + response
               console.error(message)
