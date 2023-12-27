@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.3.3
+
+### Patch Changes
+
+- [#45](https://github.com/honojs/vite-plugins/pull/45) [`05b9841b69f140b52a08b08803d0f717a4caf025`](https://github.com/honojs/vite-plugins/commit/05b9841b69f140b52a08b08803d0f717a4caf025) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: handle invalid response
+
 ## 0.3.2
 
 ### Patch Changes
