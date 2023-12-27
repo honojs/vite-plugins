@@ -84,12 +84,22 @@ export function devServer(options?: DevServerOptions): Plugin {
               env = await cloudflarePagesGetEnv(options.cf)()
             }
 
-            const response = await app.fetch(request, env, {
+            let response = await app.fetch(request, env, {
               waitUntil: async (fn) => fn,
               passThroughOnException: () => {
                 throw new Error('`passThroughOnException` is not supported')
               },
             })
+
+            /**
+             * If the response is not instance of `Response`, it returns simple HTML with error messages.
+             */
+            if (!(response instanceof Response)) {
+              const message = 'The response is not an instance of "Response", but: ' + response
+              console.error(message)
+              response = createErrorResponse(message)
+            }
+
             if (
               options?.injectClientScript !== false &&
               response.headers.get('content-type')?.match(/^text\/html/)
@@ -106,6 +116,29 @@ export function devServer(options?: DevServerOptions): Plugin {
     },
   }
   return plugin
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function createErrorResponse(body: BodyInit) {
+  return new Response(
+    `<html><body><pre style="white-space:pre-wrap;">${escapeHtml(
+      body.toString()
+    )}</pre></body></html>`,
+    {
+      status: 500,
+      headers: {
+        'content-type': 'text/html;charset=utf-8',
+      },
+    }
+  )
 }
 
 function injectStringToResponse(response: Response, content: string) {
