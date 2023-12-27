@@ -59,4 +59,9 @@ app.get('/assets/hello.json', async (c) => {
   return c.json(data)
 })
 
+// @ts-expect-error the response is string
+app.get('/invalid-response', () => {
+  return '<h1>Hello!</h1>'
+})
+
 export default app

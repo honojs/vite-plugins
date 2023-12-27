@@ -752,7 +752,7 @@ __metadata:
     "@playwright/test": ^1.37.1
     glob: ^10.3.10
     hono: ^3.11.7
-    miniflare: ^3.20231016.0
+    miniflare: ^3.20231030.4
     minimatch: ^9.0.3
     playwright: ^1.39.0
     publint: ^0.2.5
@@ -3973,7 +3973,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"miniflare@npm:^3.20231016.0":
+"miniflare@npm:^3.20231030.4":
   version: 3.20231030.4
   resolution: "miniflare@npm:3.20231030.4"
   dependencies:
