@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.3.4
+
+### Patch Changes
+
+- [#47](https://github.com/honojs/vite-plugins/pull/47) [`0a8c34da171294376186f3bc716a9620e24d37df`](https://github.com/honojs/vite-plugins/commit/0a8c34da171294376186f3bc716a9620e24d37df) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: use `toString()` for the error message
+
 ## 0.3.3
 
 ### Patch Changes
