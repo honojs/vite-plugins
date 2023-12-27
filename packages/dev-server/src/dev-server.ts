@@ -95,7 +95,8 @@ export function devServer(options?: DevServerOptions): Plugin {
              * If the response is not instance of `Response`, it returns simple HTML with error messages.
              */
             if (!(response instanceof Response)) {
-              const message = 'The response is not an instance of "Response", but: ' + response
+              // @ts-expect-error response object must have `toString()`
+              const message = `The response is not an instance of "Response", but: ${response.toString()}`
               console.error(message)
               response = createErrorResponse(message)
             }
@@ -127,11 +128,9 @@ function escapeHtml(str: string): string {
     .replace(/'/g, '&#39;')
 }
 
-function createErrorResponse(body: BodyInit) {
+function createErrorResponse(body: string) {
   return new Response(
-    `<html><body><pre style="white-space:pre-wrap;">${escapeHtml(
-      body.toString()
-    )}</pre></body></html>`,
+    `<html><body><pre style="white-space:pre-wrap;">${escapeHtml(body)}</pre></body></html>`,
     {
       status: 500,
       headers: {
