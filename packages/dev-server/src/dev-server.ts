@@ -10,6 +10,7 @@ export type DevServerOptions = {
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
   env?: Env | EnvFunc
+  shouldServeWithHono?: (url: string) => boolean
 } & {
   /**
    * @deprecated
@@ -19,7 +20,7 @@ export type DevServerOptions = {
   cf?: Parameters<typeof cloudflarePagesGetEnv>[0]
 }
 
-export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf'>> = {
+export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'shouldServeWithHono'>> = {
   entry: './src/index.ts',
   injectClientScript: true,
   exclude: [
@@ -43,6 +44,11 @@ export function devServer(options?: DevServerOptions): Plugin {
           res: http.ServerResponse,
           next: Connect.NextFunction
         ): Promise<void> {
+          if (
+            options?.shouldServeWithHono &&
+            !options.shouldServeWithHono(req.url!)
+          ) return next()
+
           const exclude = options?.exclude ?? defaultOptions.exclude
 
           for (const pattern of exclude) {
