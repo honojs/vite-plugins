@@ -22,7 +22,9 @@ export type DevServerOptions = {
   cf?: Parameters<typeof cloudflarePagesGetEnv>[0]
 }
 
-export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'include' |'middleware'>> = {
+export const defaultOptions: Required<
+  Omit<DevServerOptions, 'env' | 'cf' | 'include' | 'middleware'>
+> = {
   entry: './src/index.ts',
   injectClientScript: true,
   exclude: [
@@ -42,7 +44,7 @@ export function devServer(options?: DevServerOptions): Plugin {
     configureServer: async (server) => {
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
         return async function (
-          req: http.IncomingMessage,
+          req: Connect.IncomingMessage,
           res: http.ServerResponse,
           next: Connect.NextFunction
         ): Promise<void> {
@@ -52,7 +54,7 @@ export function devServer(options?: DevServerOptions): Plugin {
             for (const pattern of options.include) {
               if (req.url) {
                 if (pattern instanceof RegExp) {
-                  if (pattern.test(req.url)) {
+                  if (pattern.test(req.originalUrl || req.url)) {
                     matched = true
                     break
                   }
