@@ -8,8 +8,11 @@ import type { Env, Fetch, EnvFunc } from './types.js'
 export type DevServerOptions = {
   entry?: string
   injectClientScript?: boolean
+  include?: (string | RegExp)[]
   exclude?: (string | RegExp)[]
   env?: Env | EnvFunc
+  // Returning `undefined` will skip the middleware and pass the request to Vite.
+  middleware?: (req: Request) => Response | undefined
 } & {
   /**
    * @deprecated
@@ -19,7 +22,9 @@ export type DevServerOptions = {
   cf?: Parameters<typeof cloudflarePagesGetEnv>[0]
 }
 
-export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf'>> = {
+export const defaultOptions: Required<
+  Omit<DevServerOptions, 'env' | 'cf' | 'include' | 'middleware'>
+> = {
   entry: './src/index.ts',
   injectClientScript: true,
   exclude: [
@@ -39,10 +44,32 @@ export function devServer(options?: DevServerOptions): Plugin {
     configureServer: async (server) => {
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
         return async function (
-          req: http.IncomingMessage,
+          req: Connect.IncomingMessage,
           res: http.ServerResponse,
           next: Connect.NextFunction
         ): Promise<void> {
+          if (options?.include) {
+            let matched = false
+
+            for (const pattern of options.include) {
+              if (req.url) {
+                if (pattern instanceof RegExp) {
+                  if (pattern.test(req.originalUrl || req.url)) {
+                    matched = true
+                    break
+                  }
+                } else if (minimatch(req.url?.toString(), pattern)) {
+                  matched = true
+                  break
+                }
+              }
+            }
+
+            if (!matched) {
+              return next()
+            }
+          }
+
           const exclude = options?.exclude ?? defaultOptions.exclude
 
           for (const pattern of exclude) {
@@ -83,6 +110,9 @@ export function devServer(options?: DevServerOptions): Plugin {
             } else if (options?.cf) {
               env = await cloudflarePagesGetEnv(options.cf)()
             }
+
+            const result = options?.middleware?.(request)
+            if (result instanceof Response) return result
 
             let response = await app.fetch(request, env, {
               waitUntil: async (fn) => fn,
