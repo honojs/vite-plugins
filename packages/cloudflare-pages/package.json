@@ -45,7 +45,7 @@
     "publint": "^0.1.12",
     "rimraf": "^5.0.1",
     "tsup": "^7.2.0",
-    "vite": "^4.4.9"
+    "vite": "^5.0.12"
   },
   "peerDependencies": {
     "hono": ">=3.11.7"
