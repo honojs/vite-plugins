@@ -9,7 +9,7 @@ You can develop your application with Vite. It's fast.
 - Hono applications run on.
 - Fast by Vite.
 - HMR (Only for the Client-side. [Currently, Vite doesn't support HMR for SSR](https://github.com/vitejs/vite/issues/7887)).
-- Supporting Cloudflare Bindings.
+- Plugins are available, e.g., Cloudflare Pages.
 - Also runs on Bun.
 
 ## Demo
@@ -94,7 +94,7 @@ bunx --bun vite
 
 ## Options
 
-The options are below. `WorkerOptions` imported from `miniflare` are used for Cloudflare Bindings.
+The options are below.
 
 ```ts
 export type DevServerOptions = {
@@ -102,6 +102,7 @@ export type DevServerOptions = {
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
   env?: Env | EnvFunc
+  plugins?: Plugin[]
 }
 ```
 
@@ -119,6 +120,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
   ],
+  plugins: [],
 }
 ```
 
@@ -150,26 +152,30 @@ export default defineConfig({
 You can pass `ENV` variables to your application by setting the `env` option.
 `ENV` values can be accessed using `c.env` in your Hono application.
 
-Presets are available to define the `ENV`.
+### `plugins`
 
-## `ENV` presets
+There are plugins for each platform to set up their own environment, etc.
+
+## Plugins
 
 ### Cloudflare Pages
 
-You can use Cloudflare Pages `ENV` presets, which allow you to access bindings such as variables, KV, D1, and others.
+You can use Cloudflare Pages plugin, which allow you to access bindings such as variables, KV, D1, and others.
 
 ```ts
-import { getEnv } from '@hono/vite-dev-server/cloudflare-pages'
+import pages from '@hono/vite-dev-server/cloudflare-pages'
 
 export default defineConfig({
   plugins: [
     devServer({
-      env: getEnv({
-        bindings: {
-          NAME: 'Hono',
-        },
-        kvNamespaces: ['MY_KV'],
-      }),
+      plugins:  plugins: [
+        pages({
+          bindings: {
+            NAME: 'Hono',
+          },
+          kvNamespaces: ['MY_KV'],
+        }),
+      ],
     }),
   ],
 })
@@ -185,10 +191,12 @@ When using D1, your app will read `.mf/d1/DB/db.sqlite` which is generated autom
 export default defineConfig({
   plugins: [
     devServer({
-      cf: {
-        d1Databases: ['DB'],
-        d1Persist: true,
-      },
+      plugins: [
+        pages({
+          d1Databases: ['DB'],
+          d1Persist: true,
+        }),
+      ],
     }),
   ],
 })
@@ -206,13 +214,9 @@ app.get('/', (c) => {
     <html>
       <head>
         {import.meta.env.PROD ? (
-          <>
-            <script type='module' src='/static/client.js'></script>
-          </>
+          <script type='module' src='/static/client.js'></script>
         ) : (
-          <>
-            <script type='module' src='/src/client.ts'></script>
-          </>
+          <script type='module' src='/src/client.ts'></script>
         )}
       </head>
       <body>
@@ -228,21 +232,17 @@ In order to build the script properly, you can use the example config file `vite
 ```ts
 import { defineConfig } from 'vite'
 import devServer from '@hono/vite-dev-server'
-import pages from '@hono/vite-cloudflare-pages'
 
 export default defineConfig(({ mode }) => {
   if (mode === 'client') {
     return {
       build: {
-        lib: {
-          entry: './src/client.ts',
-          formats: ['es'],
-          fileName: 'client',
-          name: 'client',
-        },
         rollupOptions: {
+          input: ['./app/client.ts'],
           output: {
-            dir: './dist/static',
+            entryFileNames: 'static/client.js',
+            chunkFileNames: 'static/assets/[name]-[hash].js',
+            assetFileNames: 'static/assets/[name].[ext]',
           },
         },
         emptyOutDir: false,
@@ -251,10 +251,17 @@ export default defineConfig(({ mode }) => {
     }
   } else {
     return {
+      build: {
+        minify: true,
+        rollupOptions: {
+          output: {
+            entryFileNames: '_worker.js',
+          },
+        },
+      },
       plugins: [
-        pages(),
         devServer({
-          entry: 'src/index.tsx',
+          entry: './app/server.ts',
         }),
       ],
     }

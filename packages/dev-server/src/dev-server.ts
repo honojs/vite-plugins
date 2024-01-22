@@ -1,15 +1,16 @@
 import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
 import { minimatch } from 'minimatch'
-import type { Plugin, ViteDevServer, Connect } from 'vite'
+import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
 import { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
-import type { Env, Fetch, EnvFunc } from './types.js'
+import type { Env, Fetch, EnvFunc, Plugin } from './types.js'
 
 export type DevServerOptions = {
   entry?: string
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
   env?: Env | EnvFunc
+  plugins?: Plugin[]
 } & {
   /**
    * @deprecated
@@ -30,11 +31,12 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf'>> = {
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
   ],
+  plugins: [],
 }
 
-export function devServer(options?: DevServerOptions): Plugin {
+export function devServer(options?: DevServerOptions): VitePlugin {
   const entry = options?.entry ?? defaultOptions.entry
-  const plugin: Plugin = {
+  const plugin: VitePlugin = {
     name: '@hono/vite-dev-server',
     configureServer: async (server) => {
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
@@ -84,6 +86,14 @@ export function devServer(options?: DevServerOptions): Plugin {
               env = await cloudflarePagesGetEnv(options.cf)()
             }
 
+            if (options?.plugins) {
+              for (const plugin of options.plugins) {
+                if (plugin.env) {
+                  env = typeof plugin.env === 'function' ? await plugin.env() : plugin.env
+                }
+              }
+            }
+
             let response = await app.fetch(request, env, {
               waitUntil: async (fn) => fn,
               passThroughOnException: () => {
@@ -114,6 +124,15 @@ export function devServer(options?: DevServerOptions): Plugin {
       }
 
       server.middlewares.use(await createMiddleware(server))
+      server.httpServer?.on('close', async () => {
+        if (options?.plugins) {
+          for (const plugin of options.plugins) {
+            if (plugin.onServerClose) {
+              await plugin.onServerClose()
+            }
+          }
+        }
+      })
     },
   }
   return plugin
