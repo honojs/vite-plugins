@@ -6,8 +6,7 @@
   "module": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build:entry": "tsup --no-config --format esm --external /src/index -d dist/entry ./src/entry/_worker.js",
-    "build": "rimraf dist && tsup && yarn build:entry && publint",
+    "build": "rimraf dist && tsup && publint",
     "watch": "tsup --watch",
     "prerelease": "yarn build",
     "release": "yarn publish"

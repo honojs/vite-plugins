@@ -71,9 +71,9 @@ Default values:
 
 ```ts
 export const defaultOptions = {
-  entry: defaultEntry, // node_modules/@hono/vite-cloudflare-pages/dist/entry/_worker.js
+  entry: '/src/index',
   outputDir: './dist',
-  external: ['react', 'react-dom'],
+  external: [],
   minify: true,
   emptyOutDir: true,
 }
