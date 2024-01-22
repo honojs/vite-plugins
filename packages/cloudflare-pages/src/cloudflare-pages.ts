@@ -1,12 +1,6 @@
 import { builtinModules } from 'module'
-import path from 'node:path'
-import { fileURLToPath } from 'url'
 import type { Plugin, UserConfig } from 'vite'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const defaultEntry = path.join(__dirname, 'entry', '_worker.js')
+import { getEntryContent } from './entry.js'
 
 type CloudflarePagesOptions = {
   entry?: string
@@ -16,18 +10,30 @@ type CloudflarePagesOptions = {
   emptyOutDir?: boolean
 }
 
-export const defaultOptions = {
-  entry: defaultEntry, // node_modules/@hono/vite-cloudflare-pages/dist/entry/_worker.js
+export const defaultOptions: Required<CloudflarePagesOptions> = {
+  entry: '/src/index',
   outputDir: './dist',
-  external: ['react', 'react-dom'],
+  external: [],
   minify: true,
   emptyOutDir: true,
 }
 
 export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin => {
-  const entry = options?.entry ?? defaultOptions.entry
+  const virtualEntryId = 'virtual:cloudflare-pages-entry-module'
+  const resolvedVirtualEntryId = '\0' + virtualEntryId
+
   return {
     name: '@hono/vite-cloudflare-pages',
+    resolveId(id) {
+      if (id === virtualEntryId) {
+        return resolvedVirtualEntryId
+      }
+    },
+    load(id) {
+      if (id === resolvedVirtualEntryId) {
+        return getEntryContent({ entry: options?.entry })
+      }
+    },
     config: async (): Promise<UserConfig> => {
       return {
         ssr: {
@@ -36,13 +42,13 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
         },
         build: {
           emptyOutDir: options?.emptyOutDir ?? defaultOptions.emptyOutDir,
-          ssr: entry,
           minify: options?.minify ?? defaultOptions.minify,
+          ssr: true,
           rollupOptions: {
             external: [...builtinModules, /^node:/],
-            input: entry,
+            input: virtualEntryId,
             output: {
-              dir: options?.outputDir ?? defaultOptions.outputDir,
+              entryFileNames: '_worker.js',
             },
           },
         },
