@@ -1,11 +1,21 @@
-import { getEnv } from './cloudflare-pages.js'
+import type { EnvFunc } from '../types.js'
+import { getEnv, disposeMf } from './cloudflare-pages.js'
 
 describe('getEnv()', () => {
-  const envFunc = getEnv({
-    bindings: {
-      TOKEN: 'MY TOKEN',
-    },
+  let envFunc: EnvFunc
+
+  beforeEach(() => {
+    envFunc = getEnv({
+      bindings: {
+        TOKEN: 'MY TOKEN',
+      },
+    })
   })
+
+  afterEach(() => {
+    disposeMf()
+  })
+
   it('Should return the value for bindings', async () => {
     const env = await envFunc()
     expect(env['TOKEN']).toBe('MY TOKEN')

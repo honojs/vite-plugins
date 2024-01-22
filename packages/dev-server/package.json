@@ -58,7 +58,7 @@
   "devDependencies": {
     "@playwright/test": "^1.37.1",
     "glob": "^10.3.10",
-    "hono": "^3.11.7",
+    "hono": "^3.12.6",
     "playwright": "^1.39.0",
     "publint": "^0.2.5",
     "rimraf": "^5.0.1",
@@ -74,7 +74,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.4.1",
-    "miniflare": "^3.20231030.4",
+    "miniflare": "^3.20231218.2",
     "minimatch": "^9.0.3"
   }
 }

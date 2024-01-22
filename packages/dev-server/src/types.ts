@@ -5,8 +5,14 @@ export interface ExecutionContext {
   waitUntil(promise: Promise<unknown>): void
   passThroughOnException(): void
 }
+
 export type Fetch = (
   request: Request,
   env: {},
   executionContext: ExecutionContext
 ) => Promise<Response>
+
+export interface Plugin {
+  env?: EnvFunc
+  onServerClose?: () => void | Promise<void>
+}

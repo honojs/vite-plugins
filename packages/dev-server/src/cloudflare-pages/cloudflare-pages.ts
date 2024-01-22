@@ -1,5 +1,5 @@
-import type { MiniflareOptions, WorkerOptions } from 'miniflare'
-import type { GetEnv } from '../types.js'
+import type { Miniflare, MiniflareOptions, WorkerOptions } from 'miniflare'
+import type { GetEnv, Plugin } from '../types.js'
 
 type Options = Partial<
   Omit<
@@ -18,10 +18,12 @@ type Options = Partial<
 
 const nullScript = 'export default { fetch: () => new Response(null, { status: 404 }) };'
 
+let mf: Miniflare | undefined = undefined
+
 export const getEnv: GetEnv<Options> = (options) => async () => {
   // Dynamic import Miniflare for environments like Bun.
   const { Miniflare } = await import('miniflare')
-  const mf = new Miniflare({
+  mf = new Miniflare({
     modules: true,
     script: nullScript,
     ...options,
@@ -43,3 +45,19 @@ export const getEnv: GetEnv<Options> = (options) => async () => {
   }
   return env
 }
+
+export const disposeMf = async () => {
+  mf?.dispose()
+}
+
+const plugin = (options?: Options): Plugin => {
+  const env = getEnv(options ?? {})
+  return {
+    env,
+    onServerClose: async () => {
+      await disposeMf()
+    },
+  }
+}
+
+export default plugin
