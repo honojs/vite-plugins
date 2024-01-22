@@ -1,22 +1,28 @@
+import { normalize } from 'node:path'
+
 export type Options = {
-  entry?: string
+  entry: string[]
 }
 
-export const defaultOptions: Required<Options> = {
-  entry: '/src/index',
-}
+export const getEntryContent = async (options: Options) => {
+  const appStr = `const modules = import.meta.glob([${options.entry
+    .map((e) => `'/${normalize(e)}'`)
+    .join(',')}], { import: 'default', eager: true })
+      for (const [, app] of Object.entries(modules)) {
+        if (app) {
+          worker.route('/', app)
+          worker.notFound(app.notFoundHandler)
+        }
+      }`
 
-export const getEntryContent = (options: Options) => {
-  return `import { Hono } from 'hono'
-import { serveStatic } from 'hono/cloudflare-pages'
-import app from '${options.entry ?? defaultOptions.entry}'
+  return `import { Hono } from 'hono';
+import { serveStatic } from 'hono/cloudflare-pages';
 
-const worker = new Hono()
-worker.get('/favicon.ico', serveStatic())
-worker.get('/static/*', serveStatic())
+const worker = new Hono();
+worker.get('/favicon.ico', serveStatic());
+worker.get('/static/*', serveStatic());
 
-worker.route('/', app)
-worker.notFound(app.notFoundHandler)
+${appStr}
 
-export default worker`
+export default worker;`
 }

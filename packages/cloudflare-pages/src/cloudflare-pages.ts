@@ -3,7 +3,7 @@ import type { Plugin, UserConfig } from 'vite'
 import { getEntryContent } from './entry.js'
 
 type CloudflarePagesOptions = {
-  entry?: string
+  entry?: string | string[]
   outputDir?: string
   external?: string[]
   minify?: boolean
@@ -11,7 +11,7 @@ type CloudflarePagesOptions = {
 }
 
 export const defaultOptions: Required<CloudflarePagesOptions> = {
-  entry: '/src/index',
+  entry: ['./src/index.ts', './app/server.ts'],
   outputDir: './dist',
   external: [],
   minify: true,
@@ -29,9 +29,15 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
         return resolvedVirtualEntryId
       }
     },
-    load(id) {
+    async load(id) {
       if (id === resolvedVirtualEntryId) {
-        return getEntryContent({ entry: options?.entry })
+        return await getEntryContent({
+          entry: options?.entry
+            ? Array.isArray(options.entry)
+              ? options.entry
+              : [options.entry]
+            : [...defaultOptions.entry],
+        })
       }
     },
     config: async (): Promise<UserConfig> => {
