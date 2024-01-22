@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.4.0
+
+### Minor Changes
+
+- [#53](https://github.com/honojs/vite-plugins/pull/53) [`4c0b96f908152ffc366ffba93a35e268008c0c4c`](https://github.com/honojs/vite-plugins/commit/4c0b96f908152ffc366ffba93a35e268008c0c4c) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: introduce Plugins
+
 ## 0.3.5
 
 ### Patch Changes
