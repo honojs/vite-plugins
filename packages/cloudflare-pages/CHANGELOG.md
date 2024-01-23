@@ -1,5 +1,13 @@
 # @hono/vite-cloudflare-pages
 
+## 0.2.0
+
+### Minor Changes
+
+- [#55](https://github.com/honojs/vite-plugins/pull/55) [`876e2585b08676ac18c7a1fd7934625b4606778c`](https://github.com/honojs/vite-plugins/commit/876e2585b08676ac18c7a1fd7934625b4606778c) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: use virtual entry
+
+- [#57](https://github.com/honojs/vite-plugins/pull/57) [`26f48e937123960b9d462b5ae252c769c636b9d2`](https://github.com/honojs/vite-plugins/commit/26f48e937123960b9d462b5ae252c769c636b9d2) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: supports multiple entries
+
 ## 0.1.2
 
 ### Patch Changes
