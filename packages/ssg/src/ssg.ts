@@ -46,7 +46,7 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
         throw new Error(`Failed to find a named export "default" from ${entry}`)
       }
 
-      console.log(`Built files into temp directory: ${tempDir}`)
+      console.log(`Build files into temp directory: ${tempDir}`)
 
       const result = await toSSG(app, fs, { dir: tempDir })
 
