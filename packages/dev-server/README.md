@@ -168,7 +168,7 @@ import pages from '@hono/vite-dev-server/cloudflare-pages'
 export default defineConfig({
   plugins: [
     devServer({
-      plugins:  plugins: [
+      plugins: [
         pages({
           bindings: {
             NAME: 'Hono',
