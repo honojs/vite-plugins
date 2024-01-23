@@ -5,6 +5,7 @@ package-lock.json
 sandbox
 test-results
 playwright-report
+.hono
 
 # yarn
 .yarn/*
