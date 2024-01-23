@@ -59,7 +59,7 @@ The options are below.
 
 ```ts
 type CloudflarePagesOptions = {
-  entry?: string
+  entry?: string | string[]
   outputDir?: string
   external?: string[]
   minify?: boolean
@@ -71,7 +71,7 @@ Default values:
 
 ```ts
 export const defaultOptions = {
-  entry: '/src/index',
+  entry: ['./src/index.ts', './app/server.ts'],
   outputDir: './dist',
   external: [],
   minify: true,
