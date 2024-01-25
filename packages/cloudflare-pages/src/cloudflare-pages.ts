@@ -11,7 +11,7 @@ type CloudflarePagesOptions = {
 }
 
 export const defaultOptions: Required<CloudflarePagesOptions> = {
-  entry: ['./src/index.ts', './app/server.ts'],
+  entry: ['./src/index.tsx', './app/server.ts'],
   outputDir: './dist',
   external: [],
   minify: true,

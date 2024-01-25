@@ -71,7 +71,7 @@ Default values:
 
 ```ts
 export const defaultOptions = {
-  entry: ['./src/index.ts', './app/server.ts'],
+  entry: ['./src/index.tsx', './app/server.ts'],
   outputDir: './dist',
   external: [],
   minify: true,
