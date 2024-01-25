@@ -1,5 +1,11 @@
 # @hono/vite-cloudflare-pages
 
+## 0.2.1
+
+### Patch Changes
+
+- [#61](https://github.com/honojs/vite-plugins/pull/61) [`6ccd2338adcee4d60597f7037a1a7be902a6bf91`](https://github.com/honojs/vite-plugins/commit/6ccd2338adcee4d60597f7037a1a7be902a6bf91) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: fix default entry path and throw error if not found
+
 ## 0.2.0
 
 ### Minor Changes
