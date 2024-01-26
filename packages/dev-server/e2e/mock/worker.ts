@@ -64,4 +64,15 @@ app.get('/invalid-response', () => {
   return '<h1>Hello!</h1>'
 })
 
+app.get('/invalid-error-response', (c) => {
+  try {
+    // @ts-expect-error the variable does not exist, intentionally
+    doesNotExist = true
+
+    return c.html('<h1>Hello Vite!</h1>')
+  } catch (err) {
+    return err
+  }
+})
+
 export default app

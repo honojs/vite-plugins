@@ -73,53 +73,65 @@ export function devServer(options?: DevServerOptions): VitePlugin {
             return next(new Error(`Failed to find a named export "default" from ${entry}`))
           }
 
-          getRequestListener(async (request) => {
-            let env: Env = {}
+          getRequestListener(
+            async (request) => {
+              let env: Env = {}
 
-            if (options?.env) {
-              if (typeof options.env === 'function') {
-                env = await options.env()
-              } else {
-                env = options.env
+              if (options?.env) {
+                if (typeof options.env === 'function') {
+                  env = await options.env()
+                } else {
+                  env = options.env
+                }
+              } else if (options?.cf) {
+                env = await cloudflarePagesGetEnv(options.cf)()
               }
-            } else if (options?.cf) {
-              env = await cloudflarePagesGetEnv(options.cf)()
-            }
 
-            if (options?.plugins) {
-              for (const plugin of options.plugins) {
-                if (plugin.env) {
-                  env = typeof plugin.env === 'function' ? await plugin.env() : plugin.env
+              if (options?.plugins) {
+                for (const plugin of options.plugins) {
+                  if (plugin.env) {
+                    env = typeof plugin.env === 'function' ? await plugin.env() : plugin.env
+                  }
                 }
               }
-            }
 
-            let response = await app.fetch(request, env, {
-              waitUntil: async (fn) => fn,
-              passThroughOnException: () => {
-                throw new Error('`passThroughOnException` is not supported')
-              },
-            })
+              const response = await app.fetch(request, env, {
+                waitUntil: async (fn) => fn,
+                passThroughOnException: () => {
+                  throw new Error('`passThroughOnException` is not supported')
+                },
+              })
 
-            /**
-             * If the response is not instance of `Response`, it returns simple HTML with error messages.
-             */
-            if (!(response instanceof Response)) {
-              // @ts-expect-error response object must have `toString()`
-              const message = `The response is not an instance of "Response", but: ${response.toString()}`
-              console.error(message)
-              response = createErrorResponse(message)
-            }
+              /**
+               * If the response is not instance of `Response`, it returns simple HTML with error messages.
+               */
+              if (!(response instanceof Response)) {
+                throw response
+              }
 
-            if (
-              options?.injectClientScript !== false &&
-              response.headers.get('content-type')?.match(/^text\/html/)
-            ) {
-              const script = '<script>import("/@vite/client")</script>'
-              return injectStringToResponse(response, script)
+              if (
+                options?.injectClientScript !== false &&
+                response.headers.get('content-type')?.match(/^text\/html/)
+              ) {
+                const script = '<script>import("/@vite/client")</script>'
+                return injectStringToResponse(response, script)
+              }
+              return response
+            },
+            (e) => {
+              let err: Error
+              if (e instanceof Error) {
+                err = e
+                server.ssrFixStacktrace(err)
+              } else if (typeof e === 'string') {
+                err = new Error(`The response is not an instance of "Response", but: ${e}`)
+              } else {
+                err = new Error(`Unknown error: ${e}`)
+              }
+
+              next(err)
             }
-            return response
-          })(req, res)
+          )(req, res)
         }
       }
 
@@ -136,27 +148,6 @@ export function devServer(options?: DevServerOptions): VitePlugin {
     },
   }
   return plugin
-}
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-}
-
-function createErrorResponse(body: string) {
-  return new Response(
-    `<html><body><pre style="white-space:pre-wrap;">${escapeHtml(body)}</pre></body></html>`,
-    {
-      status: 500,
-      headers: {
-        'content-type': 'text/html;charset=utf-8',
-      },
-    }
-  )
 }
 
 function injectStringToResponse(response: Response, content: string) {
