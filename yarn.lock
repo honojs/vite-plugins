@@ -731,10 +731,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/node-server@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "@hono/node-server@npm:1.4.1"
-  checksum: a1fcee6cbbabc77107da565491a3b18ff733ae98f3bfbbdb705e2baf5e807774e9f975ff7f1d3b9a09b2576bfdde2b28d3fa5caf433cc895599f1ac5003cb9dd
+"@hono/node-server@file:.yalc/@hono/node-server::locator=hono-vite-plugins-monorepo%40workspace%3A.":
+  version: 1.5.0
+  resolution: "@hono/node-server@file:.yalc/@hono/node-server#.yalc/@hono/node-server::hash=bd4c27&locator=hono-vite-plugins-monorepo%40workspace%3A."
+  checksum: 2b8169bddb0cbc1181fd8c7c9b58359c5f898f430b4aa5661e443d3f5369d9689a703d68029cd8f983f851df2a6fea13b7048387079a8cd1adf9dc4780a9936a
   languageName: node
   linkType: hard
 

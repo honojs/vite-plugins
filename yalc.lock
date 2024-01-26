@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@hono/node-server": {
+      "signature": "38e0756d7d9a996749d7f194a3d3e027",
+      "file": true
+    }
+  }
+}

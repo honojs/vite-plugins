@@ -1,0 +1,65 @@
+{
+  "name": "@hono/node-server",
+  "version": "1.5.0",
+  "description": "Node.js Adapter for Hono",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./serve-static": {
+      "types": "./dist/serve-static.d.ts",
+      "require": "./dist/serve-static.js",
+      "import": "./dist/serve-static.mjs"
+    },
+    "./vercel": {
+      "types": "./dist/vercel.d.ts",
+      "require": "./dist/vercel.js",
+      "import": "./dist/vercel.mjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.ts"
+      ],
+      "serve-static": [
+        "./dist/serve-static.d.ts"
+      ],
+      "vercel": [
+        "./dist/vercel.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "tsup",
+    "watch": "tsup --watch",
+    "postbuild": "publint",
+    "prerelease": "yarn build && yarn test",
+    "release": "np",
+    "lint": "eslint --ext js,ts src test",
+    "lint:fix": "eslint --ext js,ts src test --fix"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/honojs/node-server.git"
+  },
+  "homepage": "https://github.com/honojs/node-server",
+  "author": "Yusuke Wada <yusuke@kamawada.com> (https://github.com/yusukebe)",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.14.1"
+  },
+  "yalcSig": "38e0756d7d9a996749d7f194a3d3e027"
+}
