@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.4.1
+
+### Patch Changes
+
+- [#64](https://github.com/honojs/vite-plugins/pull/64) [`47f3a1073036b8da2a1b405466e9a9b6d5ff9c1f`](https://github.com/honojs/vite-plugins/commit/47f3a1073036b8da2a1b405466e9a9b6d5ff9c1f) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: peerDependencies
+
 ## 0.4.0
 
 ### Minor Changes
