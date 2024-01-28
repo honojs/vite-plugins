@@ -750,7 +750,7 @@ __metadata:
     vite: ^5.0.12
     vitest: ^1.2.1
   peerDependencies:
-    hono: ">=3.11.7"
+    hono: "*"
   languageName: unknown
   linkType: soft
 
@@ -771,7 +771,7 @@ __metadata:
     vite: ^5.0.12
     vitest: ^0.34.6
   peerDependencies:
-    hono: ">=3.11.7"
+    hono: "*"
   languageName: unknown
   linkType: soft
 
