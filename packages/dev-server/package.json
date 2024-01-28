@@ -67,7 +67,7 @@
     "vitest": "^0.34.6"
   },
   "peerDependencies": {
-    "hono": ">=3.11.7"
+    "hono": "*"
   },
   "engines": {
     "node": ">=18.14.1"
