@@ -15,9 +15,6 @@
     "lint": "eslint 'packages/**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix 'packages/**/*.{ts,tsx}'"
   },
-  "resolutions": {
-    "@hono/node-server": "file:.yalc/@hono/node-server"
-  },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",

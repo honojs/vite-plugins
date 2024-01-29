@@ -731,10 +731,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/node-server@file:.yalc/@hono/node-server::locator=hono-vite-plugins-monorepo%40workspace%3A.":
-  version: 1.5.0
-  resolution: "@hono/node-server@file:.yalc/@hono/node-server#.yalc/@hono/node-server::hash=bd4c27&locator=hono-vite-plugins-monorepo%40workspace%3A."
-  checksum: 2b8169bddb0cbc1181fd8c7c9b58359c5f898f430b4aa5661e443d3f5369d9689a703d68029cd8f983f851df2a6fea13b7048387079a8cd1adf9dc4780a9936a
+"@hono/node-server@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@hono/node-server@npm:1.7.0"
+  checksum: 23c9df923f65ee6113108d6b94d0b2ce359b980915323d4b32d1c4ade42173d07be6e3ab2a05190b786f787be983c9240c87e2ffbe3f29a6deb2ae0786097135
   languageName: node
   linkType: hard
 
@@ -758,7 +758,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hono/vite-dev-server@workspace:packages/dev-server"
   dependencies:
-    "@hono/node-server": ^1.4.1
+    "@hono/node-server": ^1.7.0
     "@playwright/test": ^1.37.1
     glob: ^10.3.10
     hono: ^3.12.6
