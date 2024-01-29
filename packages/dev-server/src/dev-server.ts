@@ -163,7 +163,9 @@ function injectStringToResponse(response: Response, content: string) {
   const stream = response.body
   const newContent = new TextEncoder().encode(content)
 
-  if (!stream) return null
+  if (!stream) {
+    return null
+  }
 
   const reader = stream.getReader()
   const newContentReader = new ReadableStream({
