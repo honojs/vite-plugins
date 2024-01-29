@@ -1,5 +1,4 @@
 import fs from 'node:fs/promises'
-import path from 'node:path'
 import type { Hono } from 'hono'
 import { toSSG } from 'hono/ssg'
 import type { Plugin } from 'vite'

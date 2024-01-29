@@ -1,7 +1,7 @@
 {
   "name": "@hono/vite-dev-server",
   "description": "Vite dev-server plugin for Hono",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
   "type": "module",
@@ -67,7 +67,7 @@
     "vitest": "^0.34.6"
   },
   "peerDependencies": {
-    "hono": ">=3.11.7"
+    "hono": "*"
   },
   "engines": {
     "node": ">=18.14.1"
