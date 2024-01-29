@@ -103,7 +103,8 @@ export function devServer(options?: DevServerOptions): VitePlugin {
               })
 
               /**
-               * If the response is not instance of `Response`, it returns simple HTML with error messages.
+               * If the response is not instance of `Response`, throw it so that it can be handled
+               * by our custom errorHandler and passed through to Vite
                */
               if (!(response instanceof Response)) {
                 throw response
@@ -118,18 +119,20 @@ export function devServer(options?: DevServerOptions): VitePlugin {
               }
               return response
             },
-            (e) => {
-              let err: Error
-              if (e instanceof Error) {
-                err = e
-                server.ssrFixStacktrace(err)
-              } else if (typeof e === 'string') {
-                err = new Error(`The response is not an instance of "Response", but: ${e}`)
-              } else {
-                err = new Error(`Unknown error: ${e}`)
-              }
+            {
+              errorHandler: (e) => {
+                let err: Error
+                if (e instanceof Error) {
+                  err = e
+                  server.ssrFixStacktrace(err)
+                } else if (typeof e === 'string') {
+                  err = new Error(`The response is not an instance of "Response", but: ${e}`)
+                } else {
+                  err = new Error(`Unknown error: ${e}`)
+                }
 
-              next(err)
+                next(err)
+              },
             }
           )(req, res)
         }
