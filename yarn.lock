@@ -731,10 +731,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/node-server@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "@hono/node-server@npm:1.4.1"
-  checksum: a1fcee6cbbabc77107da565491a3b18ff733ae98f3bfbbdb705e2baf5e807774e9f975ff7f1d3b9a09b2576bfdde2b28d3fa5caf433cc895599f1ac5003cb9dd
+"@hono/node-server@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@hono/node-server@npm:1.7.0"
+  checksum: 23c9df923f65ee6113108d6b94d0b2ce359b980915323d4b32d1c4ade42173d07be6e3ab2a05190b786f787be983c9240c87e2ffbe3f29a6deb2ae0786097135
   languageName: node
   linkType: hard
 
@@ -758,7 +758,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hono/vite-dev-server@workspace:packages/dev-server"
   dependencies:
-    "@hono/node-server": ^1.4.1
+    "@hono/node-server": ^1.7.0
     "@playwright/test": ^1.37.1
     glob: ^10.3.10
     hono: ^3.12.6

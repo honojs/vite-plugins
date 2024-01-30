@@ -73,7 +73,7 @@
     "node": ">=18.14.1"
   },
   "dependencies": {
-    "@hono/node-server": "^1.4.1",
+    "@hono/node-server": "^1.7.0",
     "miniflare": "^3.20231218.2",
     "minimatch": "^9.0.3"
   }

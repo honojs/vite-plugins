@@ -81,9 +81,16 @@ test('Should handle `env.ASSETS.fetch` function', async ({ page }) => {
   expect(data['message']).toBe('Hello')
 })
 
-test('Should return an error page - /invalid-response', async ({ page }) => {
+test('Should return a vite error page - /invalid-response', async ({ page }) => {
   const response = await page.goto('/invalid-response')
   expect(response?.status()).toBe(500)
-  expect(await response?.text()).not.toBe('')
-  expect(await response?.headerValue('content-type')).toMatch(/^text\/html/)
+  expect(await response?.text()).toContain('ErrorOverlay')
+})
+
+test('Should return a vite error page with stack trace - /invalid-error-response', async ({
+  page,
+}) => {
+  const response = await page.goto('/invalid-error-response')
+  expect(response?.status()).toBe(500)
+  expect(await response?.text()).toContain('e2e/mock/worker.ts')
 })
