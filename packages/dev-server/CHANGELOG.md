@@ -1,5 +1,27 @@
 # @hono/vite-dev-server
 
+## 0.5.0
+
+### Minor Changes
+
+- [#63](https://github.com/honojs/vite-plugins/pull/63) [`10a7ab5da5e61cf314cc7566ddfa53552bf3172a`](https://github.com/honojs/vite-plugins/commit/10a7ab5da5e61cf314cc7566ddfa53552bf3172a) Thanks [@marbemac](https://github.com/marbemac)! - Leverage vite error handling. To leverage this, return client errors in development like in the example below:
+
+  ```ts
+  honoApp.get('*', async c => {
+    try {
+      // react, solid, etc
+      const app = await renderClientApp(<App />);
+
+      return new Response(app, { headers: { 'Content-Type': 'text/html' } });
+    } catch (err: any) {
+      // in dev, pass the error back to the vite dev server to display in the error overlay
+      if (import.meta.env.DEV) return err;
+
+      throw err;
+    }
+  });
+  ```
+
 ## 0.4.1
 
 ### Patch Changes
