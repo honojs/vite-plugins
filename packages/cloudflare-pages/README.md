@@ -75,7 +75,7 @@ export const defaultOptions = {
   outputDir: './dist',
   external: [],
   minify: true,
-  emptyOutDir: true,
+  emptyOutDir: false,
 }
 ```
 
@@ -95,7 +95,6 @@ export default defineConfig(({ mode }) => {
             entryFileNames: 'client.js',
           },
         },
-        emptyOutDir: false,
         copyPublicDir: false,
       },
     }
@@ -110,7 +109,7 @@ export default defineConfig(({ mode }) => {
 The build command:
 
 ```text
-vite build && vite build --mode client
+vite build --mode client && vite build
 ```
 
 ## Authors

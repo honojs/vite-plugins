@@ -15,7 +15,7 @@ export const defaultOptions: Required<CloudflarePagesOptions> = {
   outputDir: './dist',
   external: [],
   minify: true,
-  emptyOutDir: true,
+  emptyOutDir: false,
 }
 
 export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin => {
