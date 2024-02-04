@@ -1,5 +1,11 @@
 # @hono/vite-cloudflare-pages
 
+## 0.2.3
+
+### Patch Changes
+
+- [#69](https://github.com/honojs/vite-plugins/pull/69) [`06d753152aec120d7df83e207e71cb6c31d3ca41`](https://github.com/honojs/vite-plugins/commit/06d753152aec120d7df83e207e71cb6c31d3ca41) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: `emptyOutDir` as `false`
+
 ## 0.2.2
 
 ### Patch Changes
