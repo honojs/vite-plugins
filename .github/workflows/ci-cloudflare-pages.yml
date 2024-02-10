@@ -20,9 +20,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20.x
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
       - run: yarn install
       - run: yarn build
       - run: yarn test
@@ -37,8 +34,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20.x
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
       - run: yarn install
       - run: yarn test
