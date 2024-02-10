@@ -4,20 +4,8 @@ export type Options = {
   entry: string[]
 }
 
-const normalizePaths = (paths: string[]) => {
-  return paths.map((p) => {
-    let normalizedPath = normalize(p).replace(/\\/g, '/')
-    if (normalizedPath.startsWith('./')) {
-      normalizedPath = normalizedPath.substring(2)
-    }
-    return '/' + normalizedPath
-  })
-}
-
 export const getEntryContent = async (options: Options) => {
-  const globStr = normalizePaths(options.entry)
-    .map((e) => `'${e}'`)
-    .join(',')
+  const globStr = options.entry.map((e) => `'/${normalize(e)}'`).join(',')
   const appStr = `const modules = import.meta.glob([${globStr}], { import: 'default', eager: true })
       let added = false
       for (const [, app] of Object.entries(modules)) {
