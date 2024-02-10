@@ -1,5 +1,13 @@
 # @hono/vite-cloudflare-pages
 
+## 0.2.4
+
+### Patch Changes
+
+- [#73](https://github.com/honojs/vite-plugins/pull/73) [`8c02a9a425ef1eb37044ed59f2a8d4fdc0c9a37c`](https://github.com/honojs/vite-plugins/commit/8c02a9a425ef1eb37044ed59f2a8d4fdc0c9a37c) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: support windows
+
+- [#73](https://github.com/honojs/vite-plugins/pull/73) [`8c02a9a425ef1eb37044ed59f2a8d4fdc0c9a37c`](https://github.com/honojs/vite-plugins/commit/8c02a9a425ef1eb37044ed59f2a8d4fdc0c9a37c) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: support windows
+
 ## 0.2.3
 
 ### Patch Changes
