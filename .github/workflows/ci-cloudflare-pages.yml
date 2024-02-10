@@ -41,5 +41,4 @@ jobs:
         with:
           version: 8
       - run: yarn install
-      - run: yarn build
       - run: yarn test
