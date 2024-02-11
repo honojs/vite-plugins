@@ -7,7 +7,6 @@ import cloudflarePagesPlugin from '../src/index'
 describe('cloudflarePagesPlugin', () => {
   const testDir = './test-project'
   const entryFile = `${testDir}/app/server.ts`
-  const outputFile = `${testDir}/dist/_worker.js`
 
   beforeAll(() => {
     fs.mkdirSync(path.dirname(entryFile), { recursive: true })
@@ -19,11 +18,34 @@ describe('cloudflarePagesPlugin', () => {
   })
 
   it('Should build the project correctly with the plugin', async () => {
+    const outputFile = `${testDir}/dist/_worker.js`
+
     expect(fs.existsSync(entryFile)).toBe(true)
 
     await build({
       root: testDir,
       plugins: [cloudflarePagesPlugin()],
+      build: {
+        emptyOutDir: true,
+      },
+    })
+
+    expect(fs.existsSync(outputFile)).toBe(true)
+
+    const output = fs.readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('Hello World')
+  })
+
+  it('Should build the project correctly with custom output directory', async () => {
+    const outputFile = `${testDir}/customDir/_worker.js`
+
+    expect(fs.existsSync(entryFile)).toBe(true)
+
+    await build({
+      root: testDir,
+      plugins: [cloudflarePagesPlugin({
+        outputDir: 'customDir',
+      })],
       build: {
         emptyOutDir: true,
       },
