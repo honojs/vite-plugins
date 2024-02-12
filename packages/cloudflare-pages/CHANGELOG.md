@@ -1,5 +1,11 @@
 # @hono/vite-cloudflare-pages
 
+## 0.2.5
+
+### Patch Changes
+
+- [#75](https://github.com/honojs/vite-plugins/pull/75) [`50e640a64c0a9384145603d0fdc51b5c90cc19f5`](https://github.com/honojs/vite-plugins/commit/50e640a64c0a9384145603d0fdc51b5c90cc19f5) Thanks [@ninebolt6](https://github.com/ninebolt6)! - fix: respect `outputDir` option
+
 ## 0.2.4
 
 ### Patch Changes
