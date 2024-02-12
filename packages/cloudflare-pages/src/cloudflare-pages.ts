@@ -47,6 +47,7 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
           noExternal: true,
         },
         build: {
+          outDir: options?.outputDir ?? defaultOptions.outputDir,
           emptyOutDir: options?.emptyOutDir ?? defaultOptions.emptyOutDir,
           minify: options?.minify ?? defaultOptions.minify,
           ssr: true,
