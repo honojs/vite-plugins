@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.5.1
+
+### Patch Changes
+
+- [#77](https://github.com/honojs/vite-plugins/pull/77) [`b397fdd438081f4a2b98a042ac2f974c9b63c449`](https://github.com/honojs/vite-plugins/commit/b397fdd438081f4a2b98a042ac2f974c9b63c449) Thanks [@rutan](https://github.com/rutan)! - fix: initialize Miniflare only on the first run
+
 ## 0.5.0
 
 ### Minor Changes
