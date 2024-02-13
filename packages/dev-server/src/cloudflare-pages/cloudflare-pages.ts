@@ -21,13 +21,15 @@ const nullScript = 'export default { fetch: () => new Response(null, { status: 4
 let mf: Miniflare | undefined = undefined
 
 export const getEnv: GetEnv<Options> = (options) => async () => {
-  // Dynamic import Miniflare for environments like Bun.
-  const { Miniflare } = await import('miniflare')
-  mf = new Miniflare({
-    modules: true,
-    script: nullScript,
-    ...options,
-  })
+  if (!mf) {
+    // Dynamic import Miniflare for environments like Bun.
+    const { Miniflare } = await import('miniflare')
+    mf = new Miniflare({
+      modules: true,
+      script: nullScript,
+      ...options,
+    })
+  }
 
   const env = {
     ...(await mf.getBindings()),
@@ -48,6 +50,7 @@ export const getEnv: GetEnv<Options> = (options) => async () => {
 
 export const disposeMf = async () => {
   mf?.dispose()
+  mf = undefined
 }
 
 const plugin = (options?: Options): Plugin => {
