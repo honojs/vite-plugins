@@ -37,4 +37,37 @@ describe('ssgPlugin', () => {
     const output = fs.readFileSync(outputFile, 'utf-8')
     expect(output).toBe('<html><body><h1>Hello!</h1></body></html>')
   })
+
+  it('Should keep other inputs politely', async () => {
+    expect(fs.existsSync(entryFile)).toBe(true)
+
+    await build({
+      plugins: [
+        ssgPlugin({
+          entry: entryFile,
+        }),
+      ],
+      build: {
+        rollupOptions: {
+          input: entryFile,
+          output: {
+            entryFileNames: 'assets/[name].js',
+          },
+        },
+        outDir: path.resolve(testDir, 'dist'),
+        emptyOutDir: true,
+      },
+    })
+
+    const entryOutputFile = path.resolve(testDir, 'dist', 'assets', 'app.js')
+
+    expect(fs.existsSync(outputFile)).toBe(true)
+    expect(fs.existsSync(entryOutputFile)).toBe(true)
+
+    const output = fs.readFileSync(outputFile, 'utf-8')
+    expect(output).toBe('<html><body><h1>Hello!</h1></body></html>')
+
+    const entryOutput = fs.readFileSync(entryOutputFile, 'utf-8')
+    expect(entryOutput.length).toBeGreaterThan(0)
+  })
 })

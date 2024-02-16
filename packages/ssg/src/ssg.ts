@@ -13,6 +13,9 @@ export const defaultOptions: Required<SSGOptions> = {
 }
 
 export const ssgBuild = (options?: SSGOptions): Plugin => {
+  const virtualId = 'virtual:ssg-void-entry'
+  const resolvedVirtualId = '\0' + virtualId
+
   const entry = options?.entry ?? defaultOptions.entry
   let config: ResolvedConfig
   return {
@@ -22,7 +25,7 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
       return {
         build: {
           rollupOptions: {
-            input: [entry],
+            input: [virtualId],
           },
         },
       }
@@ -30,12 +33,22 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
     configResolved(resolved) {
       config = resolved
     },
+    resolveId(id) {
+      if (id === virtualId) {
+        return resolvedVirtualId
+      }
+    },
     load(id) {
-      // discard entry file content
-      return 'export default {};'
+      if (id === resolvedVirtualId) {
+        return ''
+      }
     },
     async generateBundle(_outputOptions, bundle) {
-      for (const key in bundle) delete bundle[key]
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type === 'chunk' && chunk.moduleIds.includes(resolvedVirtualId)) {
+          delete bundle[chunk.fileName]
+        }
+      }
 
       // Create a server to load the module
       const server = await createServer({
