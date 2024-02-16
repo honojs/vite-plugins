@@ -24,10 +24,10 @@ describe('ssgPlugin', () => {
       plugins: [
         ssgPlugin({
           entry: entryFile,
-          tempDir: path.resolve(testDir, '.hono'),
         }),
       ],
       build: {
+        outDir: path.resolve(testDir, 'dist'),
         emptyOutDir: true,
       },
     })

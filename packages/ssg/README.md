@@ -58,15 +58,8 @@ wrangler pages deploy ./dist
 The options are below.
 
 ```ts
-type BuildConfig = {
-  outputDir?: string
-  publicDir?: string
-}
-
 type SSGOptions = {
   entry?: string
-  rootDir?: string
-  build?: BuildConfig
 }
 ```
 
@@ -75,11 +68,6 @@ Default values:
 ```ts
 const defaultOptions = {
   entry: './src/index.tsx',
-  tempDir: '.hono',
-  build: {
-    outputDir: '../dist',
-    publicDir: '../public',
-  },
 }
 ```
 
