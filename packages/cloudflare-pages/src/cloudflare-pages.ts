@@ -3,9 +3,18 @@ import type { Plugin, UserConfig } from 'vite'
 import { getEntryContent } from './entry.js'
 
 type CloudflarePagesOptions = {
+  /**
+   * @default ['./src/index.tsx', './app/server.ts']
+   */ 
   entry?: string | string[]
+  /**
+   * @default './dist'
+   */
   outputDir?: string
   external?: string[]
+  /**
+   * @default true
+   */
   minify?: boolean
   emptyOutDir?: boolean
 }
