@@ -7,7 +7,8 @@ import ssgPlugin from '../src/index'
 describe('ssgPlugin', () => {
   const testDir = './test-project'
   const entryFile = './test/app.ts'
-  const outputFile = path.resolve(testDir, 'dist', 'index.html')
+  const outDir = path.resolve(testDir, 'dist')
+  const outputFile = path.resolve(outDir, 'index.html')
 
   beforeAll(() => {
     fs.mkdirSync(testDir, { recursive: true })
@@ -27,7 +28,7 @@ describe('ssgPlugin', () => {
         }),
       ],
       build: {
-        outDir: path.resolve(testDir, 'dist'),
+        outDir,
         emptyOutDir: true,
       },
     })
@@ -36,6 +37,9 @@ describe('ssgPlugin', () => {
 
     const output = fs.readFileSync(outputFile, 'utf-8')
     expect(output).toBe('<html><body><h1>Hello!</h1></body></html>')
+
+    // Should not output files corresponding to a virtual entry
+    expect(fs.existsSync(path.resolve(outDir, 'assets'))).toBe(false)
   })
 
   it('Should keep other inputs politely', async () => {
@@ -54,7 +58,7 @@ describe('ssgPlugin', () => {
             entryFileNames: 'assets/[name].js',
           },
         },
-        outDir: path.resolve(testDir, 'dist'),
+        outDir,
         emptyOutDir: true,
       },
     })
