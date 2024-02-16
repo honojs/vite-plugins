@@ -40,7 +40,7 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
     },
     load(id) {
       if (id === resolvedVirtualId) {
-        return ''
+        return 'console.log("suppress empty chunk message")'
       }
     },
     async generateBundle(_outputOptions, bundle) {
