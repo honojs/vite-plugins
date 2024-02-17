@@ -7,7 +7,8 @@ import ssgPlugin from '../src/index'
 describe('ssgPlugin', () => {
   const testDir = './test-project'
   const entryFile = './test/app.ts'
-  const outputFile = path.resolve(testDir, 'dist', 'index.html')
+  const outDir = path.resolve(testDir, 'dist')
+  const outputFile = path.resolve(outDir, 'index.html')
 
   beforeAll(() => {
     fs.mkdirSync(testDir, { recursive: true })
@@ -24,10 +25,10 @@ describe('ssgPlugin', () => {
       plugins: [
         ssgPlugin({
           entry: entryFile,
-          tempDir: path.resolve(testDir, '.hono'),
         }),
       ],
       build: {
+        outDir,
         emptyOutDir: true,
       },
     })
@@ -36,5 +37,41 @@ describe('ssgPlugin', () => {
 
     const output = fs.readFileSync(outputFile, 'utf-8')
     expect(output).toBe('<html><body><h1>Hello!</h1></body></html>')
+
+    // Should not output files corresponding to a virtual entry
+    expect(fs.existsSync(path.resolve(outDir, 'assets'))).toBe(false)
+  })
+
+  it('Should keep other inputs politely', async () => {
+    expect(fs.existsSync(entryFile)).toBe(true)
+
+    await build({
+      plugins: [
+        ssgPlugin({
+          entry: entryFile,
+        }),
+      ],
+      build: {
+        rollupOptions: {
+          input: entryFile,
+          output: {
+            entryFileNames: 'assets/[name].js',
+          },
+        },
+        outDir,
+        emptyOutDir: true,
+      },
+    })
+
+    const entryOutputFile = path.resolve(testDir, 'dist', 'assets', 'app.js')
+
+    expect(fs.existsSync(outputFile)).toBe(true)
+    expect(fs.existsSync(entryOutputFile)).toBe(true)
+
+    const output = fs.readFileSync(outputFile, 'utf-8')
+    expect(output).toBe('<html><body><h1>Hello!</h1></body></html>')
+
+    const entryOutput = fs.readFileSync(entryOutputFile, 'utf-8')
+    expect(entryOutput.length).toBeGreaterThan(0)
   })
 })

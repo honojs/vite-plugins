@@ -1,36 +1,55 @@
-import fs from 'node:fs/promises'
+import { relative } from 'node:path'
 import type { Hono } from 'hono'
 import { toSSG } from 'hono/ssg'
-import type { Plugin } from 'vite'
+import type { Plugin, ResolvedConfig } from 'vite'
 import { createServer } from 'vite'
-
-type BuildConfig = {
-  outputDir?: string
-  publicDir?: string
-}
 
 type SSGOptions = {
   entry?: string
-  tempDir?: string
-  build?: BuildConfig
 }
 
 export const defaultOptions: Required<SSGOptions> = {
   entry: './src/index.tsx',
-  tempDir: '.hono',
-  build: {
-    outputDir: '../dist',
-    publicDir: '../public',
-  },
 }
 
 export const ssgBuild = (options?: SSGOptions): Plugin => {
+  const virtualId = 'virtual:ssg-void-entry'
+  const resolvedVirtualId = '\0' + virtualId
+
   const entry = options?.entry ?? defaultOptions.entry
-  const tempDir = options?.tempDir ?? defaultOptions.tempDir
+  let config: ResolvedConfig
   return {
     name: '@hono/vite-ssg',
     apply: 'build',
-    config: async () => {
+    async config() {
+      return {
+        build: {
+          rollupOptions: {
+            input: [virtualId],
+          },
+        },
+      }
+    },
+    configResolved(resolved) {
+      config = resolved
+    },
+    resolveId(id) {
+      if (id === virtualId) {
+        return resolvedVirtualId
+      }
+    },
+    load(id) {
+      if (id === resolvedVirtualId) {
+        return 'console.log("suppress empty chunk message")'
+      }
+    },
+    async generateBundle(_outputOptions, bundle) {
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type === 'chunk' && chunk.moduleIds.includes(resolvedVirtualId)) {
+          delete bundle[chunk.fileName]
+        }
+      }
+
       // Create a server to load the module
       const server = await createServer({
         plugins: [],
@@ -45,30 +64,28 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
         throw new Error(`Failed to find a named export "default" from ${entry}`)
       }
 
-      console.log(`Build files into temp directory: ${tempDir}`)
+      const outDir = config.build.outDir
 
-      const result = await toSSG(app, fs, { dir: tempDir })
+      const result = await toSSG(
+        app,
+        {
+          writeFile: async (path, data) => {
+            // delegate to Vite to emit the file
+            this.emitFile({
+              type: 'asset',
+              fileName: relative(outDir, path),
+              source: data,
+            })
+          },
+          async mkdir() {
+            return
+          },
+        },
+        { dir: outDir }
+      )
 
       if (!result.success) {
         throw result.error
-      }
-
-      if (result.files) {
-        for (const file of result.files) {
-          console.log(`Generated: ${file}`)
-        }
-      }
-
-      return {
-        root: tempDir,
-        publicDir: options?.build?.publicDir ?? defaultOptions.build.publicDir,
-        build: {
-          outDir: options?.build?.outputDir ?? defaultOptions.build.outputDir,
-          rollupOptions: {
-            input: result.files ? [...result.files] : [],
-          },
-          emptyOutDir: true,
-        },
       }
     },
   }
