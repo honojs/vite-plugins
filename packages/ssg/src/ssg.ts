@@ -77,7 +77,9 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
               source: data,
             })
           },
-          async mkdir() {},
+          async mkdir() {
+            return
+          },
         },
         { dir: outDir }
       )
