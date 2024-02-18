@@ -7,6 +7,7 @@ import type { Env, Fetch, EnvFunc, Plugin } from './types.js'
 
 export type DevServerOptions = {
   entry?: string
+  export?: string
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
   env?: Env | EnvFunc
@@ -22,6 +23,7 @@ export type DevServerOptions = {
 
 export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf'>> = {
   entry: './src/index.ts',
+  export: 'default',
   injectClientScript: true,
   exclude: [
     /.*\.ts$/,
@@ -67,10 +69,11 @@ export function devServer(options?: DevServerOptions): VitePlugin {
             return next(e)
           }
 
-          const app = appModule['default'] as { fetch: Fetch }
+          const exportName = options?.export ?? defaultOptions.export
+          const app = appModule[exportName] as { fetch: Fetch }
 
           if (!app) {
-            return next(new Error(`Failed to find a named export "default" from ${entry}`))
+            return next(new Error(`Failed to find a named export "${exportName}" from ${entry}`))
           }
 
           getRequestListener(
