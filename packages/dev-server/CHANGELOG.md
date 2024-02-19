@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.7.0
+
+### Minor Changes
+
+- [#86](https://github.com/honojs/vite-plugins/pull/86) [`f9e3545753c8a3cb8e90cb8123b070c0a8966de2`](https://github.com/honojs/vite-plugins/commit/f9e3545753c8a3cb8e90cb8123b070c0a8966de2) Thanks [@jxom](https://github.com/jxom)! - Added `export` property to `devServer`.
+
 ## 0.6.1
 
 ### Patch Changes
