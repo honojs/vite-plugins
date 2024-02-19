@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.6.1
+
+### Patch Changes
+
+- [#87](https://github.com/honojs/vite-plugins/pull/87) [`5d562cce8baf4f9ff405d6d15f654401c8b54b4d`](https://github.com/honojs/vite-plugins/commit/5d562cce8baf4f9ff405d6d15f654401c8b54b4d) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: bump `@hono/node-server`
+
 ## 0.6.0
 
 ### Minor Changes
