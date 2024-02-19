@@ -99,6 +99,7 @@ The options are below.
 ```ts
 export type DevServerOptions = {
   entry?: string
+  export?: string
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
   env?: Env | EnvFunc
