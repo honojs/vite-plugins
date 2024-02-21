@@ -13,6 +13,6 @@ export type Fetch = (
 ) => Promise<Response>
 
 export interface Plugin {
-  env?: EnvFunc
+  env?: Env | EnvFunc
   onServerClose?: () => void | Promise<void>
 }
