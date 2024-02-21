@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.7.1
+
+### Patch Changes
+
+- [#90](https://github.com/honojs/vite-plugins/pull/90) [`73587e53d30eed82c4388ecfdc13ea5a1a019317`](https://github.com/honojs/vite-plugins/commit/73587e53d30eed82c4388ecfdc13ea5a1a019317) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: fix `plugin.env` type
+
 ## 0.7.0
 
 ### Minor Changes
