@@ -75,4 +75,8 @@ app.get('/invalid-error-response', (c) => {
   }
 })
 
+app.get('/env', (c) => {
+  return c.json({ env: c.env })
+})
+
 export default app

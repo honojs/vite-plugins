@@ -82,18 +82,25 @@ export function devServer(options?: DevServerOptions): VitePlugin {
 
               if (options?.env) {
                 if (typeof options.env === 'function') {
-                  env = await options.env()
+                  env = { ...env, ...(await options.env()) }
                 } else {
-                  env = options.env
+                  env = { ...env, ...options.env }
                 }
-              } else if (options?.cf) {
-                env = await cloudflarePagesGetEnv(options.cf)()
+              }
+              if (options?.cf) {
+                env = {
+                  ...env,
+                  ...(await cloudflarePagesGetEnv(options.cf)()),
+                }
               }
 
               if (options?.plugins) {
                 for (const plugin of options.plugins) {
                   if (plugin.env) {
-                    env = typeof plugin.env === 'function' ? await plugin.env() : plugin.env
+                    env = {
+                      ...env,
+                      ...(typeof plugin.env === 'function' ? await plugin.env() : plugin.env),
+                    }
                   }
                 }
               }

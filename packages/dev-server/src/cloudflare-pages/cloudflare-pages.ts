@@ -33,6 +33,7 @@ export const getEnv: GetEnv<Options> = (options) => async () => {
 
   const env = {
     ...(await mf.getBindings()),
+    ...options.bindings, // Do not overwrite existing bindings.
     // `env.ASSETS.fetch()` function for Cloudflare Pages.
     ASSETS: {
       async fetch(input: RequestInfo | URL, init?: RequestInit | undefined) {
