@@ -29,6 +29,12 @@ export default defineConfig(async () => {
           { env: { ENV_FROM_PLUGIN: 'ENV_FROM_PLUGIN_VALUE' } },
           { env: async () => ({ ENV_FROM_PLUGIN_AS_FUNC: 'ENV_FROM_PLUGIN_AS_FUNC_VALUE' }) },
         ],
+        adapter: {
+          env: {
+            ENV_FROM_ADAPTER: 'ENV_FROM_ADAPTER_VALUE',
+          },
+          onServerClose: dispose,
+        },
       }),
     ],
   }

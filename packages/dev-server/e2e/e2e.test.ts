@@ -145,3 +145,11 @@ test('Should set bindings from `plugins` in config (async)', async ({ page }) =>
   expect(json).toBeTruthy()
   expect(json.env).toHaveProperty('ENV_FROM_PLUGIN_AS_FUNC', 'ENV_FROM_PLUGIN_AS_FUNC_VALUE')
 })
+
+test('Should set bindings from `adapter` in config', async ({ page }) => {
+  const res = await page.goto('/env', { waitUntil: 'domcontentloaded' })
+  expect(res?.ok()).toBe(true)
+  const json = await res?.json()
+  expect(json).toBeTruthy()
+  expect(json.env).toHaveProperty('ENV_FROM_ADAPTER', 'ENV_FROM_ADAPTER_VALUE')
+})
