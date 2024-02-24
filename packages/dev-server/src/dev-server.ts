@@ -10,6 +10,7 @@ export type DevServerOptions = {
   export?: string
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
+  ignoreWatching?: (string | RegExp)[]
   env?: Env | EnvFunc
   plugins?: Plugin[]
   /**
@@ -71,6 +72,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'ada
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
   ],
+  ignoreWatching: [/\/\.wrangler/],
   plugins: [],
 }
 
@@ -201,6 +203,15 @@ export function devServer(options?: DevServerOptions): VitePlugin {
           await options.adapter.onServerClose()
         }
       })
+    },
+    config: () => {
+      return {
+        server: {
+          watch: {
+            ignored: options?.ignoreWatching ?? defaultOptions.ignoreWatching,
+          },
+        },
+      }
     },
   }
   return plugin
