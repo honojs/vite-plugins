@@ -163,7 +163,7 @@ You can pass the `env` value of a specified environment to the application.
 
 ### Cloudflare
 
-You can pass the Bindings specified in `.wrangler.toml` to your application by using Wrangler's `getPlatformProxy()` function.
+You can pass the Bindings specified in `wrangler.toml` to your application by using Wrangler's `getPlatformProxy()` function.
 
 ```ts
 import devServer from '@hono/vite-dev-server'
@@ -186,7 +186,7 @@ export default defineConfig(async () => {
 ```
 
 > [!NOTE]
-> The `.wrangler.toml` is not used in the Cloudflate Pages production environment. Please configure Bindings from the dashboard.
+> The `wrangler.toml` is not used in the Cloudflate Pages production environment. Please configure Bindings from the dashboard.
 
 ## Client-side
 
