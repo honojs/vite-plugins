@@ -12,6 +12,44 @@ export type DevServerOptions = {
   exclude?: (string | RegExp)[]
   env?: Env | EnvFunc
   plugins?: Plugin[]
+  /**
+   * This can be used to inject environment variables into the worker from your wrangler.toml for example,
+   * by making use of the helper function `getPlatformProxy` from `wrangler`.
+   *
+   * @example
+   *
+   * ```ts
+   * import { defineConfig } from 'vite'
+   * import devServer from '@hono/vite-dev-server'
+   * import getPlatformProxy from 'wrangler'
+   *
+   * export default defineConfig(async () => {
+   *    const { env, dispose } = await getPlatformProxy()
+   *    return {
+   *      plugins: [
+   *        devServer({
+   *          adapter: {
+   *            env,
+   *            onServerClose: dispose
+   *          },
+   *        }),
+   *      ],
+   *    }
+   *  })
+   * ```
+   *
+   *
+   */
+  adapter?: {
+    /**
+     * Environment variables to be injected into the worker
+     */
+    env?: Env
+    /**
+     * Function called when the vite dev server is closed
+     */
+    onServerClose?: () => Promise<void>
+  }
 } & {
   /**
    * @deprecated
@@ -21,7 +59,7 @@ export type DevServerOptions = {
   cf?: Parameters<typeof cloudflarePagesGetEnv>[0]
 }
 
-export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf'>> = {
+export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'adapter'>> = {
   entry: './src/index.ts',
   export: 'default',
   injectClientScript: true,
@@ -82,20 +120,29 @@ export function devServer(options?: DevServerOptions): VitePlugin {
 
               if (options?.env) {
                 if (typeof options.env === 'function') {
-                  env = await options.env()
+                  env = { ...env, ...(await options.env()) }
                 } else {
-                  env = options.env
+                  env = { ...env, ...options.env }
                 }
-              } else if (options?.cf) {
-                env = await cloudflarePagesGetEnv(options.cf)()
               }
-
+              if (options?.cf) {
+                env = {
+                  ...env,
+                  ...(await cloudflarePagesGetEnv(options.cf)()),
+                }
+              }
               if (options?.plugins) {
                 for (const plugin of options.plugins) {
                   if (plugin.env) {
-                    env = typeof plugin.env === 'function' ? await plugin.env() : plugin.env
+                    env = {
+                      ...env,
+                      ...(typeof plugin.env === 'function' ? await plugin.env() : plugin.env),
+                    }
                   }
                 }
+              }
+              if (options?.adapter?.env) {
+                env = { ...env, ...options.adapter.env }
               }
 
               const response = await app.fetch(request, env, {
@@ -149,6 +196,9 @@ export function devServer(options?: DevServerOptions): VitePlugin {
               await plugin.onServerClose()
             }
           }
+        }
+        if (options?.adapter?.onServerClose) {
+          await options.adapter.onServerClose()
         }
       })
     },

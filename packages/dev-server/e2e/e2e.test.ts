@@ -94,3 +94,62 @@ test('Should return a vite error page with stack trace - /invalid-error-response
   expect(response?.status()).toBe(500)
   expect(await response?.text()).toContain('e2e/mock/worker.ts')
 })
+
+test('Should set bindings from wrangler.toml [vars]', async ({ page }) => {
+  const res = await page.goto('/env', { waitUntil: 'domcontentloaded' })
+  expect(res?.ok()).toBe(true)
+  const json = await res?.json()
+  expect(json).toBeTruthy()
+  expect(json.env).toHaveProperty(
+    'VARIABLE_FROM_WRANGLER_TOML',
+    'VARIABLE_FROM_WRANGLER_TOML_VALUE'
+  )
+})
+
+test('Should set bindings from wrangler.toml [[d1_database]]', async ({ page }) => {
+  const res = await page.goto('/env', { waitUntil: 'domcontentloaded' })
+  expect(res?.ok()).toBe(true)
+  const json = await res?.json()
+  expect(json).toBeTruthy()
+  expect(json.env).toHaveProperty('DB_FROM_WRANGLER_TOML')
+})
+
+test('Should set bindings from root `env` in config', async ({ page }) => {
+  const res = await page.goto('/env', { waitUntil: 'domcontentloaded' })
+  expect(res?.ok()).toBe(true)
+  const json = await res?.json()
+  expect(json).toBeTruthy()
+  expect(json.env).toHaveProperty('ENV_FROM_ROOT', 'ENV_FROM_ROOT_VALUE')
+})
+
+test('Should set bindings from `cf` in config', async ({ page }) => {
+  const res = await page.goto('/env', { waitUntil: 'domcontentloaded' })
+  expect(res?.ok()).toBe(true)
+  const json = await res?.json()
+  expect(json).toBeTruthy()
+  expect(json.env).toHaveProperty('ENV_FROM_DEPRACATED_CF', 'ENV_FROM_DEPRACATED_CF_VALUE')
+})
+
+test('Should set bindings from `plugins` in config', async ({ page }) => {
+  const res = await page.goto('/env', { waitUntil: 'domcontentloaded' })
+  expect(res?.ok()).toBe(true)
+  const json = await res?.json()
+  expect(json).toBeTruthy()
+  expect(json.env).toHaveProperty('ENV_FROM_PLUGIN', 'ENV_FROM_PLUGIN_VALUE')
+})
+
+test('Should set bindings from `plugins` in config (async)', async ({ page }) => {
+  const res = await page.goto('/env', { waitUntil: 'domcontentloaded' })
+  expect(res?.ok()).toBe(true)
+  const json = await res?.json()
+  expect(json).toBeTruthy()
+  expect(json.env).toHaveProperty('ENV_FROM_PLUGIN_AS_FUNC', 'ENV_FROM_PLUGIN_AS_FUNC_VALUE')
+})
+
+test('Should set bindings from `adapter` in config', async ({ page }) => {
+  const res = await page.goto('/env', { waitUntil: 'domcontentloaded' })
+  expect(res?.ok()).toBe(true)
+  const json = await res?.json()
+  expect(json).toBeTruthy()
+  expect(json.env).toHaveProperty('ENV_FROM_ADAPTER', 'ENV_FROM_ADAPTER_VALUE')
+})
