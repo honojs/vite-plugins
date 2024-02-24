@@ -102,8 +102,11 @@ export type DevServerOptions = {
   export?: string
   injectClientScript?: boolean
   exclude?: (string | RegExp)[]
-  env?: Env | EnvFunc
-  plugins?: Plugin[]
+  ignoreWatching?: (string | RegExp)[]
+  adapter?: {
+    env?: Env
+    onServerClose?: () => Promise<void>
+  }
 }
 ```
 
@@ -121,7 +124,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
   ],
-  plugins: [],
+  ignoreWatching: [/\/\.wrangler/],
 }
 ```
 
@@ -148,60 +151,42 @@ export default defineConfig({
 })
 ```
 
-### `env`
+### `ignoreWatching`
 
-You can pass `ENV` variables to your application by setting the `env` option.
-`ENV` values can be accessed using `c.env` in your Hono application.
+You can add target directories for the server to watch.
 
-### `plugins`
+### `adapter`
 
-There are plugins for each platform to set up their own environment, etc.
+You can pass the `env` value of a specified environment to the application.
 
-## Plugins
+## Adapter
 
-### Cloudflare Pages
+### Cloudflare
 
-You can use Cloudflare Pages plugin, which allow you to access bindings such as variables, KV, D1, and others.
+You can pass the Bindings specified in `.wrangler.toml` to your application by using Wrangler's `getPlatformProxy()` function.
 
 ```ts
-import pages from '@hono/vite-dev-server/cloudflare-pages'
+import devServer from '@hono/vite-dev-server'
+import { defineConfig } from 'vite'
+import { getPlatformProxy } from 'wrangler'
 
-export default defineConfig({
-  plugins: [
-    devServer({
-      plugins: [
-        pages({
-          bindings: {
-            NAME: 'Hono',
-          },
-          kvNamespaces: ['MY_KV'],
-        }),
-      ],
-    }),
-  ],
+export default defineConfig(async () => {
+  const { env, dispose } = await getPlatformProxy()
+  return {
+    plugins: [
+      devServer({
+        adapter: {
+          env,
+          onServerClose: dispose,
+        },
+      }),
+    ],
+  }
 })
 ```
 
-These Bindings are emulated by Miniflare in the local.
-
-#### D1
-
-When using D1, your app will read `.mf/d1/DB/db.sqlite` which is generated automatically with the following configuration:
-
-```ts
-export default defineConfig({
-  plugins: [
-    devServer({
-      plugins: [
-        pages({
-          d1Databases: ['DB'],
-          d1Persist: true,
-        }),
-      ],
-    }),
-  ],
-})
-```
+> [!NOTE]
+> The `.wrangler.toml` is not used in the Cloudflate Pages production environment. Please configure Bindings from the dashboard.
 
 ## Client-side
 
