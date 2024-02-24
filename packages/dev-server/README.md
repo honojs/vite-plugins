@@ -124,7 +124,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
   ],
-  ignoreWatching: [/\/\.wrangler/],
+  ignoreWatching: [/\.wrangler/],
 }
 ```
 
