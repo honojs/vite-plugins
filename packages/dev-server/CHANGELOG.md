@@ -1,5 +1,17 @@
 # @hono/vite-dev-server
 
+## 0.8.0
+
+### Minor Changes
+
+- [#96](https://github.com/honojs/vite-plugins/pull/96) [`88fe05f7a2e56f87e3ff12066104dcaee32372c5`](https://github.com/honojs/vite-plugins/commit/88fe05f7a2e56f87e3ff12066104dcaee32372c5) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: add `ignoreWatching` option
+
+- [`6897fd999340a462935213a14f886566e264ec18`](https://github.com/honojs/vite-plugins/commit/6897fd999340a462935213a14f886566e264ec18) Thanks [@KaiSpencer](https://github.com/KaiSpencer)! - feat: add `adapter` and merge `env`
+
+### Patch Changes
+
+- [#98](https://github.com/honojs/vite-plugins/pull/98) [`ff1f0b65c47db8b7776dcee693f95f19060560c9`](https://github.com/honojs/vite-plugins/commit/ff1f0b65c47db8b7776dcee693f95f19060560c9) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: fixed `.wrangler` path
+
 ## 0.7.1
 
 ### Patch Changes
