@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
+import { getPlatformProxy } from 'wrangler'
 import devServer, { defaultOptions } from '../src'
 import pages from '../src/cloudflare-pages'
-import { getPlatformProxy } from 'wrangler'
 
 export default defineConfig(async () => {
   const { env, dispose } = await getPlatformProxy()
