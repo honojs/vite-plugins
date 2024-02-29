@@ -68,6 +68,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'ada
     /.*\.ts$/,
     /.*\.tsx$/,
     /^\/@.+$/,
+    /\?t\=\d+$/,
     /^\/favicon\.ico$/,
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
