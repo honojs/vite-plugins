@@ -120,6 +120,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
     /.*\.ts$/,
     /.*\.tsx$/,
     /^\/@.+$/,
+    /\?t\=\d+$/,
     /^\/favicon\.ico$/,
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
