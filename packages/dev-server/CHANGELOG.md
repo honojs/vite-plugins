@@ -1,5 +1,13 @@
 # @hono/vite-dev-server
 
+## 0.8.1
+
+### Patch Changes
+
+- [#102](https://github.com/honojs/vite-plugins/pull/102) [`95564fe656d7e6ce590e7f9adf585837c0fe3736`](https://github.com/honojs/vite-plugins/commit/95564fe656d7e6ce590e7f9adf585837c0fe3736) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: add `/\?t\=\d+$/` to `exclude`
+
+- [#100](https://github.com/honojs/vite-plugins/pull/100) [`10b50e61a5d5586173705fb5f3fb37480b23e0d5`](https://github.com/honojs/vite-plugins/commit/10b50e61a5d5586173705fb5f3fb37480b23e0d5) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: bump `@hono/node-server`
+
 ## 0.8.0
 
 ### Minor Changes
