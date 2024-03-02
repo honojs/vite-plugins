@@ -65,6 +65,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'ada
   export: 'default',
   injectClientScript: true,
   exclude: [
+    /.*\.css$/,
     /.*\.ts$/,
     /.*\.tsx$/,
     /^\/@.+$/,
