@@ -117,6 +117,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
   entry: './src/index.ts',
   injectClientScript: true,
   exclude: [
+    /.*\.css$/,
     /.*\.ts$/,
     /.*\.tsx$/,
     /^\/@.+$/,
