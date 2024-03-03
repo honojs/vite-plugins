@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.8.2
+
+### Patch Changes
+
+- [#105](https://github.com/honojs/vite-plugins/pull/105) [`0f44e181b1391754e369a8e07354213ac59ddb75`](https://github.com/honojs/vite-plugins/commit/0f44e181b1391754e369a8e07354213ac59ddb75) Thanks [@emirotin](https://github.com/emirotin)! - Add CSS to server excludes
+
 ## 0.8.1
 
 ### Patch Changes
