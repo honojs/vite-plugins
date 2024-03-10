@@ -145,3 +145,9 @@ test('Should set bindings from `plugins` in config (async)', async ({ page }) =>
   expect(json).toBeTruthy()
   expect(json.env).toHaveProperty('ENV_FROM_PLUGIN_AS_FUNC', 'ENV_FROM_PLUGIN_AS_FUNC_VALUE')
 })
+
+test('Should set `workerd` as a runtime key', async ({ page }) => {
+  const res = await page.goto('/runtime')
+  expect(res?.ok()).toBe(true)
+  expect(await res?.text()).toBe('workerd')
+})

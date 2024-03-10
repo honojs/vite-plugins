@@ -26,4 +26,11 @@ export interface Adapter {
    * Function called when the vite dev server is closed
    */
   onServerClose?: () => Promise<void>
+  /**
+   * Implementation of waitUntil and passThroughOnException
+   */
+  executionContext?: {
+    waitUntil(promise: Promise<unknown>): void
+    passThroughOnException(): void
+  }
 }

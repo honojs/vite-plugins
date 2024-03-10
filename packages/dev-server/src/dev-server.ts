@@ -135,17 +135,21 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                   }
                 }
               }
+
               const adapter = await getAdapterFromOptions(options)
+
               if (adapter?.env) {
                 env = { ...env, ...adapter.env }
               }
 
-              const response = await app.fetch(request, env, {
+              const executionContext = adapter?.executionContext ?? {
                 waitUntil: async (fn) => fn,
                 passThroughOnException: () => {
                   throw new Error('`passThroughOnException` is not supported')
                 },
-              })
+              }
+
+              const response = await app.fetch(request, env, executionContext)
 
               /**
                * If the response is not instance of `Response`, throw it so that it can be handled
