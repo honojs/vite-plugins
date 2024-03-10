@@ -16,3 +16,14 @@ export interface Plugin {
   env?: Env | EnvFunc
   onServerClose?: () => void | Promise<void>
 }
+
+export interface Adapter {
+  /**
+   * Environment variables to be injected into the worker
+   */
+  env?: Env
+  /**
+   * Function called when the vite dev server is closed
+   */
+  onServerClose?: () => Promise<void>
+}

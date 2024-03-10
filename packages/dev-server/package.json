@@ -28,6 +28,11 @@
         "default": "./dist/index.js"
       }
     },
+    "./cloudflare": {
+      "types": "./dist/adapter/cloudflare/index.d.ts",
+      "require": "./dist/adapter/cloudflare/index.cjs",
+      "import": "./dist/adapter/cloudflare/index.js"
+    },
     "./cloudflare-pages": {
       "types": "./dist/cloudflare-pages/index.d.ts",
       "require": "./dist/cloudflare-pages/index.cjs",
@@ -38,6 +43,9 @@
     "*": {
       "types": [
         "./dist/types"
+      ],
+      "cloudflare": [
+        "./dist/adapter/cloudflare/types"
       ],
       "cloudflare-pages": [
         "./dist/cloudflare-pages/index.d.ts"
