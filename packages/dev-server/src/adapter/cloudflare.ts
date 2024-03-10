@@ -1,8 +1,10 @@
 import { getPlatformProxy } from 'wrangler'
-import type { Adapter } from '../types.js'
+import type { Adapter, Env } from '../types.js'
+
+let proxy: Awaited<ReturnType<typeof getPlatformProxy<Env>>>
 
 export const cloudflareAdapter: () => Promise<Adapter> = async () => {
-  const proxy = await getPlatformProxy()
+  proxy ??= await getPlatformProxy()
   return {
     env: proxy.env,
     onServerClose: proxy.dispose,
