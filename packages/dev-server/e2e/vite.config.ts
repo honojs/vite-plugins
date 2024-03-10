@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import { getPlatformProxy } from 'wrangler'
 import devServer, { defaultOptions } from '../src'
+import cloudflareAdapter from '../src/adapter/cloudflare'
 import pages from '../src/cloudflare-pages'
 
 export default defineConfig(async () => {
@@ -29,12 +30,7 @@ export default defineConfig(async () => {
           { env: { ENV_FROM_PLUGIN: 'ENV_FROM_PLUGIN_VALUE' } },
           { env: async () => ({ ENV_FROM_PLUGIN_AS_FUNC: 'ENV_FROM_PLUGIN_AS_FUNC_VALUE' }) },
         ],
-        adapter: {
-          env: {
-            ENV_FROM_ADAPTER: 'ENV_FROM_ADAPTER_VALUE',
-          },
-          onServerClose: dispose,
-        },
+        adapter: cloudflareAdapter,
       }),
     ],
   }

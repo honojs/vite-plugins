@@ -3,7 +3,7 @@ import { getRequestListener } from '@hono/node-server'
 import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
 import { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
-import type { Env, Fetch, EnvFunc, Plugin } from './types.js'
+import type { Env, Fetch, EnvFunc, Plugin, Adapter } from './types.js'
 
 export type DevServerOptions = {
   entry?: string
@@ -41,17 +41,7 @@ export type DevServerOptions = {
    *
    *
    */
-  adapter?: {
-    /**
-     * Environment variables to be injected into the worker
-     */
-    env?: Env
-    /**
-     * Function called when the vite dev server is closed
-     */
-    onServerClose?: () => Promise<void>
-  }
-} & {
+  adapter?: Adapter | Promise<Adapter> | (() => Adapter | Promise<Adapter>)
   /**
    * @deprecated
    * The `cf` option is maintained for backward compatibility, but it will be obsolete in the future.
@@ -145,16 +135,21 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                   }
                 }
               }
-              if (options?.adapter?.env) {
-                env = { ...env, ...options.adapter.env }
+
+              const adapter = await getAdapterFromOptions(options)
+
+              if (adapter?.env) {
+                env = { ...env, ...adapter.env }
               }
 
-              const response = await app.fetch(request, env, {
+              const executionContext = adapter?.executionContext ?? {
                 waitUntil: async (fn) => fn,
                 passThroughOnException: () => {
                   throw new Error('`passThroughOnException` is not supported')
                 },
-              })
+              }
+
+              const response = await app.fetch(request, env, executionContext)
 
               /**
                * If the response is not instance of `Response`, throw it so that it can be handled
@@ -201,8 +196,9 @@ export function devServer(options?: DevServerOptions): VitePlugin {
             }
           }
         }
-        if (options?.adapter?.onServerClose) {
-          await options.adapter.onServerClose()
+        const adapter = await getAdapterFromOptions(options)
+        if (adapter?.onServerClose) {
+          await adapter.onServerClose()
         }
       })
     },
@@ -217,6 +213,19 @@ export function devServer(options?: DevServerOptions): VitePlugin {
     },
   }
   return plugin
+}
+
+const getAdapterFromOptions = async (
+  options: DevServerOptions | undefined
+): Promise<Adapter | undefined> => {
+  let adapter = options?.adapter
+  if (typeof adapter === 'function') {
+    adapter = adapter()
+  }
+  if (adapter instanceof Promise) {
+    adapter = await adapter
+  }
+  return adapter
 }
 
 function injectStringToResponse(response: Response, content: string) {

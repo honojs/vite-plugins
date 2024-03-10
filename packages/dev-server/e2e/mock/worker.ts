@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { getRuntimeKey } from 'hono/adapter'
 
 const app = new Hono<{
   Bindings: {
@@ -78,5 +79,7 @@ app.get('/invalid-error-response', (c) => {
 app.get('/env', (c) => {
   return c.json({ env: c.env })
 })
+
+app.get('/runtime', (c) => c.text(getRuntimeKey()))
 
 export default app
