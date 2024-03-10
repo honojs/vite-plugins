@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.9.0
+
+### Minor Changes
+
+- [#108](https://github.com/honojs/vite-plugins/pull/108) [`939eee515adf974f7491710f003383127e9d94a1`](https://github.com/honojs/vite-plugins/commit/939eee515adf974f7491710f003383127e9d94a1) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: introduce Cloudflare Adapter
+
 ## 0.8.2
 
 ### Patch Changes
