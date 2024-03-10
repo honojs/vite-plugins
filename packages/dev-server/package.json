@@ -29,9 +29,9 @@
       }
     },
     "./cloudflare": {
-      "types": "./dist/adapter/cloudflare/index.d.ts",
-      "require": "./dist/adapter/cloudflare/index.cjs",
-      "import": "./dist/adapter/cloudflare/index.js"
+      "types": "./dist/adapter/cloudflare.d.ts",
+      "require": "./dist/adapter/cloudflare.cjs",
+      "import": "./dist/adapter/cloudflare.js"
     },
     "./cloudflare-pages": {
       "types": "./dist/cloudflare-pages/index.d.ts",
