@@ -64,7 +64,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'ada
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
   ],
-  ignoreWatching: [/\.wrangler/],
+  ignoreWatching: [/\.wrangler/, /\.mf/],
   plugins: [],
 }
 
