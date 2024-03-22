@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.10.0
+
+### Minor Changes
+
+- [#111](https://github.com/honojs/vite-plugins/pull/111) [`fcc98f92cd45df52ce34380414072d0b10e8c701`](https://github.com/honojs/vite-plugins/commit/fcc98f92cd45df52ce34380414072d0b10e8c701) Thanks [@tseijp](https://github.com/tseijp)! - Added `.mf` to `ignoreWatching` in `vite-plugin` to fix unnecessary server reloads on file changes. This update prevents the Vite server from restarting when `.mf` files are modified, improving development experience.
+
 ## 0.9.0
 
 ### Minor Changes
