@@ -1,5 +1,5 @@
 import type http from 'http'
-import { getRequestListener } from '@hono/node-server'
+import { getRequestListener } from './listener'
 import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
 import { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
