@@ -8,7 +8,7 @@ You can develop your application with Vite. It's fast.
 - Support any `fetch`-based applications.
 - Hono applications run on.
 - Fast by Vite.
-- HMR (Only for the Client-side. [Currently, Vite doesn't support HMR for SSR](https://github.com/vitejs/vite/issues/7887)).
+- HMR (Only for the client side. [Currently, Vite doesn't support HMR for SSR](https://github.com/vitejs/vite/issues/7887)).
 - Plugins are available, e.g., Cloudflare Pages.
 - Also runs on Bun.
 
@@ -31,7 +31,7 @@ export default {
 This code can also run on Cloudflare Workers or Bun.
 And if you change the entry point, you can run on Deno, Vercel, Lagon, and other platforms.
 
-Hono is designed for `fetch`-based application like this.
+Hono is designed for `fetch`-based applications like this.
 
 ```ts
 import { Hono } from 'hono'
@@ -132,11 +132,11 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
 
 ### `injectClientScript`
 
-If it's `true` and the response content-type is "HTML", inject the script that enables Hot-reload. default is `true`.
+If it's `true` and the response content type is "HTML", inject the script that enables Hot-reload. default is `true`.
 
 ### `exclude`
 
-The paths which are not served by the dev-server.
+The paths that are not served by the dev-server.
 
 If you have static files in `public/assets/*` and want to return them, exclude `/assets/*` as follows:
 
@@ -182,9 +182,6 @@ export default defineConfig(async () => {
   }
 })
 ```
-
-> [!NOTE]
-> The `wrangler.toml` is not used in the Cloudflare Pages production environment. Please configure Bindings from the dashboard.
 
 ## Client-side
 
