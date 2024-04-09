@@ -256,6 +256,25 @@ You can run the following command to build the client script.
 vite build --mode client
 ```
 
+## Frequently Asked Questions
+
+### exports is not defined
+
+If you use a package that only supports CommonJS, you will encounter the error `exports is not defined`.
+
+![exports is not defined](https://github.com/honojs/vite-plugins/assets/10682/6b36f8c2-50a8-4672-a177-4321f325a39f)
+
+In that case, specify the target package in `ssr.external` in `vite.config.ts`:
+
+```ts
+export default defineConfig({
+  ssr: {
+    external: ['react', 'react-dom'],
+  },
+  plugins: [devServer()],
+})
+```
+
 ## Authors
 
 - Yusuke Wada <https://github.com/yusukebe>
