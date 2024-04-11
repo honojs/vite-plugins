@@ -950,10 +950,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/node-server@npm:^1.8.2":
-  version: 1.8.2
-  resolution: "@hono/node-server@npm:1.8.2"
-  checksum: dda9a37a9f73ebae64edd653d348dd63c5bd8205e368a8767c8f21bee5e0cbe555c8b279e98a4805ad27ae00517bbeae4fccf27119c6c06af8a268e126d82d0d
+"@hono/node-server@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "@hono/node-server@npm:1.10.0"
+  checksum: d6ed27c41cf3fd10873cd3c927c3459ed9d596d28e4870ad145660e6783f0de9109ec0fe97b45ba55844c6fb41acb748005cff76cdbd78a944a98179489d3cba
   languageName: node
   linkType: hard
 
@@ -977,7 +977,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hono/vite-dev-server@workspace:packages/dev-server"
   dependencies:
-    "@hono/node-server": ^1.8.2
+    "@hono/node-server": ^1.10.0
     "@playwright/test": ^1.37.1
     glob: ^10.3.10
     hono: ^4.0.1

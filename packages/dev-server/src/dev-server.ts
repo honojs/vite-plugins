@@ -169,6 +169,7 @@ export function devServer(options?: DevServerOptions): VitePlugin {
               return response
             },
             {
+              overrideGlobalObjects: false,
               errorHandler: (e) => {
                 let err: Error
                 if (e instanceof Error) {

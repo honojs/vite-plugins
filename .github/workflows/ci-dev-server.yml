@@ -24,3 +24,13 @@ jobs:
       - run: yarn build
       - run: npx playwright install --with-deps
       - run: yarn test
+  ci-bun:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: '1.0.25'
+      - run: bun install
+      - run: npx playwright install --with-deps
+      - run: bun run test:e2e:bun
