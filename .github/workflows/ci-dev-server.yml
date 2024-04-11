@@ -26,6 +26,9 @@ jobs:
       - run: yarn test
   ci-bun:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/dev-server
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
