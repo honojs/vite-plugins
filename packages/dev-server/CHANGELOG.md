@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.11.0
+
+### Minor Changes
+
+- [#119](https://github.com/honojs/vite-plugins/pull/119) [`7365dc477f57ad2103d026b0e9b9fcbae9c1966b`](https://github.com/honojs/vite-plugins/commit/7365dc477f57ad2103d026b0e9b9fcbae9c1966b) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: supports Bun
+
 ## 0.10.0
 
 ### Minor Changes
