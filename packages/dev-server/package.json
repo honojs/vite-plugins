@@ -6,8 +6,9 @@
   "module": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test:unit": "vitest --run",
+    "test:unit": "vitest --run ./src",
     "test:e2e": "playwright test -c e2e/playwright.config.ts e2e/e2e.test.ts",
+    "test:e2e:bun": "playwright test -c e2e-bun/playwright.config.ts e2e-bun/e2e.test.ts",
     "test": "yarn test:unit && yarn test:e2e",
     "build": "rimraf dist && tsup --format esm,cjs --dts && publint",
     "watch": "tsup --watch",
@@ -82,7 +83,7 @@
     "node": ">=18.14.1"
   },
   "dependencies": {
-    "@hono/node-server": "^1.8.2",
+    "@hono/node-server": "^1.10.0",
     "miniflare": "^3.20231218.2",
     "minimatch": "^9.0.3"
   }
