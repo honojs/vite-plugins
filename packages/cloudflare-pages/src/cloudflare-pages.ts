@@ -1,11 +1,13 @@
 import { builtinModules } from 'module'
-import type { Plugin, UserConfig } from 'vite'
+import { readdir, writeFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
+import type { Plugin, UserConfig, ResolvedConfig } from 'vite'
 import { getEntryContent } from './entry.js'
 
 type CloudflarePagesOptions = {
   /**
    * @default ['./src/index.tsx', './app/server.ts']
-   */ 
+   */
   entry?: string | string[]
   /**
    * @default './dist'
@@ -17,6 +19,11 @@ type CloudflarePagesOptions = {
    */
   minify?: boolean
   emptyOutDir?: boolean
+  /**
+   * @description Create `_routes.json` or not.
+   * @default true
+   */
+  routesJson?: boolean
 }
 
 export const defaultOptions: Required<CloudflarePagesOptions> = {
@@ -25,14 +32,38 @@ export const defaultOptions: Required<CloudflarePagesOptions> = {
   external: [],
   minify: true,
   emptyOutDir: false,
+  routesJson: true,
 }
+
+type StaticRoutes = { version: number; include: string[]; exclude: string[] }
 
 export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin => {
   const virtualEntryId = 'virtual:cloudflare-pages-entry-module'
   const resolvedVirtualEntryId = '\0' + virtualEntryId
+  let config: ResolvedConfig
+  let staticRoutes: StaticRoutes
+  const staticPaths: string[] = []
 
   return {
     name: '@hono/vite-cloudflare-pages',
+    configResolved: async (resolvedConfig) => {
+      config = resolvedConfig
+      const paths = await readdir(config.publicDir, {
+        withFileTypes: true,
+      })
+      paths.forEach((p) => {
+        if (p.isDirectory()) {
+          staticPaths.push(`/${p.name}/*`)
+        } else {
+          staticPaths.push(`/${p.name}`)
+        }
+      })
+      staticRoutes = {
+        version: 1,
+        include: ['/*'],
+        exclude: staticPaths,
+      }
+    },
     resolveId(id) {
       if (id === virtualEntryId) {
         return resolvedVirtualEntryId
@@ -46,8 +77,20 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
               ? options.entry
               : [options.entry]
             : [...defaultOptions.entry],
+          staticPaths,
         })
       }
+    },
+    writeBundle: async () => {
+      if (!options?.routesJson === false) {
+        return
+      }
+      const path = resolve(
+        config.root,
+        options?.outputDir ?? defaultOptions.outputDir,
+        '_routes.json'
+      )
+      await writeFile(path, JSON.stringify(staticRoutes))
     },
     config: async (): Promise<UserConfig> => {
       return {
