@@ -2,6 +2,8 @@ import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
 import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
+import { createViteRuntime } from 'vite'
+import type { ViteRuntime } from 'vite/runtime'
 import { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
 import type { Env, Fetch, EnvFunc, Plugin, Adapter } from './types.js'
 
@@ -70,6 +72,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'ada
 
 export function devServer(options?: DevServerOptions): VitePlugin {
   const entry = options?.entry ?? defaultOptions.entry
+  let runtime: ViteRuntime
   const plugin: VitePlugin = {
     name: '@hono/vite-dev-server',
     configureServer: async (server) => {
@@ -92,11 +95,11 @@ export function devServer(options?: DevServerOptions): VitePlugin {
               }
             }
           }
-
+          runtime ??= await createViteRuntime(server)
           let appModule
 
           try {
-            appModule = await server.ssrLoadModule(entry)
+            appModule = await runtime.executeEntrypoint(entry)
           } catch (e) {
             return next(e)
           }
