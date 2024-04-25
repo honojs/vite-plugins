@@ -46,7 +46,7 @@
         "./dist/types"
       ],
       "cloudflare": [
-        "./dist/adapter/cloudflare/types"
+        "./dist/adapter/cloudflare.d.ts"
       ],
       "cloudflare-pages": [
         "./dist/cloudflare-pages/index.d.ts"
