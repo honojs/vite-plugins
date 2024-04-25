@@ -82,4 +82,21 @@ app.get('/env', (c) => {
 
 app.get('/runtime', (c) => c.text(getRuntimeKey()))
 
+app.get('/cache', async (c) => {
+  const myCache = await caches.open('myCache')
+  const res = await myCache.match(c.req.url)
+  if (res) {
+    return res
+  }
+  await myCache.put(
+    c.req.url,
+    new Response('cached', {
+      headers: {
+        'Cache-Control': 's-maxage=10',
+      },
+    })
+  )
+  return c.text('first')
+})
+
 export default app

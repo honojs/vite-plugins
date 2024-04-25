@@ -151,3 +151,14 @@ test('Should set `workerd` as a runtime key', async ({ page }) => {
   expect(res?.ok()).toBe(true)
   expect(await res?.text()).toBe('workerd')
 })
+
+test('Should not throw an error if accessing the `caches`', async ({ page }) => {
+  const res = await page.goto('/cache')
+  expect(res?.ok()).toBe(true)
+  expect(await res?.text()).toBe('first')
+  const resCached = await page.goto('/cache')
+  expect(resCached?.ok()).toBe(true)
+  // Cache API provided by `getPlatformProxy` currently do nothing.
+  // It does **not** return cached content.
+  expect(await resCached?.text()).not.toBe('cached')
+})
