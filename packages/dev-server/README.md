@@ -8,7 +8,7 @@ You can develop your application with Vite. It's fast.
 - Support any `fetch`-based applications.
 - Hono applications run on.
 - Fast by Vite.
-- HMR (Only for the client side. [Currently, Vite doesn't support HMR for SSR](https://github.com/vitejs/vite/issues/7887)).
+- HMR
 - Plugins are available, e.g., Cloudflare Pages.
 - Also runs on Bun.
 
