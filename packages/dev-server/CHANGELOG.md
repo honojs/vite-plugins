@@ -1,5 +1,17 @@
 # @hono/vite-dev-server
 
+## 0.12.0
+
+### Minor Changes
+
+- [#129](https://github.com/honojs/vite-plugins/pull/129) [`b4019f0f194d95a3e3d2a56aba649614b06a0135`](https://github.com/honojs/vite-plugins/commit/b4019f0f194d95a3e3d2a56aba649614b06a0135) Thanks [@alessandrojcm](https://github.com/alessandrojcm)! - Switched to executeEntrypoint instead of ssrLoadModule
+
+### Patch Changes
+
+- [#130](https://github.com/honojs/vite-plugins/pull/130) [`5b728da65de4b5588de07fd3d3656cbc09bf62df`](https://github.com/honojs/vite-plugins/commit/5b728da65de4b5588de07fd3d3656cbc09bf62df) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: add caches which to do nothing to cloudflare adapter
+
+- [#127](https://github.com/honojs/vite-plugins/pull/127) [`ac6d6c4cc4089c5555ae539c7c5467779d15808a`](https://github.com/honojs/vite-plugins/commit/ac6d6c4cc4089c5555ae539c7c5467779d15808a) Thanks [@naporin0624](https://github.com/naporin0624)! - fixed typesVersions in `@hono/vite-dev-server/cloudflare`
+
 ## 0.11.1
 
 ### Patch Changes
