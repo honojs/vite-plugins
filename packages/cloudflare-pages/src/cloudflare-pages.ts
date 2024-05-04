@@ -48,21 +48,6 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
     name: '@hono/vite-cloudflare-pages',
     configResolved: async (resolvedConfig) => {
       config = resolvedConfig
-      const paths = await readdir(config.build.outDir, {
-        withFileTypes: true,
-      })
-      paths.forEach((p) => {
-        if (p.isDirectory()) {
-          staticPaths.push(`/${p.name}/*`)
-        } else {
-          staticPaths.push(`/${p.name}`)
-        }
-      })
-      staticRoutes = {
-        version: 1,
-        include: ['/*'],
-        exclude: staticPaths,
-      }
     },
     resolveId(id) {
       if (id === virtualEntryId) {
@@ -82,6 +67,21 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
       }
     },
     writeBundle: async () => {
+      const paths = await readdir(config.build.outDir, {
+        withFileTypes: true,
+      })
+      paths.forEach((p) => {
+        if (p.isDirectory()) {
+          staticPaths.push(`/${p.name}/*`)
+        } else {
+          staticPaths.push(`/${p.name}`)
+        }
+      })
+      staticRoutes = {
+        version: 1,
+        include: ['/*'],
+        exclude: staticPaths,
+      }
       if (!options?.routesJson === false) {
         return
       }
