@@ -48,7 +48,7 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
     name: '@hono/vite-cloudflare-pages',
     configResolved: async (resolvedConfig) => {
       config = resolvedConfig
-      const paths = await readdir(config.publicDir, {
+      const paths = await readdir(config.build.outDir, {
         withFileTypes: true,
       })
       paths.forEach((p) => {
