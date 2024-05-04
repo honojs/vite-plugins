@@ -1,7 +1,6 @@
 import * as fs from 'node:fs'
-import path from 'path'
 import { build } from 'vite'
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, afterAll } from 'vitest'
 import cloudflarePagesPlugin from '../src/index'
 
 describe('cloudflarePagesPlugin', () => {
@@ -23,6 +22,7 @@ describe('cloudflarePagesPlugin', () => {
       plugins: [
         cloudflarePagesPlugin({
           minify: false,
+          serveStaticDir: './public',
         }),
       ],
     })
@@ -55,6 +55,7 @@ worker.get("/static/*", serveStatic());`)
       root: testDir,
       plugins: [
         cloudflarePagesPlugin({
+          serveStaticDir: './public',
           outputDir: 'customDir',
           minify: false,
         }),
