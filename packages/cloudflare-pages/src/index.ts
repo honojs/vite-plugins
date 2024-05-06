@@ -1,2 +1,3 @@
-import { cloudflarePagesPlugin } from './cloudflare-pages.js'
+import { cloudflarePagesPlugin, defaultOptions } from './cloudflare-pages.js'
+export { defaultOptions }
 export default cloudflarePagesPlugin
