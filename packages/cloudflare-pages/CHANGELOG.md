@@ -1,5 +1,11 @@
 # @hono/vite-cloudflare-pages
 
+## 0.3.0
+
+### Minor Changes
+
+- [#121](https://github.com/honojs/vite-plugins/pull/121) [`cf3afbf4548008e6b2f6bcb97c4222d02c2713d5`](https://github.com/honojs/vite-plugins/commit/cf3afbf4548008e6b2f6bcb97c4222d02c2713d5) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: detect static files automatically
+
 ## 0.2.5
 
 ### Patch Changes
