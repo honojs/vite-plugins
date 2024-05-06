@@ -19,12 +19,7 @@ describe('cloudflarePagesPlugin', () => {
 
     await build({
       root: testDir,
-      plugins: [
-        cloudflarePagesPlugin({
-          minify: false,
-          serveStaticDir: './public',
-        }),
-      ],
+      plugins: [cloudflarePagesPlugin()],
     })
 
     expect(fs.existsSync(outputFile)).toBe(true)
@@ -32,8 +27,6 @@ describe('cloudflarePagesPlugin', () => {
 
     const output = fs.readFileSync(outputFile, 'utf-8')
     expect(output).toContain('Hello World')
-    expect(output).toContain(`worker.get("/favicon.ico", serveStatic());
-worker.get("/static/*", serveStatic());`)
 
     const routes = fs.readFileSync(routesFile, 'utf-8')
     expect(routes).toContain(
@@ -55,9 +48,7 @@ worker.get("/static/*", serveStatic());`)
       root: testDir,
       plugins: [
         cloudflarePagesPlugin({
-          serveStaticDir: './public',
           outputDir: 'customDir',
-          minify: false,
         }),
       ],
       build: {
@@ -70,8 +61,6 @@ worker.get("/static/*", serveStatic());`)
 
     const output = fs.readFileSync(outputFile, 'utf-8')
     expect(output).toContain('Hello World')
-    expect(output).toContain(`worker.get("/favicon.ico", serveStatic());
-worker.get("/static/*", serveStatic());`)
 
     const routes = fs.readFileSync(routesFile, 'utf-8')
     expect(routes).toContain(

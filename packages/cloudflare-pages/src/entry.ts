@@ -2,7 +2,6 @@ import { normalize } from 'node:path'
 
 export type Options = {
   entry: string[]
-  staticPaths: string[]
 }
 
 const normalizePaths = (paths: string[]) => {
@@ -16,9 +15,6 @@ const normalizePaths = (paths: string[]) => {
 }
 
 export const getEntryContent = async (options: Options) => {
-  const staticStr = options.staticPaths
-    .map((path) => `worker.get('${path}', serveStatic())`)
-    .join(';')
   const globStr = normalizePaths(options.entry)
     .map((e) => `'${e}'`)
     .join(',')
@@ -37,10 +33,8 @@ export const getEntryContent = async (options: Options) => {
       `
 
   return `import { Hono } from 'hono'
-import { serveStatic } from 'hono/cloudflare-pages'
 
 const worker = new Hono()
-${staticStr}
 
 ${appStr}
 

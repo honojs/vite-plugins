@@ -13,23 +13,12 @@ type CloudflarePagesOptions = {
    * @default './dist'
    */
   outputDir?: string
-  /**
-   * @description The directory includes static files.
-   * The default is `config.build.outDir`, but if you don't include built files, you can specify a different directory, e.g., `public` or set `undefined` to disable it.
-   * @default config.build.outDir
-   */
-  serveStaticDir?: string | undefined
   external?: string[]
   /**
    * @default true
    */
   minify?: boolean
   emptyOutDir?: boolean
-  /**
-   * @description Create `_routes.json` or not.
-   * @default true
-   */
-  routesJson?: boolean
 }
 
 export const defaultOptions: Required<Omit<CloudflarePagesOptions, 'serveStaticDir'>> = {
@@ -38,8 +27,9 @@ export const defaultOptions: Required<Omit<CloudflarePagesOptions, 'serveStaticD
   external: [],
   minify: true,
   emptyOutDir: false,
-  routesJson: true,
 }
+
+const WORKER_JS_NAME = '_worker.js'
 
 type StaticRoutes = { version: number; include: string[]; exclude: string[] }
 
@@ -47,15 +37,12 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
   const virtualEntryId = 'virtual:cloudflare-pages-entry-module'
   const resolvedVirtualEntryId = '\0' + virtualEntryId
   let config: ResolvedConfig
-  let staticRoutes: StaticRoutes
-  let serveStaticDir = options?.serveStaticDir
   const staticPaths: string[] = []
 
   return {
     name: '@hono/vite-cloudflare-pages',
     configResolved: async (resolvedConfig) => {
       config = resolvedConfig
-      serveStaticDir ??= config.build.outDir
     },
     resolveId(id) {
       if (id === virtualEntryId) {
@@ -64,33 +51,30 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
     },
     async load(id) {
       if (id === resolvedVirtualEntryId) {
-        if (typeof serveStaticDir === 'string') {
-          const paths = await readdir(resolve(config.root, serveStaticDir!), {
-            withFileTypes: true,
-          })
-          paths.forEach((p) => {
-            if (p.isDirectory()) {
-              staticPaths.push(`/${p.name}/*`)
-            } else {
-              staticPaths.push(`/${p.name}`)
-            }
-          })
-        }
         return await getEntryContent({
           entry: options?.entry
             ? Array.isArray(options.entry)
               ? options.entry
               : [options.entry]
             : [...defaultOptions.entry],
-          staticPaths,
         })
       }
     },
     writeBundle: async () => {
-      if (!options?.routesJson === false) {
-        return
-      }
-      staticRoutes = {
+      const paths = await readdir(resolve(config.root, config.build.outDir), {
+        withFileTypes: true,
+      })
+      paths.forEach((p) => {
+        if (p.isDirectory()) {
+          staticPaths.push(`/${p.name}/*`)
+        } else {
+          if (p.name === WORKER_JS_NAME) {
+            return
+          }
+          staticPaths.push(`/${p.name}`)
+        }
+      })
+      const staticRoutes: StaticRoutes = {
         version: 1,
         include: ['/*'],
         exclude: staticPaths,
@@ -117,7 +101,7 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
             external: [...builtinModules, /^node:/],
             input: virtualEntryId,
             output: {
-              entryFileNames: '_worker.js',
+              entryFileNames: WORKER_JS_NAME,
             },
           },
         },
