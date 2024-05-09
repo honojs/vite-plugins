@@ -1,5 +1,11 @@
 # @hono/vite-cloudflare-pages
 
+## 0.4.0
+
+### Minor Changes
+
+- [#135](https://github.com/honojs/vite-plugins/pull/135) [`25bfb6170ecb7b9aec827a2b0e4838c8e6e7a78d`](https://github.com/honojs/vite-plugins/commit/25bfb6170ecb7b9aec827a2b0e4838c8e6e7a78d) Thanks [@ryuapp](https://github.com/ryuapp)! - feat: creating a `public/_routes.json` will override the automatic generation
+
 ## 0.3.0
 
 ### Minor Changes
