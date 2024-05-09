@@ -87,6 +87,6 @@ describe('cloudflarePagesPlugin', () => {
     expect(output).toContain('Hello World')
 
     const routes = fs.readFileSync(routesFile, 'utf-8')
-    expect(routes).toContain('{"version":1,"include":["/"],"exclude":["Custom Routes"]}')
+    expect(routes).toContain('{"version":1,"include":["/"],"exclude":["/customRoute"]}')
   })
 })
