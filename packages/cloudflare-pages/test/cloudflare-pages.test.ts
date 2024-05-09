@@ -67,4 +67,26 @@ describe('cloudflarePagesPlugin', () => {
       '{"version":1,"include":["/*"],"exclude":["/favicon.ico","/static/*"]}'
     )
   })
+
+  it('Should not create a new _routes.json when _routes.json on output directory.', async () => {
+    const outputFile = `${testDir}/dist/_worker.js`
+    const routesFile = `${testDir}/dist/_routes.json`
+
+    expect(fs.existsSync(entryFile)).toBe(true)
+
+    await build({
+      publicDir: 'public-routes-json',
+      root: testDir,
+      plugins: [cloudflarePagesPlugin()],
+    })
+
+    expect(fs.existsSync(outputFile)).toBe(true)
+    expect(fs.existsSync(routesFile)).toBe(true)
+
+    const output = fs.readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('Hello World')
+
+    const routes = fs.readFileSync(routesFile, 'utf-8')
+    expect(routes).toContain('{"version":1,"include":["/"],"exclude":["/customRoute"]}')
+  })
 })

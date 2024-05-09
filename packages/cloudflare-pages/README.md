@@ -79,6 +79,8 @@ export const defaultOptions = {
 }
 ```
 
+This plugin generates `_routes.json` automatically. The automatic generation can be overridden by creating a `public/_routes.json`. See [Create a `_routes.json` file](https://developers.cloudflare.com/pages/functions/routing/#create-a-_routesjson-file) on Cloudflare Docs for more details.
+
 ## Build a client
 
 If you also want to build a client-side script, you can configure it as follows.

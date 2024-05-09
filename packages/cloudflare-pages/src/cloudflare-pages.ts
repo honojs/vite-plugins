@@ -30,6 +30,7 @@ export const defaultOptions: Required<Omit<CloudflarePagesOptions, 'serveStaticD
 }
 
 const WORKER_JS_NAME = '_worker.js'
+const ROUTES_JSON_NAME = '_routes.json'
 
 type StaticRoutes = { version: number; include: string[]; exclude: string[] }
 
@@ -64,27 +65,32 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
       const paths = await readdir(resolve(config.root, config.build.outDir), {
         withFileTypes: true,
       })
-      paths.forEach((p) => {
-        if (p.isDirectory()) {
-          staticPaths.push(`/${p.name}/*`)
-        } else {
-          if (p.name === WORKER_JS_NAME) {
-            return
+      // If _routes.json already exists, don't create it
+      if (paths.some((p) => p.name === ROUTES_JSON_NAME)) {
+        return
+      } else {
+        paths.forEach((p) => {
+          if (p.isDirectory()) {
+            staticPaths.push(`/${p.name}/*`)
+          } else {
+            if (p.name === WORKER_JS_NAME) {
+              return
+            }
+            staticPaths.push(`/${p.name}`)
           }
-          staticPaths.push(`/${p.name}`)
+        })
+        const staticRoutes: StaticRoutes = {
+          version: 1,
+          include: ['/*'],
+          exclude: staticPaths,
         }
-      })
-      const staticRoutes: StaticRoutes = {
-        version: 1,
-        include: ['/*'],
-        exclude: staticPaths,
+        const path = resolve(
+          config.root,
+          options?.outputDir ?? defaultOptions.outputDir,
+          '_routes.json'
+        )
+        await writeFile(path, JSON.stringify(staticRoutes))
       }
-      const path = resolve(
-        config.root,
-        options?.outputDir ?? defaultOptions.outputDir,
-        '_routes.json'
-      )
-      await writeFile(path, JSON.stringify(staticRoutes))
     },
     config: async (): Promise<UserConfig> => {
       return {
