@@ -275,6 +275,45 @@ export default defineConfig({
 })
 ```
 
+### Importing Asset as URL is not working
+
+If you want to [import assets as URL](https://vitejs.dev/guide/assets) with the following code, the `logo` image may not be found.
+
+```tsx
+import { Hono } from 'hono'
+
+import logo from './logo.png'
+
+const app = new Hono()
+
+app.get('/', async (c) => {
+  return c.html(
+    <html>
+      <body>
+        <img src={logo} />
+      </body>
+    </html>
+  )
+})
+
+export default app
+```
+
+This is because `logo.png` is served from this dev-server, even though it is expected to be served from Vite itself. So to fix it, you can add `*.png` to the `exclude` option:
+
+```ts
+import devServer, { defaultOptions } from '@hono/vite-dev-server'
+
+export default defineConfig({
+  plugins: [
+    devServer({
+      entry: 'src/index.tsx',
+      exclude: [/.*\.png$/, ...defaultOptions.exclude],
+    }),
+  ],
+})
+```
+
 ## Authors
 
 - Yusuke Wada <https://github.com/yusukebe>
