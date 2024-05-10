@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.12.1
+
+### Patch Changes
+
+- [#138](https://github.com/honojs/vite-plugins/pull/138) [`6dd041a94b955331e1bff049c8b9572d7b554d06`](https://github.com/honojs/vite-plugins/commit/6dd041a94b955331e1bff049c8b9572d7b554d06) Thanks [@yusukebe](https://github.com/yusukebe)! - use `ssrLoadModule` instead of Runtime API
+
 ## 0.12.0
 
 ### Minor Changes
