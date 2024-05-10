@@ -72,7 +72,6 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'ada
 
 export function devServer(options?: DevServerOptions): VitePlugin {
   const entry = options?.entry ?? defaultOptions.entry
-  let runtime: ViteRuntime
   const plugin: VitePlugin = {
     name: '@hono/vite-dev-server',
     configureServer: async (server) => {
@@ -95,11 +94,10 @@ export function devServer(options?: DevServerOptions): VitePlugin {
               }
             }
           }
-          runtime ??= await createViteRuntime(server)
           let appModule
 
           try {
-            appModule = await runtime.executeEntrypoint(entry)
+            appModule = await server.ssrLoadModule(entry)
           } catch (e) {
             return next(e)
           }
