@@ -165,7 +165,7 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                 response.headers.get('content-type')?.match(/^text\/html/)
               ) {
                 const script = '<script>import("/@vite/client")</script>'
-                return injectStringToResponse(response, script)
+                return transformHTML(injectStringToResponse(response, script), server, req.url)
               }
               return response
             },
@@ -276,4 +276,11 @@ function injectStringToResponse(response: Response, content: string) {
     headers,
     status: response.status,
   })
+}
+
+async function transformHTML (response: Response | null, viteServer: ViteDevServer, url: string)  {
+  if(!response) return null
+  const html = await response.text()
+  const htmlTransformed = await viteServer.transformIndexHtml(url, html)
+  return new Response(htmlTransformed, {headers: response.headers, status: response.status})
 }
