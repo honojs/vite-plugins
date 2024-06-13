@@ -1,1 +1,1 @@
-# @hono/netlify
+# @hono/vite-netlify

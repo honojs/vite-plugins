@@ -34,7 +34,7 @@ export const netlifyPlugin = (options?: NetlifyOptions): Plugin => {
   const resolvedVirtualEntryId = '\0' + virtualEntryId
 
   return {
-    name: '@hono/netlify',
+    name: '@hono/vite-netlify',
     resolveId(id) {
       if (id === virtualEntryId) {
         return resolvedVirtualEntryId

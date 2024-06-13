@@ -34,7 +34,7 @@ export const bunPlugin = (options?: BunOptions): Plugin => {
   const resolvedVirtualEntryId = '\0' + virtualEntryId
 
   return {
-    name: '@hono/bun',
+    name: '@hono/vite-bun',
     resolveId(id) {
       if (id === virtualEntryId) {
         return resolvedVirtualEntryId

@@ -1,1 +1,1 @@
-# @hono/bun
+# @hono/vite-bun

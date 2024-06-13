@@ -1,21 +1,21 @@
-# @hono/netlify
+# @hono/vite-netlify
 
-`@hono/netlify` is a Vite plugin to build your Hono application for Bun.
+`@hono/vite-netlify` is a Vite plugin to build your Hono application for Bun.
 
 ## Usage
 
 ### Installation
 
-You can install `vite` and `@hono/netlify` via npm.
+You can install `vite` and `@hono/vite-netlify` via npm.
 
 ```plain
-npm i -D vite @hono/netlify
+npm i -D vite @hono/vite-netlify
 ```
 
 Or you can install them with Bun.
 
 ```plain
-bun add vite @hono/netlify
+bun add vite @hono/vite-netlify
 ```
 
 ### Settings
@@ -24,7 +24,7 @@ Add `"type": "module"` to your `package.json`. Then, create `vite.config.ts` and
 
 ```ts
 import { defineConfig } from 'vite'
-import pages from '@hono/netlify'
+import pages from '@hono/vite-netlify'
 
 export default defineConfig({
   plugins: [pages()],

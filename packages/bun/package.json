@@ -1,5 +1,5 @@
 {
-  "name": "@hono/bun",
+  "name": "@hono/vite-bun",
   "description": "Vite plugin to build your Hono app for Bun",
   "version": "0.4.0",
   "types": "dist/index.d.ts",

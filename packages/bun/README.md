@@ -1,21 +1,21 @@
-# @hono/bun
+# @hono/vite-bun
 
-`@hono/bun` is a Vite plugin to build your Hono application for Bun.
+`@hono/vite-bun` is a Vite plugin to build your Hono application for Bun.
 
 ## Usage
 
 ### Installation
 
-You can install `vite` and `@hono/bun` via npm.
+You can install `vite` and `@hono/vite-bun` via npm.
 
 ```plain
-npm i -D vite @hono/bun
+npm i -D vite @hono/vite-bun
 ```
 
 Or you can install them with Bun.
 
 ```plain
-bun add vite @hono/bun
+bun add vite @hono/vite-bun
 ```
 
 ### Settings
@@ -24,7 +24,7 @@ Add `"type": "module"` to your `package.json`. Then, create `vite.config.ts` and
 
 ```ts
 import { defineConfig } from 'vite'
-import pages from '@hono/bun'
+import pages from '@hono/vite-bun'
 
 export default defineConfig({
   plugins: [pages()],

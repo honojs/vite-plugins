@@ -1,5 +1,5 @@
 {
-  "name": "@hono/netlify",
+  "name": "@hono/vite-netlify",
   "description": "Vite plugin to build your Hono app for Netlify",
   "version": "0.4.0",
   "types": "dist/index.d.ts",
