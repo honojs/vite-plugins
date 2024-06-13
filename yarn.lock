@@ -1093,6 +1093,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hono/bun@workspace:packages/bun":
+  version: 0.0.0-use.local
+  resolution: "@hono/bun@workspace:packages/bun"
+  dependencies:
+    glob: ^10.3.10
+    hono: ^4.2.7
+    publint: ^0.1.12
+    rimraf: ^5.0.1
+    tsup: ^7.2.0
+    vite: ^5.2.10
+    vitest: ^1.2.1
+  peerDependencies:
+    hono: "*"
+  languageName: unknown
+  linkType: soft
+
 "@hono/eslint-config@npm:^0.0.4":
   version: 0.0.4
   resolution: "@hono/eslint-config@npm:0.0.4"
@@ -1110,6 +1126,22 @@ __metadata:
   checksum: a8aba05f75623973522a00dc25260510cc008a574f70b91d681b8c478e1dc145b5584068be31169dbf8b0a8a58a5b367041f520ae45a9ad249c1690b30537ba7
   languageName: node
   linkType: hard
+
+"@hono/netlify@workspace:packages/netlify":
+  version: 0.0.0-use.local
+  resolution: "@hono/netlify@workspace:packages/netlify"
+  dependencies:
+    glob: ^10.3.10
+    hono: ^4.2.7
+    publint: ^0.1.12
+    rimraf: ^5.0.1
+    tsup: ^7.2.0
+    vite: ^5.2.10
+    vitest: ^1.2.1
+  peerDependencies:
+    hono: "*"
+  languageName: unknown
+  linkType: soft
 
 "@hono/node-server@npm:^1.11.0":
   version: 1.11.0
