@@ -1,6 +1,6 @@
 # @hono/netlify
 
-`@hono/netlify` is a Vite plugin to build your Hono application for Cloudflare Pages.
+`@hono/netlify` is a Vite plugin to build your Hono application for Bun.
 
 ## Usage
 

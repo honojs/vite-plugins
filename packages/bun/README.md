@@ -1,6 +1,6 @@
 # @hono/bun
 
-`@hono/bun` is a Vite plugin to build your Hono application for Cloudflare Pages.
+`@hono/bun` is a Vite plugin to build your Hono application for Bun.
 
 ## Usage
 
@@ -43,6 +43,12 @@ Or
 
 ```text
 bunx --bun vite build
+```
+
+### Run with bun
+
+```text
+cd dist && bun server.js
 ```
 
 ## Options
