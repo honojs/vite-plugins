@@ -45,14 +45,6 @@ Or
 bunx --bun vite build
 ```
 
-### Deploy to Bun
-
-Run the `bun` command.
-
-```text
-bun deploy --prod
-```
-
 ## Options
 
 The options are below.
