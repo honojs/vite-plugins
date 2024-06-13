@@ -45,6 +45,12 @@ Or
 bunx --bun vite build
 ```
 
+### Run with bun
+
+```text
+cd dist && bun server.js
+```
+
 ## Options
 
 The options are below.
