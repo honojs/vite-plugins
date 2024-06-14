@@ -62,6 +62,7 @@ export const netlifyPlugin = (options?: NetlifyOptions): Plugin => {
           emptyOutDir: options?.emptyOutDir ?? defaultOptions.emptyOutDir,
           minify: options?.minify ?? defaultOptions.minify,
           ssr: true,
+          copyPublicDir: false,
           rollupOptions: {
             external: [...builtinModules, /^node:/],
             input: virtualEntryId,
