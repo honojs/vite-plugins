@@ -14,11 +14,11 @@ const normalizePaths = (paths: string[]) => {
   })
 }
 
-export const getEntryContent = async (options: Options) => {
+export const getAppEntryContent = (options: Options) => {
   const globStr = normalizePaths(options.entry)
     .map((e) => `'${e}'`)
     .join(',')
-  const appStr = `const modules = import.meta.glob([${globStr}], { import: 'default', eager: true })
+  return `const modules = import.meta.glob([${globStr}], { import: 'default', eager: true })
       let added = false
       for (const [, app] of Object.entries(modules)) {
         if (app) {
@@ -31,14 +31,4 @@ export const getEntryContent = async (options: Options) => {
         throw new Error("Can't import modules from [${globStr}]")
       }
       `
-
-  return `import { Hono } from 'hono'
-import { handle } from 'hono/netlify'
-
-const worker = new Hono()
-
-${appStr}
-
-export default handle(worker)
-export const config = { path: "/*", preferStatic: true }`
 }

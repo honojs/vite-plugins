@@ -2,8 +2,6 @@
   "name": "@hono/vite-netlify",
   "description": "Vite plugin to build your Hono app for Netlify",
   "version": "0.1.0",
-  "types": "dist/index.d.ts",
-  "module": "dist/index.js",
   "type": "module",
   "scripts": {
     "test": "vitest --run",
@@ -16,15 +14,22 @@
     "dist"
   ],
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+    "./functions": {
+      "types": "./dist/functions/index.d.ts",
+      "import": "./dist/functions/index.js"
+    },
+    "./edge-functions": {
+      "types": "./dist/edge-functions/index.d.ts",
+      "import": "./dist/edge-functions/index.js"
     }
   },
   "typesVersions": {
     "*": {
-      "types": [
-        "./dist/types"
+      "functions": [
+        "./dist/functions/index.d.ts"
+      ],
+      "edge-functions": [
+        "./dist/edge-functions/index.d.ts"
       ]
     }
   },

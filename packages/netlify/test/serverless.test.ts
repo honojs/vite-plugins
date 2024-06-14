@@ -1,7 +1,7 @@
 import * as fs from 'node:fs'
 import { build } from 'vite'
 import { describe, it, expect, afterAll } from 'vitest'
-import netlifyPlugin from '../src/index'
+import netlifyPlugin from '../src/functions/index'
 
 describe('cloudflarePagesPlugin', () => {
   const testDir = './test/project'
@@ -12,7 +12,7 @@ describe('cloudflarePagesPlugin', () => {
   })
 
   it('Should build the project correctly with the plugin', async () => {
-    const outputFile = `${testDir}/netlify/edge-functions/index.js`
+    const outputFile = `${testDir}/netlify/functions/index.js`
 
     expect(fs.existsSync(entryFile)).toBe(true)
 
@@ -28,7 +28,7 @@ describe('cloudflarePagesPlugin', () => {
   })
 
   it('Should build the project correctly with custom output directory', async () => {
-    const outputFile = `${testDir}/netlify/edge-functions/index.js`
+    const outputFile = `${testDir}/netlify/functions/index.js`
 
     afterAll(() => {
       fs.rmSync(`${testDir}/customDir/`, { recursive: true, force: true })

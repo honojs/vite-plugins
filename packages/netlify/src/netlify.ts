@@ -1,8 +1,8 @@
 import { builtinModules } from 'module'
-import type { Plugin, UserConfig, ResolvedConfig } from 'vite'
-import { getEntryContent } from './entry.js'
+import type { Plugin, UserConfig } from 'vite'
+import { Options } from './entry.js'
 
-type NetlifyOptions = {
+export type NetlifyOptions = {
   /**
    * @default ['./src/index.tsx', './app/server.ts']
    */
@@ -19,9 +19,8 @@ type NetlifyOptions = {
   emptyOutDir?: boolean
 }
 
-export const defaultOptions: Required<Omit<NetlifyOptions, 'serveStaticDir'>> = {
+export const baseDefaultOptions: Required<Omit<NetlifyOptions, 'outputDir'>> = {
   entry: ['./src/index.tsx', './app/server.ts'],
-  outputDir: './netlify/edge-functions',
   external: [],
   minify: true,
   emptyOutDir: false,
@@ -29,38 +28,43 @@ export const defaultOptions: Required<Omit<NetlifyOptions, 'serveStaticDir'>> = 
 
 const FUNCTION_JS_NAME = 'index.js'
 
-export const netlifyPlugin = (options?: NetlifyOptions): Plugin => {
-  const virtualEntryId = 'virtual:netlify-entry-module'
+export const netlifyPlugin = (
+  name: string,
+  virtualEntryId: string,
+  getEntryContent: (options: Options) => string,
+  defaultOutputDir: string,
+  options?: NetlifyOptions
+): Plugin => {
   const resolvedVirtualEntryId = '\0' + virtualEntryId
 
   return {
-    name: '@hono/vite-netlify',
+    name,
     resolveId(id) {
       if (id === virtualEntryId) {
         return resolvedVirtualEntryId
       }
     },
-    async load(id) {
+    load(id) {
       if (id === resolvedVirtualEntryId) {
-        return await getEntryContent({
+        return getEntryContent({
           entry: options?.entry
             ? Array.isArray(options.entry)
               ? options.entry
               : [options.entry]
-            : [...defaultOptions.entry],
+            : [...baseDefaultOptions.entry],
         })
       }
     },
     config: async (): Promise<UserConfig> => {
       return {
         ssr: {
-          external: options?.external ?? defaultOptions.external,
+          external: options?.external ?? baseDefaultOptions.external,
           noExternal: true,
         },
         build: {
-          outDir: options?.outputDir ?? defaultOptions.outputDir,
-          emptyOutDir: options?.emptyOutDir ?? defaultOptions.emptyOutDir,
-          minify: options?.minify ?? defaultOptions.minify,
+          outDir: options?.outputDir ?? defaultOutputDir,
+          emptyOutDir: options?.emptyOutDir ?? baseDefaultOptions.emptyOutDir,
+          minify: options?.minify ?? baseDefaultOptions.minify,
           ssr: true,
           copyPublicDir: false,
           rollupOptions: {
