@@ -11,7 +11,7 @@ type EdgeOptions = {
    */
   outputDir?: string
   /**
-   * @default './netlify/edge-functions'
+   * @default './.netlify/edge-functions'
    */
   functionsDir?: string
 } & BaseNetlifyOptions
@@ -19,7 +19,7 @@ type EdgeOptions = {
 export const defaultOptions: Required<EdgeOptions> = {
   ...baseDefaultOptions,
   outputDir: './dist',
-  functionsDir: './netlify/edge-functions',
+  functionsDir: './.netlify/edge-functions',
 }
 
 const FUNCTION_JS_NAME = 'index.js'
