@@ -40,7 +40,7 @@ describe('cloudflarePagesPlugin', () => {
       root: testDir,
       plugins: [
         netlifyPlugin({
-          outputDir: 'customDir',
+          functionsDir: 'customDir',
         }),
       ],
       build: {

@@ -3,17 +3,29 @@ import { readdir, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import type { Plugin, ResolvedConfig, UserConfig } from 'vite'
 import { getEntryContent } from './entry.js'
-import { NetlifyOptions, baseDefaultOptions } from '../netlify.js'
+import { BaseNetlifyOptions, baseDefaultOptions } from '../netlify.js'
 
-export const defaultOptions: Required<NetlifyOptions> = {
+type EdgeOptions = {
+  /**
+   * @default './dist'
+   */
+  outputDir?: string
+  /**
+   * @default './netlify/edge-functions'
+   */
+  functionsDir?: string
+} & BaseNetlifyOptions
+
+export const defaultOptions: Required<EdgeOptions> = {
   ...baseDefaultOptions,
-  outputDir: './netlify/edge-functions',
+  outputDir: './dist',
+  functionsDir: './netlify/edge-functions',
 }
 
 const FUNCTION_JS_NAME = 'index.js'
 const NETLIFY_MANIFEST_NAME = 'manifest.json'
 
-export const netlifyEdgePlugin = (options?: NetlifyOptions): Plugin => {
+export const netlifyEdgePlugin = (options?: EdgeOptions): Plugin => {
   const virtualEntryId = 'virtual:netlify-edge-functions-entry-module'
   const resolvedVirtualEntryId = '\0' + virtualEntryId
   let config: ResolvedConfig
@@ -41,10 +53,12 @@ export const netlifyEdgePlugin = (options?: NetlifyOptions): Plugin => {
       }
     },
     writeBundle: async () => {
-      console.log(config.build.outDir)
-      const paths = await readdir(resolve(config.root, './dist'), {
-        withFileTypes: true,
-      })
+      const paths = await readdir(
+        resolve(config.root, options?.outputDir ?? defaultOptions.outputDir),
+        {
+          withFileTypes: true,
+        }
+      )
 
       paths.forEach((p) => {
         if (p.isDirectory()) {
@@ -66,7 +80,7 @@ export const netlifyEdgePlugin = (options?: NetlifyOptions): Plugin => {
       }
       const path = resolve(
         config.root,
-        options?.outputDir ?? defaultOptions.outputDir,
+        options?.functionsDir ?? defaultOptions.functionsDir,
         NETLIFY_MANIFEST_NAME
       )
       await writeFile(path, JSON.stringify(manifestContent))
@@ -78,7 +92,7 @@ export const netlifyEdgePlugin = (options?: NetlifyOptions): Plugin => {
           noExternal: true,
         },
         build: {
-          outDir: options?.outputDir ?? defaultOptions.outputDir,
+          outDir: options?.functionsDir ?? defaultOptions.functionsDir,
           emptyOutDir: options?.emptyOutDir ?? defaultOptions.emptyOutDir,
           minify: options?.minify ?? defaultOptions.minify,
           ssr: true,
