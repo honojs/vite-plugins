@@ -8,11 +8,7 @@ import { handle } from 'hono/netlify'
 
 const worker = new Hono()
 
-worker.use('/static/*', serveStatic({root: './dist'}))
-worker.use('/favicon.ico', serveStatic({path: './dist/favicon.ico'}))
-
 ${appStr}
 
-export default handle(worker)
-export const config = { path: "/*" }`
+export default handle(worker)`
 }

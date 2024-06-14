@@ -1,18 +1,58 @@
-import type { Plugin } from 'vite'
+import { builtinModules } from 'module'
+import type { Plugin, UserConfig } from 'vite'
 import { getEntryContent } from './entry.js'
-import { NetlifyOptions, baseDefaultOptions, netlifyPlugin } from '../netlify.js'
+import { NetlifyOptions, baseDefaultOptions } from '../netlify.js'
 
 export const defaultOptions: Required<NetlifyOptions> = {
   ...baseDefaultOptions,
   outputDir: './netlify/functions',
 }
 
+const FUNCTION_JS_NAME = 'index.js'
+
 export const netlifyServerlessPlugin = (options?: NetlifyOptions): Plugin => {
-  return netlifyPlugin(
-    '@hono/vite-netlify/functions',
-    'virtual:netlify-serverless-functions-entry-module',
-    getEntryContent,
-    defaultOptions.outputDir,
-    options
-  )
+  const virtualEntryId = 'virtual:netlify-serverless-functions-entry-module'
+  const resolvedVirtualEntryId = '\0' + virtualEntryId
+
+  return {
+    name: '@hono/vite-netlify/functions',
+    resolveId(id) {
+      if (id === virtualEntryId) {
+        return resolvedVirtualEntryId
+      }
+    },
+    load(id) {
+      if (id === resolvedVirtualEntryId) {
+        return getEntryContent({
+          entry: options?.entry
+            ? Array.isArray(options.entry)
+              ? options.entry
+              : [options.entry]
+            : [...defaultOptions.entry],
+        })
+      }
+    },
+    config: async (): Promise<UserConfig> => {
+      return {
+        ssr: {
+          external: options?.external ?? defaultOptions.external,
+          noExternal: true,
+        },
+        build: {
+          outDir: options?.outputDir ?? defaultOptions.outputDir,
+          emptyOutDir: options?.emptyOutDir ?? defaultOptions.emptyOutDir,
+          minify: options?.minify ?? defaultOptions.minify,
+          ssr: true,
+          copyPublicDir: false,
+          rollupOptions: {
+            external: [...builtinModules, /^node:/],
+            input: virtualEntryId,
+            output: {
+              entryFileNames: FUNCTION_JS_NAME,
+            },
+          },
+        },
+      }
+    },
+  }
 }

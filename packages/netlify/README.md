@@ -24,7 +24,8 @@ Add `"type": "module"` to your `package.json`. Then, create `vite.config.ts` and
 
 ```ts
 import { defineConfig } from 'vite'
-import pages from '@hono/vite-netlify'
+import pages from '@hono/vite-netlify/functions'
+// or: import pages from '@hono/vite-netlify/edge-functions'
 
 export default defineConfig({
   plugins: [pages()],
