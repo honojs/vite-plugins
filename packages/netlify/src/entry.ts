@@ -40,5 +40,5 @@ const worker = new Hono()
 ${appStr}
 
 export default handle(worker)
-export const config = { path: "/*" }`
+export const config = { path: "/*", preferStatic: true }`
 }
