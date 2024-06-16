@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.12.2
+
+### Patch Changes
+
+- [#144](https://github.com/honojs/vite-plugins/pull/144) [`728099d899fab5ff81adb126fcd39e47e7f13051`](https://github.com/honojs/vite-plugins/commit/728099d899fab5ff81adb126fcd39e47e7f13051) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: handler cloudflare dispose error
+
 ## 0.12.1
 
 ### Patch Changes
