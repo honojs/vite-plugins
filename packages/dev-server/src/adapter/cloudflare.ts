@@ -20,7 +20,15 @@ export const cloudflareAdapter: (options?: CloudflareAdapterOptions) => Promise<
   return {
     env: proxy.env,
     executionContext: proxy.ctx,
-    onServerClose: proxy.dispose,
+    onServerClose: async () => {
+      try {
+        await proxy.dispose()
+      } catch {
+        /**
+         * It throws an error if server is not running.
+         */
+      }
+    },
   }
 }
 
