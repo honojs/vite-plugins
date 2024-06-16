@@ -1,5 +1,11 @@
 # @hono/vite-cloudflare-pages
 
+## 0.4.1
+
+### Patch Changes
+
+- [#146](https://github.com/honojs/vite-plugins/pull/146) [`05476646e6d9029f30075c7eefe6425507ce2336`](https://github.com/honojs/vite-plugins/commit/05476646e6d9029f30075c7eefe6425507ce2336) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: add `apply` option
+
 ## 0.4.0
 
 ### Minor Changes
