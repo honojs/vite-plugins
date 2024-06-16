@@ -1,7 +1,7 @@
 import { builtinModules } from 'module'
 import { readdir, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import type { Plugin, UserConfig, ResolvedConfig } from 'vite'
+import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig } from 'vite'
 import { getEntryContent } from './entry.js'
 
 type CloudflarePagesOptions = {
@@ -19,6 +19,7 @@ type CloudflarePagesOptions = {
    */
   minify?: boolean
   emptyOutDir?: boolean
+  apply?: ((this: void, config: UserConfig, env: ConfigEnv) => boolean) | undefined
 }
 
 export const defaultOptions: Required<Omit<CloudflarePagesOptions, 'serveStaticDir'>> = {
@@ -27,6 +28,12 @@ export const defaultOptions: Required<Omit<CloudflarePagesOptions, 'serveStaticD
   external: [],
   minify: true,
   emptyOutDir: false,
+  apply: (_config, { command, mode }) => {
+    if (command === 'build' && mode !== 'client') {
+      return true
+    }
+    return false
+  },
 }
 
 const WORKER_JS_NAME = '_worker.js'
@@ -92,6 +99,7 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
         await writeFile(path, JSON.stringify(staticRoutes))
       }
     },
+    apply: options?.apply ?? defaultOptions.apply,
     config: async (): Promise<UserConfig> => {
       return {
         ssr: {
