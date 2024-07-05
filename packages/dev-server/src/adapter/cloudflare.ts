@@ -17,6 +17,11 @@ export const cloudflareAdapter: (options?: CloudflareAdapterOptions) => Promise<
   proxy ??= await getPlatformProxy(options?.proxy)
   // Cache API provided by `getPlatformProxy` currently do nothing.
   Object.assign(globalThis, { caches: proxy.caches })
+  Object.assign(globalThis, {
+    navigator: {
+      userAgent: 'Cloudflare-Workers',
+    },
+  })
   return {
     env: proxy.env,
     executionContext: proxy.ctx,
