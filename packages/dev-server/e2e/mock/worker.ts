@@ -4,7 +4,6 @@ import { getRuntimeKey } from 'hono/adapter'
 const app = new Hono<{
   Bindings: {
     NAME: string
-    ASSETS: { fetch: typeof fetch }
   }
 }>()
 
@@ -52,12 +51,6 @@ app.get('/stream', () => {
   return new Response(stream, {
     headers: { 'Content-Type': 'text/html', 'x-via': 'vite' },
   })
-})
-
-app.get('/assets/hello.json', async (c) => {
-  const res = await c.env.ASSETS.fetch(new URL('/static/hello.json', c.req.url))
-  const data = await res.json()
-  return c.json(data)
 })
 
 // @ts-expect-error the response is string

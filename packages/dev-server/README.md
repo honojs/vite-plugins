@@ -9,7 +9,7 @@ You can develop your application with Vite. It's fast.
 - Hono applications run on.
 - Fast by Vite.
 - HMR (Only for the client side).
-- Plugins are available, e.g., Cloudflare Pages.
+- Adapters are available, e.g., Cloudflare.
 - Also runs on Bun.
 
 ## Demo

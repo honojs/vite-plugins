@@ -4,7 +4,7 @@ import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
 import { createViteRuntime } from 'vite'
 import type { ViteRuntime } from 'vite/runtime'
-import { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
+import type { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
 import type { Env, Fetch, EnvFunc, Plugin, Adapter } from './types.js'
 
 export type DevServerOptions = {
@@ -14,6 +14,10 @@ export type DevServerOptions = {
   exclude?: (string | RegExp)[]
   ignoreWatching?: (string | RegExp)[]
   env?: Env | EnvFunc
+  /**
+   * @deprecated
+   * The `plugins` option is deprecated. Use the `adapter` instead of it.
+   */
   plugins?: Plugin[]
   /**
    * This can be used to inject environment variables into the worker from your wrangler.toml for example,
@@ -120,22 +124,6 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                   env = { ...env, ...options.env }
                 }
               }
-              if (options?.cf) {
-                env = {
-                  ...env,
-                  ...(await cloudflarePagesGetEnv(options.cf)()),
-                }
-              }
-              if (options?.plugins) {
-                for (const plugin of options.plugins) {
-                  if (plugin.env) {
-                    env = {
-                      ...env,
-                      ...(typeof plugin.env === 'function' ? await plugin.env() : plugin.env),
-                    }
-                  }
-                }
-              }
 
               const adapter = await getAdapterFromOptions(options)
 
@@ -191,13 +179,6 @@ export function devServer(options?: DevServerOptions): VitePlugin {
 
       server.middlewares.use(await createMiddleware(server))
       server.httpServer?.on('close', async () => {
-        if (options?.plugins) {
-          for (const plugin of options.plugins) {
-            if (plugin.onServerClose) {
-              await plugin.onServerClose()
-            }
-          }
-        }
         const adapter = await getAdapterFromOptions(options)
         if (adapter?.onServerClose) {
           await adapter.onServerClose()

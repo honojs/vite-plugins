@@ -54,6 +54,10 @@ export const disposeMf = async () => {
   mf = undefined
 }
 
+/**
+ * @deprecated
+ * Use the Cloudflare Adapter instead of it.
+ */
 const plugin = (options?: Options): Plugin => {
   const env = getEnv(options ?? {})
   return {

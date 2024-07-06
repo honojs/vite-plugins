@@ -67,14 +67,14 @@
   "devDependencies": {
     "@playwright/test": "^1.37.1",
     "glob": "^10.3.10",
-    "hono": "^4.2.7",
+    "hono": "^4.4.11",
     "playwright": "^1.39.0",
     "publint": "^0.2.5",
     "rimraf": "^5.0.1",
     "tsup": "^7.2.0",
     "vite": "^5.2.10",
     "vitest": "^0.34.6",
-    "wrangler": "^3.28.4"
+    "wrangler": "^3.63.1"
   },
   "peerDependencies": {
     "hono": "*"
