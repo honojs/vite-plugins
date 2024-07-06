@@ -2,7 +2,6 @@ import { WebSocketPair } from 'miniflare'
 import { getPlatformProxy } from 'wrangler'
 import type { Adapter, Env } from '../types.js'
 
-// We detect if the environment is `workerd` by checking if the WebSocketPair is available.
 Object.assign(globalThis, { WebSocketPair })
 
 type CloudflareAdapterOptions = {
