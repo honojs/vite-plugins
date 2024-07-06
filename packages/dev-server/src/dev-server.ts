@@ -2,10 +2,7 @@ import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
 import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
-import { createViteRuntime } from 'vite'
-import type { ViteRuntime } from 'vite/runtime'
-import type { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
-import type { Env, Fetch, EnvFunc, Plugin, Adapter } from './types.js'
+import type { Env, Fetch, EnvFunc, Adapter } from './types.js'
 
 export type DevServerOptions = {
   entry?: string
@@ -14,11 +11,6 @@ export type DevServerOptions = {
   exclude?: (string | RegExp)[]
   ignoreWatching?: (string | RegExp)[]
   env?: Env | EnvFunc
-  /**
-   * @deprecated
-   * The `plugins` option is deprecated. Use the `adapter` instead of it.
-   */
-  plugins?: Plugin[]
   /**
    * This can be used to inject environment variables into the worker from your wrangler.toml for example,
    * by making use of the helper function `getPlatformProxy` from `wrangler`.
@@ -48,15 +40,9 @@ export type DevServerOptions = {
    *
    */
   adapter?: Adapter | Promise<Adapter> | (() => Adapter | Promise<Adapter>)
-  /**
-   * @deprecated
-   * The `cf` option is maintained for backward compatibility, but it will be obsolete in the future.
-   * Instead, use the `env` option.
-   */
-  cf?: Parameters<typeof cloudflarePagesGetEnv>[0]
 }
 
-export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'adapter'>> = {
+export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter'>> = {
   entry: './src/index.ts',
   export: 'default',
   injectClientScript: true,
@@ -71,7 +57,6 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'ada
     /^\/node_modules\/.*/,
   ],
   ignoreWatching: [/\.wrangler/, /\.mf/],
-  plugins: [],
 }
 
 export function devServer(options?: DevServerOptions): VitePlugin {

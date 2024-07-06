@@ -12,11 +12,6 @@ export type Fetch = (
   executionContext: ExecutionContext
 ) => Promise<Response>
 
-export interface Plugin {
-  env?: Env | EnvFunc
-  onServerClose?: () => void | Promise<void>
-}
-
 export interface Adapter {
   /**
    * Environment variables to be injected into the worker

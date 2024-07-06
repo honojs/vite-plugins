@@ -33,11 +33,6 @@
       "types": "./dist/adapter/cloudflare.d.ts",
       "require": "./dist/adapter/cloudflare.cjs",
       "import": "./dist/adapter/cloudflare.js"
-    },
-    "./cloudflare-pages": {
-      "types": "./dist/cloudflare-pages/index.d.ts",
-      "require": "./dist/cloudflare-pages/index.cjs",
-      "import": "./dist/cloudflare-pages/index.js"
     }
   },
   "typesVersions": {
@@ -47,9 +42,6 @@
       ],
       "cloudflare": [
         "./dist/adapter/cloudflare.d.ts"
-      ],
-      "cloudflare-pages": [
-        "./dist/cloudflare-pages/index.d.ts"
       ]
     }
   },
@@ -83,8 +75,8 @@
     "node": ">=18.14.1"
   },
   "dependencies": {
-    "@hono/node-server": "^1.11.0",
-    "miniflare": "^3.20231218.2",
+    "@hono/node-server": "^1.12.0",
+    "miniflare": "^3.20240701.0",
     "minimatch": "^9.0.3"
   }
 }
