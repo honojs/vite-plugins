@@ -1,5 +1,15 @@
 # @hono/vite-dev-server
 
+## 0.13.0
+
+### Minor Changes
+
+- [#152](https://github.com/honojs/vite-plugins/pull/152) [`1782639ce0b9dcc802d3ecbb5f14dd614b80f708`](https://github.com/honojs/vite-plugins/commit/1782639ce0b9dcc802d3ecbb5f14dd614b80f708) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: remove plugins
+
+### Patch Changes
+
+- [#150](https://github.com/honojs/vite-plugins/pull/150) [`a0c634394cf6dde72df8408d475598ccf35a9bc5`](https://github.com/honojs/vite-plugins/commit/a0c634394cf6dde72df8408d475598ccf35a9bc5) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: add `navigator.userAgent` value for the cloudflare adapter
+
 ## 0.12.2
 
 ### Patch Changes
