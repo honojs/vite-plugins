@@ -105,6 +105,7 @@ export const cloudflarePagesPlugin = (options?: CloudflarePagesOptions): Plugin 
         ssr: {
           external: options?.external ?? defaultOptions.external,
           noExternal: true,
+          target: 'webworker',
         },
         build: {
           outDir: options?.outputDir ?? defaultOptions.outputDir,
