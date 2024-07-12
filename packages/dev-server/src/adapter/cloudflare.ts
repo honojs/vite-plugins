@@ -16,10 +16,17 @@ export const cloudflareAdapter: (options?: CloudflareAdapterOptions) => Promise<
   proxy ??= await getPlatformProxy(options?.proxy)
   // Cache API provided by `getPlatformProxy` currently do nothing.
   Object.assign(globalThis, { caches: proxy.caches })
-  Object.defineProperty(globalThis.navigator, 'userAgent', {
-    value: 'Cloudflare-Workers',
-    writable: false,
-  })
+  if (typeof globalThis.navigator === 'undefined') {
+    // @ts-expect-error not typed well
+    globalThis.navigator = {
+      userAgent: 'Cloudflare-Workers',
+    }
+  } else {
+    Object.defineProperty(globalThis.navigator, 'userAgent', {
+      value: 'Cloudflare-Workers',
+      writable: false,
+    })
+  }
 
   return {
     env: proxy.env,
