@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.13.1
+
+### Patch Changes
+
+- [#156](https://github.com/honojs/vite-plugins/pull/156) [`e62bf1b49d96cd2d59d98572a034bee7514cd00f`](https://github.com/honojs/vite-plugins/commit/e62bf1b49d96cd2d59d98572a034bee7514cd00f) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: set `navigator.userAgent` correctly
+
 ## 0.13.0
 
 ### Minor Changes
