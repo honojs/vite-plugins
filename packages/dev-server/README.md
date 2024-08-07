@@ -147,7 +147,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [
     devServer({
-      exclude: ['/assets/.*', ...defaultOptions.exclude],
+      exclude: ['/assets/*', ...defaultOptions.exclude],
     }),
   ],
 })
