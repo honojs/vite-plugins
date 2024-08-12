@@ -92,4 +92,11 @@ app.get('/cache', async (c) => {
   return c.text('first')
 })
 
+app.get('/cf', (c) => {
+  return c.json({
+    // @ts-expect-error `Request.cf` is not typed
+    cf: typeof c.req.raw.cf === 'object' ? true : false,
+  })
+})
+
 export default app

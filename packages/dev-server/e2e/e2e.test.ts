@@ -95,3 +95,9 @@ test('Should not throw an error if accessing the `caches`', async ({ page }) => 
   // It does **not** return cached content.
   expect(await resCached?.text()).not.toBe('cached')
 })
+
+test('Should set `cf` properties', async ({ page }) => {
+  const res = await page.goto('/cf')
+  expect(res?.ok()).toBe(true)
+  expect(await res?.json()).toEqual({ cf: true })
+})
