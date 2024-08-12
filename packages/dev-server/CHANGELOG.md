@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.14.0
+
+### Minor Changes
+
+- [#161](https://github.com/honojs/vite-plugins/pull/161) [`6cb1002e01e7b7554b2efa873f8e46ca3d14c5fc`](https://github.com/honojs/vite-plugins/commit/6cb1002e01e7b7554b2efa873f8e46ca3d14c5fc) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: support `cf` property in Cloudflare adapter
+
 ## 0.13.1
 
 ### Patch Changes
