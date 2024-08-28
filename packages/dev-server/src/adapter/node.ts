@@ -1,4 +1,4 @@
-import type { Adapter } from "../types"
+import type { Adapter } from '../types'
 export const nodeAdapter = (): Adapter => {
   if (typeof globalThis.navigator === 'undefined') {
     // @ts-expect-error not typed well
@@ -12,8 +12,8 @@ export const nodeAdapter = (): Adapter => {
     })
   }
   return {
-    env: process.env
+    env: process.env,
   }
 }
 
-export default nodeAdapter;
+export default nodeAdapter
