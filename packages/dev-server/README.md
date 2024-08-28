@@ -167,6 +167,12 @@ You can pass the `env` value of a specified environment to the application.
 
 You can pass the Bindings specified in `wrangler.toml` to your application by using "Cloudflare Adapter".
 
+Install miniflare and wrangler to develop and deploy your cf project.
+
+```text
+npm i -D wrangler miniflare
+```
+
 ```ts
 import devServer from '@hono/vite-dev-server'
 import cloudflareAdapter from '@hono/vite-dev-server/cloudflare'

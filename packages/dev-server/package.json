@@ -60,6 +60,7 @@
     "@playwright/test": "^1.37.1",
     "glob": "^10.3.10",
     "hono": "^4.4.11",
+    "miniflare": "^3.20240701.0",
     "playwright": "^1.39.0",
     "publint": "^0.2.5",
     "rimraf": "^5.0.1",
@@ -69,14 +70,26 @@
     "wrangler": "^3.63.1"
   },
   "peerDependencies": {
-    "hono": "*"
+    "hono": "*",
+    "miniflare": "*",
+    "wrangler": "*"
+  },
+  "peerDependenciesMeta": {
+    "hono": {
+      "optional": false
+    },
+    "miniflare": {
+      "optional": true
+    },
+    "wrangler": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=18.14.1"
   },
   "dependencies": {
     "@hono/node-server": "^1.12.0",
-    "miniflare": "^3.20240701.0",
     "minimatch": "^9.0.3"
   }
 }
