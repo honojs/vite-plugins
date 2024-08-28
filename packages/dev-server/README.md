@@ -188,32 +188,6 @@ export default defineConfig(async () => {
 })
 ```
 
-### Node.js & Bun
-No additional dependencies needed.
-
-```ts
-import devServer from '@hono/vite-dev-server'
-import nodeAdapter from '@hono/vite-dev-server/node'
-// OR
-// import bunAdapter from '@hono/vite-dev-server/bun'
-import { defineConfig } from 'vite'
-
-export default defineConfig(async () => {
-  return {
-    plugins: [
-      devServer({
-        adapter: nodeAdapter,
-        // OR
-        // adapter: bunAdapter,
-      }),
-    ],
-  }
-})
-```
-
-Using selected adapter, In hono app you can access environtment variable like ```ctx.env``` or ```env(ctx)```.
-
-
 ## Client-side
 
 You can write client-side scripts and import them into your application using Vite's features.
