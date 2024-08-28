@@ -942,6 +942,15 @@ __metadata:
     wrangler: ^3.63.1
   peerDependencies:
     hono: "*"
+    miniflare: "*"
+    wrangler: "*"
+  peerDependenciesMeta:
+    hono:
+      optional: false
+    miniflare:
+      optional: true
+    wrangler:
+      optional: true
   languageName: unknown
   linkType: soft
 
