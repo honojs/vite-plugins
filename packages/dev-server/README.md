@@ -9,8 +9,7 @@ You can develop your application with Vite. It's fast.
 - Hono applications run on.
 - Fast by Vite.
 - HMR (Only for the client side).
-- Adapters are available, e.g., Cloudflare.
-- Also runs on Bun.
+- Adapters are available, e.g., Cloudflare, Node.js, And Bun
 
 ## Demo
 
@@ -167,6 +166,12 @@ You can pass the `env` value of a specified environment to the application.
 
 You can pass the Bindings specified in `wrangler.toml` to your application by using "Cloudflare Adapter".
 
+Install miniflare and wrangler to develop and deploy your cf project.
+
+```text
+npm i -D wrangler miniflare
+```
+
 ```ts
 import devServer from '@hono/vite-dev-server'
 import cloudflareAdapter from '@hono/vite-dev-server/cloudflare'
@@ -182,6 +187,32 @@ export default defineConfig(async () => {
   }
 })
 ```
+
+### Node.js & Bun
+No additional dependencies needed.
+
+```ts
+import devServer from '@hono/vite-dev-server'
+import nodeAdapter from '@hono/vite-dev-server/node'
+// OR
+// import bunAdapter from '@hono/vite-dev-server/bun'
+import { defineConfig } from 'vite'
+
+export default defineConfig(async () => {
+  return {
+    plugins: [
+      devServer({
+        adapter: nodeAdapter,
+        // OR
+        // adapter: bunAdapter,
+      }),
+    ],
+  }
+})
+```
+
+Using selected adapter, In hono app you can access environtment variable like ```ctx.env``` or ```env(ctx)```.
+
 
 ## Client-side
 
