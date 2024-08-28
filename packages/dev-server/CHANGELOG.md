@@ -1,5 +1,17 @@
 # @hono/vite-dev-server
 
+## 0.15.0
+
+### Minor Changes
+
+- [#167](https://github.com/honojs/vite-plugins/pull/167) [`044a023d63d1ce903aa6bab132b16d0799265766`](https://github.com/honojs/vite-plugins/commit/044a023d63d1ce903aa6bab132b16d0799265766) Thanks [@arisris](https://github.com/arisris)! - Add initial nodejs adapter
+
+- [#166](https://github.com/honojs/vite-plugins/pull/166) [`714951ca854e949834f9b5375342684849f5c260`](https://github.com/honojs/vite-plugins/commit/714951ca854e949834f9b5375342684849f5c260) Thanks [@arisris](https://github.com/arisris)! - Add Initial bun adapter
+
+### Patch Changes
+
+- [#165](https://github.com/honojs/vite-plugins/pull/165) [`0a59fddeaeae3cc1222779035c1f2b1c4753f1e3`](https://github.com/honojs/vite-plugins/commit/0a59fddeaeae3cc1222779035c1f2b1c4753f1e3) Thanks [@arisris](https://github.com/arisris)! - Remove miniflare from deps, and add it to peer optional.
+
 ## 0.14.0
 
 ### Minor Changes
