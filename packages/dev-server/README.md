@@ -51,13 +51,13 @@ So, any Hono application will run on `@hono/vite-dev-server`.
 
 You can install `vite` and `@hono/vite-dev-server` via npm.
 
-```text
+```bash
 npm i -D vite @hono/vite-dev-server
 ```
 
 Or you can install them with Bun.
 
-```text
+```bash
 bun add vite @hono/vite-dev-server
 ```
 
@@ -82,13 +82,13 @@ export default defineConfig({
 
 Just run `vite`.
 
-```text
+```bash
 npm exec vite
 ```
 
 Or
 
-```text
+```bash
 bunx --bun vite
 ```
 
@@ -169,7 +169,7 @@ You can pass the Bindings specified in `wrangler.toml` to your application by us
 
 Install miniflare and wrangler to develop and deploy your cf project.
 
-```text
+```bash
 npm i -D wrangler miniflare
 ```
 
@@ -183,6 +183,30 @@ export default defineConfig(async () => {
     plugins: [
       devServer({
         adapter: cloudflareAdapter,
+      }),
+    ],
+  }
+})
+```
+
+### Node.js & Bun
+
+No additional dependencies needed.
+
+```ts
+import devServer from '@hono/vite-dev-server'
+import nodeAdapter from '@hono/vite-dev-server/node'
+// OR
+// import bunAdapter from '@hono/vite-dev-server/bun'
+import { defineConfig } from 'vite'
+
+export default defineConfig(async () => {
+  return {
+    plugins: [
+      devServer({
+        adapter: nodeAdapter,
+        // OR
+        // adapter: bunAdapter,
       }),
     ],
   }
@@ -258,7 +282,7 @@ export default defineConfig(({ mode }) => {
 
 You can run the following command to build the client script.
 
-```text
+```bash
 vite build --mode client
 ```
 
