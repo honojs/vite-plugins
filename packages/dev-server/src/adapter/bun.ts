@@ -1,4 +1,4 @@
-import type { Adapter } from "../types";
+import type { Adapter } from '../types'
 
 export const bunAdapter = (): Adapter => {
   if (typeof globalThis.navigator === 'undefined') {
@@ -13,7 +13,7 @@ export const bunAdapter = (): Adapter => {
     })
   }
   return {
-    env: process.env
+    env: process.env,
   }
 }
 
