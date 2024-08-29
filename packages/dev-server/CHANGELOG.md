@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.15.1
+
+### Patch Changes
+
+- [#170](https://github.com/honojs/vite-plugins/pull/170) [`4137d3fd60cb7189c485c7b73c46d64fb7adb0af`](https://github.com/honojs/vite-plugins/commit/4137d3fd60cb7189c485c7b73c46d64fb7adb0af) Thanks [@arisris](https://github.com/arisris)! - (fix) missing export for initial node, bun adapter in the package.json from the previous version
+
 ## 0.15.0
 
 ### Minor Changes
