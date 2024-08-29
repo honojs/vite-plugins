@@ -33,6 +33,16 @@
       "types": "./dist/adapter/cloudflare.d.ts",
       "require": "./dist/adapter/cloudflare.cjs",
       "import": "./dist/adapter/cloudflare.js"
+    },
+    "./node": {
+      "types": "./dist/adapter/node.d.ts",
+      "require": "./dist/adapter/node.cjs",
+      "import": "./dist/adapter/node.js"
+    },
+    "./bun": {
+      "types": "./dist/adapter/bun.d.ts",
+      "require": "./dist/adapter/bun.cjs",
+      "import": "./dist/adapter/bun.js"
     }
   },
   "typesVersions": {
@@ -42,6 +52,12 @@
       ],
       "cloudflare": [
         "./dist/adapter/cloudflare.d.ts"
+      ],
+      "node": [
+        "./dist/adapter/node.d.ts"
+      ],
+      "bun": [
+        "./dist/adapter/bun.d.ts"
       ]
     }
   },
