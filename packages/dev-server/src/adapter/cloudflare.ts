@@ -51,7 +51,7 @@ export const cloudflareAdapter: (options?: CloudflareAdapterOptions) => Promise<
            * It throws an error if server is not running.
            */
         } finally {
-          proxy = undefined as Awaited<ReturnType<typeof getPlatformProxy<Env>>> | undefined
+          proxy = undefined
         }
       }
     },
