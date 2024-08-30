@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.15.2
+
+### Patch Changes
+
+- [#173](https://github.com/honojs/vite-plugins/pull/173) [`840e6da43ba95bbfde767246f8ee071d8235f166`](https://github.com/honojs/vite-plugins/commit/840e6da43ba95bbfde767246f8ee071d8235f166) Thanks [@komapotter](https://github.com/komapotter)! - fix(dev-server): Add null check and error handling for proxy disposal in cloudflareAdapter
+
 ## 0.15.1
 
 ### Patch Changes
