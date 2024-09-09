@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.16.0
+
+### Minor Changes
+
+- [#175](https://github.com/honojs/vite-plugins/pull/175) [`c44f9391cf145192b3632c6eb71b15a8d5d3178b`](https://github.com/honojs/vite-plugins/commit/c44f9391cf145192b3632c6eb71b15a8d5d3178b) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: add `loadModule` option
+
 ## 0.15.2
 
 ### Patch Changes
