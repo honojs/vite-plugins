@@ -1,3 +1,5 @@
+import type { ViteDevServer } from 'vite'
+
 export type Env = Record<string, unknown> | Promise<Record<string, unknown>>
 export type EnvFunc = () => Env | Promise<Env>
 export type GetEnv<Options> = (options: Options) => EnvFunc
@@ -11,6 +13,8 @@ export type Fetch = (
   env: {},
   executionContext: ExecutionContext
 ) => Promise<Response>
+
+export type LoadModule = (server: ViteDevServer, entry: string) => Promise<{ fetch: Fetch }>
 
 export interface Adapter {
   /**

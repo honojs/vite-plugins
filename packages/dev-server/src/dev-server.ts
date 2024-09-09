@@ -2,7 +2,7 @@ import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
 import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
-import type { Env, Fetch, EnvFunc, Adapter } from './types.js'
+import type { Env, Fetch, EnvFunc, Adapter, LoadModule } from './types.js'
 
 export type DevServerOptions = {
   entry?: string
@@ -11,6 +11,7 @@ export type DevServerOptions = {
   exclude?: (string | RegExp)[]
   ignoreWatching?: (string | RegExp)[]
   env?: Env | EnvFunc
+  loadModule?: LoadModule
   /**
    * This can be used to inject environment variables into the worker from your wrangler.toml for example,
    * by making use of the helper function `getPlatformProxy` from `wrangler`.
@@ -42,7 +43,7 @@ export type DevServerOptions = {
   adapter?: Adapter | Promise<Adapter> | (() => Adapter | Promise<Adapter>)
 }
 
-export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter'>> = {
+export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' | 'loadModule'>> = {
   entry: './src/index.ts',
   export: 'default',
   injectClientScript: true,
@@ -83,19 +84,29 @@ export function devServer(options?: DevServerOptions): VitePlugin {
               }
             }
           }
-          let appModule
 
-          try {
-            appModule = await server.ssrLoadModule(entry)
-          } catch (e) {
-            return next(e)
+          let loadModule: LoadModule
+
+          if (options?.loadModule) {
+            loadModule = options.loadModule
+          } else {
+            loadModule = async (server, entry) => {
+              const appModule = await server.ssrLoadModule(entry)
+              const exportName = options?.export ?? defaultOptions.export
+              const app = appModule[exportName] as { fetch: Fetch }
+              if (!app) {
+                throw new Error(`Failed to find a named export "${exportName}" from ${entry}`)
+              }
+              return app
+            }
           }
 
-          const exportName = options?.export ?? defaultOptions.export
-          const app = appModule[exportName] as { fetch: Fetch }
+          let app: { fetch: Fetch }
 
-          if (!app) {
-            return next(new Error(`Failed to find a named export "${exportName}" from ${entry}`))
+          try {
+            app = await loadModule(server, entry)
+          } catch (e) {
+            return next(e)
           }
 
           getRequestListener(
