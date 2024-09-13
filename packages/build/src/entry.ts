@@ -1,7 +1,7 @@
 import { normalize } from 'node:path'
 
 export type EntryContentHookOptions = {
-  staticFilePaths: string[]
+  staticPaths: string[]
 }
 
 export type EntryContentHook = (
@@ -27,7 +27,7 @@ const normalizePaths = (paths: string[]) => {
 }
 
 export const getEntryContent = async (options: GetEntryContentOptions) => {
-  const staticFilePaths = options.staticPaths ?? ['']
+  const staticPaths = options.staticPaths ?? ['']
   const globStr = normalizePaths(options.entry)
     .map((e) => `'${e}'`)
     .join(',')
@@ -47,13 +47,12 @@ export const getEntryContent = async (options: GetEntryContentOptions) => {
 
 const mainApp = new Hono()
 
-${options.entryContentBeforeHook ? await options.entryContentBeforeHook('mainApp', { staticFilePaths }) : ''}
+${options.entryContentBeforeHook ? await options.entryContentBeforeHook('mainApp', { staticPaths }) : ''}
 
 ${appStr}
 
-${options.entryContentAfterHook ? await options.entryContentAfterHook('mainApp', { staticFilePaths }) : ''}
+${options.entryContentAfterHook ? await options.entryContentAfterHook('mainApp', { staticPaths }) : ''}
 
 export default mainApp`
-  console.log(foo)
   return foo
 }
