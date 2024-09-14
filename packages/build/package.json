@@ -27,6 +27,14 @@
     "./node": {
       "types": "./dist/adapter/node/index.d.ts",
       "import": "./dist/adapter/node/index.js"
+    },
+    "./cloudflare-pages": {
+      "types": "./dist/adapter/cloudflare-pages/index.d.ts",
+      "import": "./dist/adapter/cloudflare-pages/index.js"
+    },
+    "./cloudflare-workers": {
+      "types": "./dist/adapter/cloudflare-workers/index.d.ts",
+      "import": "./dist/adapter/cloudflare-workers/index.js"
     }
   },
   "typesVersions": {
@@ -39,6 +47,12 @@
       ],
       "node": [
         "./dist/adapter/node/index.d.ts"
+      ],
+      "cloudflare-pages": [
+        "./dist/adapter/cloudflare-pages/index.d.ts"
+      ],
+      "cloudflare-workers": [
+        "./dist/adapter/cloudflare-workers/index.d.ts"
       ]
     }
   },
@@ -55,12 +69,12 @@
   "homepage": "https://github.com/honojs/vite-plugins",
   "devDependencies": {
     "glob": "^10.3.10",
-    "hono": "^4.2.7",
+    "hono": "^4.6.1",
     "publint": "^0.1.12",
     "rimraf": "^5.0.1",
     "tsup": "^7.2.0",
-    "vite": "^5.4.4",
-    "vitest": "^1.2.1"
+    "vite": "^5.4.5",
+    "vitest": "^2.1.1"
   },
   "peerDependencies": {
     "hono": "*"
