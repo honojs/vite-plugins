@@ -1,6 +1,6 @@
 import { builtinModules } from 'module'
-import { readdirSync, statSync } from 'node:fs'
-import { resolve } from 'url'
+import { readdirSync } from 'node:fs'
+import path, { resolve } from 'node:path'
 import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig } from 'vite'
 import { getEntryContent } from './entry/index.js'
 import type { GetEntryContentOptions } from './entry/index.js'
@@ -47,6 +47,8 @@ const buildPlugin = (options: BuildOptions): Plugin => {
   const resolvedVirtualEntryId = '\0' + virtualEntryId
   let config: ResolvedConfig
 
+  const output = options.output ?? defaultOptions.output
+
   return {
     name: '@hono/vite-build',
     configResolved: async (resolvedConfig) => {
@@ -59,20 +61,34 @@ const buildPlugin = (options: BuildOptions): Plugin => {
     },
     async load(id) {
       if (id === resolvedVirtualEntryId) {
-        const staticPaths: string[] = []
+        let staticPaths: string[] = []
+        const direntPaths = []
         try {
-          statSync(config.publicDir)
-          const paths = readdirSync(resolve(config.root, config.publicDir), {
+          const publicDirPaths = readdirSync(resolve(config.root, config.publicDir), {
             withFileTypes: true,
           })
-          paths.forEach((p) => {
-            if (p.isDirectory()) {
-              staticPaths.push(`/${p.name}/*`)
-            } else {
-              staticPaths.push(`/${p.name}`)
-            }
+          direntPaths.push(...publicDirPaths)
+          const buildOutDirPaths = readdirSync(resolve(config.root, config.build.outDir), {
+            withFileTypes: true,
           })
+          direntPaths.push(...buildOutDirPaths)
         } catch {}
+
+        const uniqueStaticPaths = new Set<string>()
+
+        direntPaths.forEach((p) => {
+          if (p.isDirectory()) {
+            uniqueStaticPaths.add(`/${p.name}/*`)
+          } else {
+            if (p.name === output) {
+              return
+            }
+            uniqueStaticPaths.add(`/${p.name}`)
+          }
+        })
+
+        staticPaths = Array.from(uniqueStaticPaths)
+
         const entry = options.entry ?? defaultOptions.entry
         return await getEntryContent({
           entry: Array.isArray(entry) ? entry : [entry],
@@ -99,7 +115,7 @@ const buildPlugin = (options: BuildOptions): Plugin => {
             external: [...builtinModules, /^node:/],
             input: virtualEntryId,
             output: {
-              entryFileNames: options.output ?? defaultOptions.output,
+              entryFileNames: output,
             },
           },
         },
