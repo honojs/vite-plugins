@@ -11,7 +11,7 @@ const ROUTES_JSON_NAME = '_routes.json'
 
 type StaticRoutes = { version: number; include: string[]; exclude: string[] }
 
-const bunBuildPlugin = (pluginOptions?: CloudflarePagesBuildOptions): Plugin => {
+const cloudflarePagesBuildPlugin = (pluginOptions?: CloudflarePagesBuildOptions): Plugin => {
   let config: ResolvedConfig
   const staticPaths: string[] = []
 
@@ -58,4 +58,4 @@ const bunBuildPlugin = (pluginOptions?: CloudflarePagesBuildOptions): Plugin => 
   }
 }
 
-export default bunBuildPlugin
+export default cloudflarePagesBuildPlugin

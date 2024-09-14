@@ -4,7 +4,7 @@ import buildPlugin from '../../base.js'
 
 export type CloudflareWorkersBuildOptions = BuildOptions
 
-const nodeBuildPlugin = (pluginOptions?: CloudflareWorkersBuildOptions): Plugin => {
+const cloudflareWorkersBuildPlugin = (pluginOptions?: CloudflareWorkersBuildOptions): Plugin => {
   return {
     ...buildPlugin({
       ...pluginOptions,
@@ -13,4 +13,4 @@ const nodeBuildPlugin = (pluginOptions?: CloudflareWorkersBuildOptions): Plugin 
   }
 }
 
-export default nodeBuildPlugin
+export default cloudflareWorkersBuildPlugin

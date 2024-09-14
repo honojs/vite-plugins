@@ -3,7 +3,7 @@ import { build } from 'vite'
 import { describe, it, expect, afterAll } from 'vitest'
 import cloudflarePagesPlugin from '../src/adapter/cloudflare-pages'
 
-describe('cloudflarePagesPlugin', () => {
+describe('Build Plugin with Cloudflare Pages Adapter', () => {
   const testDir = './test/mocks/app-static-files'
 
   afterAll(() => {
