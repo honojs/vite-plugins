@@ -33,6 +33,9 @@ Add `"type": "module"` to your package.json. Then, create `vite.config.ts` an
 ```ts
 import { defineConfig } from 'vite'
 import build from '@hono/vite-build/bun'
+// import build from '@hono/vite-build/cloudflare-pages'
+// import build from '@hono/vite-build/cloudflare-workers'
+// import build from '@hono/vite-build/node'
 
 export default defineConfig({
   plugins: [
@@ -109,6 +112,12 @@ export const defaultOptions = {
 }
 ```
 
+## Platform specific things
+
+### Cloudflare Pages
+
+This plugin generates `_routes.json` automatically. The automatic generation can be overridden by creating a `public/_routes.json`. See [Create a `_routes.json` file](https://developers.cloudflare.com/pages/functions/routing/#create-a-_routesjson-file) on Cloudflare Docs for more details.
+
 ## Example project
 
 `src/index.tsx`:
@@ -134,7 +143,7 @@ app.get('/', (c) => {
 export default app
 ```
 
-`public/static`:
+`public/static/style.css`:
 
 ```css
 h1 {
@@ -172,7 +181,7 @@ export default defineConfig(({ mode }) => {
     }
   } else {
     return {
-      plugins: [pages()],
+      plugins: [build()],
     }
   }
 })
@@ -182,6 +191,25 @@ The build command:
 
 ```bash
 vite build --mode client && vite build
+```
+
+`import.meta.env.PROD` is helpful in detecting whether it is in development or production mode if you are using it on a Vite dev server.
+
+```tsx
+app.get('/', (c) => {
+  return c.html(
+    <html>
+      <head>
+        {import.meta.env.PROD ? (
+          <script type='module' src='/static/client.js'></script>
+        ) : (
+          <script type='module' src='/src/client.ts'></script>
+        )}
+      </head>
+      <body>Hello!</body>
+    </html>
+  )
+})
 ```
 
 ## Authors
