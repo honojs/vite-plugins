@@ -1,6 +1,5 @@
 import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { build } from 'vite'
-import { describe, it, expect, afterAll } from 'vitest'
 import bunBuildPlugin from '../src/adapter/bun'
 
 describe('Build Plugin with Bun Adapter', () => {

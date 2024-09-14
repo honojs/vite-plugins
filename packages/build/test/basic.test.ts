@@ -1,6 +1,5 @@
 import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { build } from 'vite'
-import { describe, it, expect, afterAll } from 'vitest'
 import buildPlugin from '../src/base'
 
 describe('Base Plugin', () => {

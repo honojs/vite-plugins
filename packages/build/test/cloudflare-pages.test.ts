@@ -1,6 +1,5 @@
 import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { build } from 'vite'
-import { describe, it, expect, afterAll } from 'vitest'
 import cloudflarePagesPlugin from '../src/adapter/cloudflare-pages'
 
 describe('Build Plugin with Cloudflare Pages Adapter', () => {
