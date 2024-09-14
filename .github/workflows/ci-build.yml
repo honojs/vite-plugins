@@ -1,0 +1,38 @@
+name: ci-build
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/build/**'
+  pull_request:
+    branches: ['*']
+    paths:
+      - 'packages/build/**'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - run: yarn install
+      - run: yarn build
+      - run: yarn test
+
+  ci-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./packages/build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - run: yarn install
+      - run: yarn test
