@@ -1,18 +1,19 @@
 import { builtinModules } from 'module'
-import { readdir } from 'node:fs/promises'
+import { readdirSync, statSync } from 'node:fs'
 import { resolve } from 'url'
 import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig } from 'vite'
-import { getEntryContent } from './entry.js'
-import type { GetEntryContentOptions } from './entry.js'
+import { getEntryContent } from './entry/index.js'
+import type { GetEntryContentOptions } from './entry/index.js'
 
 export type BuildOptions = {
   /**
-   * @default ['./src/index.tsx', './app/server.ts']
+   * @default ['src/index.ts', './src/index.tsx', './app/server.ts']
    */
-  entry: string | string[]
+  entry?: string | string[]
   /**
    * @default './dist'
    */
+  output?: string
   outputDir?: string
   external?: string[]
   /**
@@ -24,8 +25,10 @@ export type BuildOptions = {
 } & Omit<GetEntryContentOptions, 'entry'>
 
 export const defaultOptions: Required<
-  Omit<BuildOptions, 'entry' | 'entryContentAfterHook' | 'entryContentBeforeHook'>
+  Omit<BuildOptions, 'entryContentAfterHooks' | 'entryContentBeforeHooks'>
 > = {
+  entry: ['src/index.ts', './src/index.tsx', './app/server.ts'],
+  output: 'index.js',
   outputDir: './dist',
   external: [],
   minify: true,
@@ -36,12 +39,10 @@ export const defaultOptions: Required<
     }
     return false
   },
-  staticPaths: [''],
+  staticPaths: [],
 }
 
-const EntryFileName = 'app.js'
-
-export const buildPlugin = (options: BuildOptions): Plugin => {
+const buildPlugin = (options: BuildOptions): Plugin => {
   const virtualEntryId = 'virtual:build-entry-module'
   const resolvedVirtualEntryId = '\0' + virtualEntryId
   let config: ResolvedConfig
@@ -59,20 +60,24 @@ export const buildPlugin = (options: BuildOptions): Plugin => {
     async load(id) {
       if (id === resolvedVirtualEntryId) {
         const staticPaths: string[] = []
-        const paths = await readdir(resolve(config.root, config.publicDir), {
-          withFileTypes: true,
-        })
-        paths.forEach((p) => {
-          if (p.isDirectory()) {
-            staticPaths.push(`/${p.name}/*`)
-          } else {
-            staticPaths.push(`/${p.name}`)
-          }
-        })
+        try {
+          statSync(config.publicDir)
+          const paths = readdirSync(resolve(config.root, config.publicDir), {
+            withFileTypes: true,
+          })
+          paths.forEach((p) => {
+            if (p.isDirectory()) {
+              staticPaths.push(`/${p.name}/*`)
+            } else {
+              staticPaths.push(`/${p.name}`)
+            }
+          })
+        } catch {}
+        const entry = options.entry ?? defaultOptions.entry
         return await getEntryContent({
-          entry: Array.isArray(options.entry) ? options.entry : [options.entry],
-          entryContentBeforeHook: options.entryContentBeforeHook,
-          entryContentAfterHook: options.entryContentAfterHook,
+          entry: Array.isArray(entry) ? entry : [entry],
+          entryContentBeforeHooks: options.entryContentBeforeHooks,
+          entryContentAfterHooks: options.entryContentAfterHooks,
           staticPaths,
         })
       }
@@ -94,7 +99,7 @@ export const buildPlugin = (options: BuildOptions): Plugin => {
             external: [...builtinModules, /^node:/],
             input: virtualEntryId,
             output: {
-              entryFileNames: EntryFileName,
+              entryFileNames: options.output ?? defaultOptions.output,
             },
           },
         },
@@ -102,3 +107,5 @@ export const buildPlugin = (options: BuildOptions): Plugin => {
     },
   }
 }
+
+export default buildPlugin

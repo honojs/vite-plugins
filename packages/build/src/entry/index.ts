@@ -11,8 +11,8 @@ export type EntryContentHook = (
 
 export type GetEntryContentOptions = {
   entry: string[]
-  entryContentBeforeHook?: EntryContentHook
-  entryContentAfterHook?: EntryContentHook
+  entryContentBeforeHooks?: EntryContentHook[]
+  entryContentAfterHooks?: EntryContentHook[]
   staticPaths?: string[]
 }
 
@@ -31,6 +31,23 @@ export const getEntryContent = async (options: GetEntryContentOptions) => {
   const globStr = normalizePaths(options.entry)
     .map((e) => `'${e}'`)
     .join(',')
+
+  const hooksToString = async (appName: string, hooks?: EntryContentHook[]) => {
+    if (hooks) {
+      const str = (
+        await Promise.all(
+          hooks.map((hook) => {
+            return hook(appName, {
+              staticPaths,
+            })
+          })
+        )
+      ).join('\n')
+      return str
+    }
+    return ''
+  }
+
   const appStr = `const modules = import.meta.glob([${globStr}], { import: 'default', eager: true })
       let added = false
       for (const [, app] of Object.entries(modules)) {
@@ -43,16 +60,16 @@ export const getEntryContent = async (options: GetEntryContentOptions) => {
       if (!added) {
         throw new Error("Can't import modules from [${globStr}]")
       }`
-  const foo = `import { Hono } from 'hono'
 
+  const mainAppStr = `import { Hono } from 'hono'
 const mainApp = new Hono()
 
-${options.entryContentBeforeHook ? await options.entryContentBeforeHook('mainApp', { staticPaths }) : ''}
+${await hooksToString('mainApp', options.entryContentBeforeHooks)}
 
 ${appStr}
 
-${options.entryContentAfterHook ? await options.entryContentAfterHook('mainApp', { staticPaths }) : ''}
+${await hooksToString('mainApp', options.entryContentAfterHooks)}
 
 export default mainApp`
-  return foo
+  return mainAppStr
 }

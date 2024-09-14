@@ -3,18 +3,18 @@ import type { BuildOptions } from '../../base.js'
 import buildPlugin from '../../base.js'
 import { serveStaticHook } from '../../entry/serve-static.js'
 
-export type BunBuildOptions = {
+export type NodeBuildOptions = {
   staticRoot?: string | undefined
 } & BuildOptions
 
-const bunBuildPlugin = (pluginOptions?: BunBuildOptions): Plugin => {
+const nodeBuildPlugin = (pluginOptions?: NodeBuildOptions): Plugin => {
   return {
     ...buildPlugin({
       ...{
         entryContentBeforeHooks: [
           async (appName, options) => {
             // eslint-disable-next-line quotes
-            let code = "import { serveStatic } from 'hono/bun'\n"
+            let code = "import { serveStatic } from '@hono/node-server/serve-static'\n"
             code += serveStaticHook(appName, {
               filePaths: options?.staticPaths,
               root: pluginOptions?.staticRoot,
@@ -22,11 +22,19 @@ const bunBuildPlugin = (pluginOptions?: BunBuildOptions): Plugin => {
             return code
           },
         ],
+        entryContentAfterHooks: [
+          async (appName) => {
+            // eslint-disable-next-line quotes
+            let code = "import { serve } from '@hono/node-server'\n"
+            code += `serve(${appName})`
+            return code
+          },
+        ],
       },
       ...pluginOptions,
     }),
-    name: '@hono/vite-build/bun',
+    name: '@hono/vite-build/node',
   }
 }
 
-export default bunBuildPlugin
+export default nodeBuildPlugin

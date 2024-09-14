@@ -1,5 +1,5 @@
 {
-  "name": "@hono/build",
+  "name": "@hono/vite-build",
   "description": "Vite plugin to build your Hono app",
   "version": "0.0.0",
   "types": "dist/index.d.ts",
@@ -23,6 +23,10 @@
     "./bun": {
       "types": "./dist/adapter/bun/index.d.ts",
       "import": "./dist/adapter/bun/index.js"
+    },
+    "./node": {
+      "types": "./dist/adapter/node/index.d.ts",
+      "import": "./dist/adapter/node/index.js"
     }
   },
   "typesVersions": {
@@ -32,6 +36,9 @@
       ],
       "bun": [
         "./dist/adapter/bun/index.d.ts"
+      ],
+      "node": [
+        "./dist/adapter/node/index.d.ts"
       ]
     }
   },
