@@ -1,6 +1,6 @@
+import type { Plugin, ResolvedConfig } from 'vite'
 import { readdir, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import type { Plugin, ResolvedConfig } from 'vite'
 import type { BuildOptions } from '../../base.js'
 import buildPlugin, { defaultOptions } from '../../base.js'
 

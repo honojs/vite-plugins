@@ -1,7 +1,7 @@
-import fs from 'node:fs'
-import path from 'node:path'
 import { build } from 'vite'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import fs from 'node:fs'
+import path from 'node:path'
 import ssgPlugin from '../src/index'
 
 describe('ssgPlugin', () => {

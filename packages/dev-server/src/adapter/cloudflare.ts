@@ -46,7 +46,7 @@ export const cloudflareAdapter: (options?: CloudflareAdapterOptions) => Promise<
       if (proxy !== undefined) {
         try {
           await proxy.dispose()
-        } catch (error) {
+        } catch {
           /**
            * It throws an error if server is not running.
            */
