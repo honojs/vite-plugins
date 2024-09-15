@@ -1,11 +1,49 @@
 import { build } from 'vite'
 import { existsSync, readFileSync, rmSync } from 'node:fs'
+import bunBuildPlugin from '../src/adapter/bun'
 import cloudflarePagesPlugin from '../src/adapter/cloudflare-pages'
+import denoBuildPlugin from '../src/adapter/deno'
+
+describe('Build Plugin with Bun Adapter', () => {
+  const testDir = './test/mocks/app-static-files'
+  const entry = './src/server.ts'
+
+  afterEach(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+  })
+
+  it('Should build the project correctly with the plugin', async () => {
+    const outputFile = `${testDir}/dist/index.js`
+
+    await build({
+      root: testDir,
+      plugins: [
+        bunBuildPlugin({
+          entry,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('Hello World')
+    expect(output).toContain('use("/foo.txt"')
+    expect(output).toContain('use("/js/*"')
+
+    const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
+    expect(outputFooTxt).toContain('foo')
+
+    const outputJsClientJs = readFileSync(`${testDir}/dist/js/client.js`, 'utf-8')
+    // eslint-disable-next-line quotes
+    expect(outputJsClientJs).toContain("console.log('foo')")
+  })
+})
 
 describe('Build Plugin with Cloudflare Pages Adapter', () => {
   const testDir = './test/mocks/app-static-files'
 
-  afterAll(() => {
+  afterEach(() => {
     rmSync(`${testDir}/dist`, { recursive: true, force: true })
   })
 
@@ -81,5 +119,41 @@ describe('Build Plugin with Cloudflare Pages Adapter', () => {
 
     const routes = readFileSync(routesFile, 'utf-8')
     expect(routes).toContain('{"version":1,"include":["/"],"exclude":["/customRoute"]}')
+  })
+})
+
+describe('Build Plugin with Deno Adapter', () => {
+  const testDir = './test/mocks/app-static-files'
+  const entry = './src/server.ts'
+
+  afterEach(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+  })
+
+  it('Should build the project correctly with the plugin', async () => {
+    const outputFile = `${testDir}/dist/index.js`
+
+    await build({
+      root: testDir,
+      plugins: [
+        denoBuildPlugin({
+          entry,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('Hello World')
+    expect(output).toContain('use("/foo.txt"')
+    expect(output).toContain('use("/js/*"')
+
+    const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
+    expect(outputFooTxt).toContain('foo')
+
+    const outputJsClientJs = readFileSync(`${testDir}/dist/js/client.js`, 'utf-8')
+    // eslint-disable-next-line quotes
+    expect(outputJsClientJs).toContain("console.log('foo')")
   })
 })
