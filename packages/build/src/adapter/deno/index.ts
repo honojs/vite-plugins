@@ -22,11 +22,6 @@ const denoBuildPlugin = (pluginOptions?: DenoBuildOptions): Plugin => {
             return code
           },
         ],
-        entryContentAfterHooks: [
-          async (appName) => {
-            return `Deno.serve(${appName}.fetch)`
-          },
-        ],
       },
       ...pluginOptions,
     }),
