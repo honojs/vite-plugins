@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.1.0
+
+### Minor Changes
+
+- [#181](https://github.com/honojs/vite-plugins/pull/181) [`fc15f718c0172f84748f8717f53abba40470baed`](https://github.com/honojs/vite-plugins/commit/fc15f718c0172f84748f8717f53abba40470baed) Thanks [@nakasyou](https://github.com/nakasyou)! - Added Deno adapter
+
 ## 1.0.0
 
 ### Major Changes
