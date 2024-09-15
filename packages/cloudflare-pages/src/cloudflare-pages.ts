@@ -1,7 +1,7 @@
+import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig } from 'vite'
 import { builtinModules } from 'module'
 import { readdir, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig } from 'vite'
 import { getEntryContent } from './entry.js'
 
 type CloudflarePagesOptions = {

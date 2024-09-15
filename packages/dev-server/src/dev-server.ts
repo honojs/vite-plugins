@@ -1,7 +1,7 @@
-import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
 import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
+import type http from 'http'
 import type { Env, Fetch, EnvFunc, Adapter, LoadModule } from './types.js'
 
 export type DevServerOptions = {

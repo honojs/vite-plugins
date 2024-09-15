@@ -1,6 +1,6 @@
-import * as fs from 'node:fs'
 import { build } from 'vite'
 import { describe, it, expect, afterAll } from 'vitest'
+import * as fs from 'node:fs'
 import cloudflarePagesPlugin from '../src/index'
 
 describe('cloudflarePagesPlugin', () => {

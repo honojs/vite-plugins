@@ -1,7 +1,7 @@
+import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig } from 'vite'
 import { builtinModules } from 'module'
 import { readdirSync } from 'node:fs'
-import path, { resolve } from 'node:path'
-import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig } from 'vite'
+import { resolve } from 'node:path'
 import { getEntryContent } from './entry/index.js'
 import type { GetEntryContentOptions } from './entry/index.js'
 

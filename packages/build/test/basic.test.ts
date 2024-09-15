@@ -1,5 +1,5 @@
-import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { build } from 'vite'
+import { existsSync, readFileSync, rmSync } from 'node:fs'
 import buildPlugin from '../src/base'
 
 describe('Base Plugin', () => {

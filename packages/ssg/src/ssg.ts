@@ -1,8 +1,8 @@
-import { relative } from 'node:path'
 import type { Hono } from 'hono'
 import { toSSG } from 'hono/ssg'
 import type { Plugin, ResolvedConfig } from 'vite'
 import { createServer } from 'vite'
+import { relative } from 'node:path'
 
 type SSGOptions = {
   entry?: string
