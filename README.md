@@ -5,7 +5,7 @@ This is a monorepo managing Vite Plugins for Hono.
 ## Available Plugins
 
 - [@hono/vite-dev-server](./packages/dev-server/)
-- [@hono/vite-cloudflare-pages](./packages/cloudflare-pages/)
+- [@hono/vite-build](./packages/build/)
 - [@hono/vite-ssg](./packages/ssg/)
 
 ## How to contribute

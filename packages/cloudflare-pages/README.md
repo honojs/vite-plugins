@@ -2,6 +2,10 @@
 
 `@hono/vite-cloudflare-pages` is a Vite plugin to build your Hono application for Cloudflare Pages.
 
+> [!CAUTION]
+>
+> `@hono/vite-cloudflare-page` is deprecated. Use [`@hono/vite-build`](https://github.com/honojs/vite-plugins/tree/main/packages/build) instead of it.
+
 ## Usage
 
 ### Installation
