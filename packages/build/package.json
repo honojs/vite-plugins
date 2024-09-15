@@ -33,7 +33,7 @@
       "import": "./dist/adapter/cloudflare-pages/index.js"
     },
     "./cloudflare-workers": {
-      "types": "./dist/adapter/cloudflate-workers/index.d.ts",
+      "types": "./dist/adapter/cloudflare-workers/index.d.ts",
       "import": "./dist/adapter/cloudflare-workers/index.js"
     },
     "./deno": {
