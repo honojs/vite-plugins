@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.17.0
+
+### Minor Changes
+
+- [#191](https://github.com/honojs/vite-plugins/pull/191) [`1a9b6851c01ef17c3129a4432db96f67724ab966`](https://github.com/honojs/vite-plugins/commit/1a9b6851c01ef17c3129a4432db96f67724ab966) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: exlude files in `public` dir
+
 ## 0.16.0
 
 ### Minor Changes
