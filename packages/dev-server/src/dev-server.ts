@@ -1,7 +1,9 @@
 import { getRequestListener } from '@hono/node-server'
 import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
+import fs from 'fs'
 import type http from 'http'
+import path from 'path'
 import type { Env, Fetch, EnvFunc, Adapter, LoadModule } from './types.js'
 
 export type DevServerOptions = {
@@ -61,9 +63,13 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
 }
 
 export function devServer(options?: DevServerOptions): VitePlugin {
+  let publicDirPath = ''
   const entry = options?.entry ?? defaultOptions.entry
   const plugin: VitePlugin = {
     name: '@hono/vite-dev-server',
+    configResolved(config) {
+      publicDirPath = config.publicDir
+    },
     configureServer: async (server) => {
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
         return async function (
@@ -71,8 +77,18 @@ export function devServer(options?: DevServerOptions): VitePlugin {
           res: http.ServerResponse,
           next: Connect.NextFunction
         ): Promise<void> {
-          const exclude = options?.exclude ?? defaultOptions.exclude
+          if (req.url) {
+            const filePath = path.join(publicDirPath, req.url)
+            try {
+              if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+                return next()
+              }
+            } catch {
+              // do nothing
+            }
+          }
 
+          const exclude = options?.exclude ?? defaultOptions.exclude
           for (const pattern of exclude) {
             if (req.url) {
               if (pattern instanceof RegExp) {

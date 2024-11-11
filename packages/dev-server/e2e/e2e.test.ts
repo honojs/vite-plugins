@@ -101,3 +101,8 @@ test('Should set `cf` properties', async ({ page }) => {
   expect(res?.ok()).toBe(true)
   expect(await res?.json()).toEqual({ cf: true })
 })
+
+test('Should return files in the public directory', async ({ page }) => {
+  const res = await page.goto('/hono-logo.png')
+  expect(res?.status()).toBe(200)
+})
