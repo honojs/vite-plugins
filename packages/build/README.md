@@ -212,6 +212,10 @@ app.get('/', (c) => {
 })
 ```
 
+## Example
+
+You can see the example project here - [hono-vite-jsx](https://github.com/honojs/examples/tree/main/hono-vite-jsx)
+
 ## Authors
 
 - Yusuke Wada <https://github.com/yusukebe>
