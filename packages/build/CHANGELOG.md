@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.1.1
+
+### Patch Changes
+
+- [#196](https://github.com/honojs/vite-plugins/pull/196) [`ead8c3255f2d7fb68084b8d30c3fbe9fcaabb3ec`](https://github.com/honojs/vite-plugins/commit/ead8c3255f2d7fb68084b8d30c3fbe9fcaabb3ec) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: support latest `hono`
+
 ## 1.1.0
 
 ### Minor Changes
