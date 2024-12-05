@@ -53,7 +53,14 @@ export const getEntryContent = async (options: GetEntryContentOptions) => {
       for (const [, app] of Object.entries(modules)) {
         if (app) {
           mainApp.route('/', app)
-          mainApp.notFound(app.notFoundHandler)
+          mainApp.notFound((c) => {
+            let executionCtx
+            try {
+              executionCtx = c.executionCtx
+            } catch {}
+            return app.fetch(c.req.raw, c.env, executionCtx)
+          })
+          console.log(app.notFoundHandler)
           added = true
         }
       }
