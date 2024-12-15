@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.2.0
+
+### Minor Changes
+
+- [#198](https://github.com/honojs/vite-plugins/pull/198) [`f08c6586018c0da828158ec252be4d889f8c32e8`](https://github.com/honojs/vite-plugins/commit/f08c6586018c0da828158ec252be4d889f8c32e8) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: Node.js adapter supports `port` option
+
 ## 1.1.1
 
 ### Patch Changes
