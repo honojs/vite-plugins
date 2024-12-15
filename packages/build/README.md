@@ -42,6 +42,8 @@ export default defineConfig({
     build({
       // Defaults are `src/index.ts`,`./src/index.tsx`,`./app/server.ts`
       entry: './src/index.tsx',
+      // port option is only for Node.js adapter. Default is 3000
+      port: 3001,
     }),
   ],
 })

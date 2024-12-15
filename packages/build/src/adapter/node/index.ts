@@ -5,9 +5,11 @@ import { serveStaticHook } from '../../entry/serve-static.js'
 
 export type NodeBuildOptions = {
   staticRoot?: string | undefined
+  port?: number | undefined
 } & BuildOptions
 
 const nodeBuildPlugin = (pluginOptions?: NodeBuildOptions): Plugin => {
+  const port = pluginOptions?.port ?? 3000
   return {
     ...buildPlugin({
       ...{
@@ -26,7 +28,7 @@ const nodeBuildPlugin = (pluginOptions?: NodeBuildOptions): Plugin => {
           async (appName) => {
             // eslint-disable-next-line quotes
             let code = "import { serve } from '@hono/node-server'\n"
-            code += `serve(${appName})`
+            code += `serve({ fetch: ${appName}.fetch, port: ${port.toString()} })`
             return code
           },
         ],
