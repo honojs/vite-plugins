@@ -3,6 +3,7 @@ import { existsSync, readFileSync, rmSync } from 'node:fs'
 import bunBuildPlugin from '../src/adapter/bun'
 import cloudflarePagesPlugin from '../src/adapter/cloudflare-pages'
 import denoBuildPlugin from '../src/adapter/deno'
+import nodeBuildPlugin from '../src/adapter/node'
 
 describe('Build Plugin with Bun Adapter', () => {
   const testDir = './test/mocks/app-static-files'
@@ -148,6 +149,45 @@ describe('Build Plugin with Deno Adapter', () => {
     expect(output).toContain('Hello World')
     expect(output).toContain('use("/foo.txt"')
     expect(output).toContain('use("/js/*"')
+
+    const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
+    expect(outputFooTxt).toContain('foo')
+
+    const outputJsClientJs = readFileSync(`${testDir}/dist/js/client.js`, 'utf-8')
+    // eslint-disable-next-line quotes
+    expect(outputJsClientJs).toContain("console.log('foo')")
+  })
+})
+
+describe('Build Plugin with Node.js Adapter', () => {
+  const testDir = './test/mocks/app-static-files'
+  const entry = './src/server.ts'
+
+  afterEach(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+  })
+
+  it('Should build the project correctly with the plugin', async () => {
+    const outputFile = `${testDir}/dist/index.js`
+
+    await build({
+      root: testDir,
+      plugins: [
+        nodeBuildPlugin({
+          entry,
+          port: 3001,
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('Hello World')
+    expect(output).toContain('use("/foo.txt"')
+    expect(output).toContain('use("/js/*"')
+    expect(output).toContain('serve({ fetch: mainApp.fetch, port: 3001 })')
 
     const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
     expect(outputFooTxt).toContain('foo')
