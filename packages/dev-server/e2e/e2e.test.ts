@@ -17,6 +17,22 @@ test('Should contain an injected script tag', async ({ page }) => {
   const lastScriptTag = await page.$('script:last-of-type')
   expect(lastScriptTag).not.toBeNull()
 
+  const nonce = await lastScriptTag?.getAttribute('nonce')
+  expect(nonce).toBeNull()
+
+  const content = await lastScriptTag?.textContent()
+  expect(content).toBe('import("/@vite/client")')
+})
+
+test('Should contain an injected script tag with a nonce', async ({ page }) => {
+  await page.goto('/with-nonce')
+
+  const lastScriptTag = await page.$('script:last-of-type')
+  expect(lastScriptTag).not.toBeNull()
+
+  const nonce = await lastScriptTag?.getAttribute('nonce')
+  expect(nonce).not.toBeNull()
+
   const content = await lastScriptTag?.textContent()
   expect(content).toBe('import("/@vite/client")')
 })
