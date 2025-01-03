@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.2.1
+
+### Patch Changes
+
+- [#204](https://github.com/honojs/vite-plugins/pull/204) [`adcdd9ad7a3c7ef6a828dfa1210ba5d08eadc576`](https://github.com/honojs/vite-plugins/commit/adcdd9ad7a3c7ef6a828dfa1210ba5d08eadc576) Thanks [@jonz94](https://github.com/jonz94)! - fix(build): remove `console.log`
+
 ## 1.2.0
 
 ### Minor Changes
