@@ -60,7 +60,6 @@ export const getEntryContent = async (options: GetEntryContentOptions) => {
             } catch {}
             return app.fetch(c.req.raw, c.env, executionCtx)
           })
-          console.log(app.notFoundHandler)
           added = true
         }
       }
