@@ -12,6 +12,11 @@ app.get('/', (c) => {
   return c.html('<h1>Hello Vite!</h1>')
 })
 
+app.get('/with-nonce', (c) => {
+  c.header('content-security-policy', 'script-src-elem \'self\' \'nonce-ZMuLoN/taD7JZTUXfl5yvQ==\';')
+  return c.html('<h1>Hello Vite!</h1>')
+})
+
 app.get('/name', (c) => c.html(`<h1>My name is ${c.env.NAME}</h1>`))
 
 app.get('/wait-until', (c) => {

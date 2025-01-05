@@ -8,6 +8,11 @@ app.get('/', (c) => {
   return c.html('<h1>Hello Vite!</h1>')
 })
 
+app.get('/with-nonce', (c) => {
+  c.header('content-security-policy', 'script-src-elem \'self\' \'nonce-ZMuLoN/taD7JZTUXfl5yvQ==\';')
+  return c.html('<h1>Hello Vite!</h1>')
+})
+
 app.get('/file.ts', (c) => {
   return c.text('console.log("exclude me!")')
 })
