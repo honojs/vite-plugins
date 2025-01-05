@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.18.0
+
+### Minor Changes
+
+- [#202](https://github.com/honojs/vite-plugins/pull/202) [`3eae0ff4685f53067b32d78d1d9393bddce165eb`](https://github.com/honojs/vite-plugins/commit/3eae0ff4685f53067b32d78d1d9393bddce165eb) Thanks [@meck93](https://github.com/meck93)! - feat: add CSP support to vite's `injectClientScript` option
+
 ## 0.17.0
 
 ### Minor Changes
