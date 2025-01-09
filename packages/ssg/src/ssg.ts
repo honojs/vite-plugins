@@ -56,7 +56,6 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
         build: { ssr: true },
       })
       const module = await server.ssrLoadModule(entry)
-      server.close()
 
       const app = module['default'] as Hono
 
@@ -83,6 +82,8 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
         },
         { dir: outDir }
       )
+
+      server.close()
 
       if (!result.success) {
         throw result.error
