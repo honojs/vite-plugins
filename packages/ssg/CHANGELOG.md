@@ -1,5 +1,11 @@
 # @hono/vite-ssg
 
+## 0.1.1
+
+### Patch Changes
+
+- [#209](https://github.com/honojs/vite-plugins/pull/209) [`9a39a51d34e0e6c34212fed15f49aa9248a8b4bc`](https://github.com/honojs/vite-plugins/commit/9a39a51d34e0e6c34212fed15f49aa9248a8b4bc) Thanks [@berlysia](https://github.com/berlysia)! - Preserve the SSR server instance during page rendering
+
 ## 0.1.0
 
 ### Minor Changes
