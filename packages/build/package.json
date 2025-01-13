@@ -47,6 +47,10 @@
     "./vercel": {
       "types": "./dist/adapter/vercel/index.d.ts",
       "import": "./dist/adapter/vercel/index.js"
+    },
+    "./lambda-edge": {
+      "types": "./dist/adapter/lambda-edge/index.d.ts",
+      "import": "./dist/adapter/lambda-edge/index.js"
     }
   },
   "typesVersions": {
@@ -74,6 +78,9 @@
       ],
       "vercel": [
         "./dist/adapter/vercel/index.d.ts"
+      ],
+      "lambda-edge": [
+        "./dist/adapter/lambda-edge/index.d.ts"
       ]
     }
   },

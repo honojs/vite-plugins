@@ -7,7 +7,7 @@ import denoBuildPlugin from '../src/adapter/deno'
 import netlifyFunctionsPlugin from '../src/adapter/netlify-functions'
 import nodeBuildPlugin from '../src/adapter/node'
 import vercelBuildPlugin from '../src/adapter/vercel'
-
+import lambdaEdgeBuildPlugin from '../src/adapter/lambda-edge'
 describe('Build Plugin with Bun Adapter', () => {
   const testDir = './test/mocks/app-static-files'
   const entry = './src/server.ts'
@@ -348,6 +348,44 @@ describe('Build Plugin with Vercel Adapter', () => {
 
     const outputJsClientJs = readFileSync(`${vercelDir}/output/static/js/client.js`, 'utf-8')
     // eslint-disable-next-line quotes
+    expect(outputJsClientJs).toContain("console.log('foo')")
+  })
+})
+
+describe('Build Plugin with Lambda Edge Adapter', () => {
+  const testDir = './test/mocks/app-static-files'
+  const entry = './src/server.ts'
+
+  afterEach(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+  })
+
+  it('Should build the project correctly with the plugin', async () => {
+    const outputFile = `${testDir}/dist/worker.mjs`
+
+    await build({
+      root: testDir,
+      plugins: [
+        lambdaEdgeBuildPlugin({
+          entry,
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('Hello World')
+    // check if the output contains the handler assignment
+    expect(output).toContain('const handler = handle(mainApp)')
+    // check if the output contains the export statement for the handler
+    expect(output).toMatch(/export {[a-zA-Z\n\r, ]*handler[a-zA-Z\n\r, ]*}/)
+
+    const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
+    expect(outputFooTxt).toContain('foo')
+
+    const outputJsClientJs = readFileSync(`${testDir}/dist/js/client.js`, 'utf-8')
     expect(outputJsClientJs).toContain("console.log('foo')")
   })
 })
