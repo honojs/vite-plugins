@@ -39,6 +39,10 @@
     "./deno": {
       "types": "./dist/adapter/deno/index.d.ts",
       "import": "./dist/adapter/deno/index.js"
+    },
+    "./lambda-edge": {
+      "types": "./dist/adapter/lambda-edge/index.d.ts",
+      "import": "./dist/adapter/lambda-edge/index.js"
     }
   },
   "typesVersions": {
@@ -57,6 +61,9 @@
       ],
       "cloudflare-workers": [
         "./dist/adapter/cloudflare-workers/index.d.ts"
+      ],
+      "lambda-edge": [
+        "./dist/adapter/lambda-edge/index.d.ts"
       ]
     }
   },
