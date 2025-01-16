@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, request } from '@playwright/test'
 
 test('Should return 200 response', async ({ page }) => {
   const response = await page.goto('/')
@@ -121,4 +121,17 @@ test('Should set `cf` properties', async ({ page }) => {
 test('Should return files in the public directory', async ({ page }) => {
   const res = await page.goto('/hono-logo.png')
   expect(res?.status()).toBe(200)
+})
+
+test('Should not crash when receiving a HEAD request', async () => {
+  const apiContext = await request.newContext()
+  const response = await apiContext.fetch('/', {
+    method: 'HEAD',
+  })
+
+  expect(response.status()).toBe(200)
+  expect(response.headers()['content-type']).toMatch(/^text\/html/)
+  const body = await response.body()
+  expect(body.length).toBe(0)
+  await apiContext.dispose()
 })

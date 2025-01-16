@@ -126,7 +126,7 @@ export function devServer(options?: DevServerOptions): VitePlugin {
           }
 
           getRequestListener(
-            async (request) => {
+            async (request): Promise<Response> => {
               let env: Env = {}
 
               if (options?.env) {
@@ -168,7 +168,7 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                   .get('content-security-policy')
                   ?.match(/'nonce-([^']+)'/)?.[1]
                 const script = `<script${nonce ? ` nonce="${nonce}"` : ''}>import("/@vite/client")</script>`
-                return injectStringToResponse(response, script)
+                return injectStringToResponse(response, script) ?? response
               }
               return response
             },
