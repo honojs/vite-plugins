@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.18.1
+
+### Patch Changes
+
+- [#212](https://github.com/honojs/vite-plugins/pull/212) [`01d28ca426646f4b75754767baeb41a11e0d8dfd`](https://github.com/honojs/vite-plugins/commit/01d28ca426646f4b75754767baeb41a11e0d8dfd) Thanks [@gobengo](https://github.com/gobengo)! - dev-server plugin getRequestListener fetchCallback now always returns Promise<Response> instead of sometimes returning Promise<null>
+
 ## 0.18.0
 
 ### Minor Changes
