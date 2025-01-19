@@ -7,7 +7,7 @@ This is a monorepo managing Vite Plugins for Hono.
 - [@hono/vite-dev-server](./packages/dev-server/)
 - [@hono/vite-bun](./packages/bun/)
 - [@hono/vite-netlify](./packages/netlify/)
-- [@hono/vite-cloudflare-pages](./packages/cloudflare-pages/)
+- [@hono/vite-build](./packages/build/)
 - [@hono/vite-ssg](./packages/ssg/)
 
 ## How to contribute

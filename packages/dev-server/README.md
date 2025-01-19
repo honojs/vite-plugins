@@ -9,7 +9,7 @@ You can develop your application with Vite. It's fast.
 - Hono applications run on.
 - Fast by Vite.
 - HMR (Only for the client side).
-- Plugins are available, e.g., Cloudflare Pages.
+- Adapters are available, e.g., Cloudflare.
 - Also runs on Bun.
 
 ## Demo
@@ -51,13 +51,13 @@ So, any Hono application will run on `@hono/vite-dev-server`.
 
 You can install `vite` and `@hono/vite-dev-server` via npm.
 
-```text
+```bash
 npm i -D vite @hono/vite-dev-server
 ```
 
 Or you can install them with Bun.
 
-```text
+```bash
 bun add vite @hono/vite-dev-server
 ```
 
@@ -82,13 +82,13 @@ export default defineConfig({
 
 Just run `vite`.
 
-```text
+```bash
 npm exec vite
 ```
 
 Or
 
-```text
+```bash
 bunx --bun vite
 ```
 
@@ -147,7 +147,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [
     devServer({
-      exclude: ['/assets/.*', ...defaultOptions.exclude],
+      exclude: ['/assets/*', ...defaultOptions.exclude],
     }),
   ],
 })
@@ -167,6 +167,12 @@ You can pass the `env` value of a specified environment to the application.
 
 You can pass the Bindings specified in `wrangler.toml` to your application by using "Cloudflare Adapter".
 
+Install miniflare and wrangler to develop and deploy your cf project.
+
+```bash
+npm i -D wrangler miniflare
+```
+
 ```ts
 import devServer from '@hono/vite-dev-server'
 import cloudflareAdapter from '@hono/vite-dev-server/cloudflare'
@@ -177,6 +183,30 @@ export default defineConfig(async () => {
     plugins: [
       devServer({
         adapter: cloudflareAdapter,
+      }),
+    ],
+  }
+})
+```
+
+### Node.js & Bun
+
+No additional dependencies needed.
+
+```ts
+import devServer from '@hono/vite-dev-server'
+import nodeAdapter from '@hono/vite-dev-server/node'
+// OR
+// import bunAdapter from '@hono/vite-dev-server/bun'
+import { defineConfig } from 'vite'
+
+export default defineConfig(async () => {
+  return {
+    plugins: [
+      devServer({
+        adapter: nodeAdapter,
+        // OR
+        // adapter: bunAdapter,
       }),
     ],
   }
@@ -252,7 +282,7 @@ export default defineConfig(({ mode }) => {
 
 You can run the following command to build the client script.
 
-```text
+```bash
 vite build --mode client
 ```
 

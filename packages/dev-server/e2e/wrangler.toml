@@ -1,8 +1,2 @@
 [vars]
-VARIABLE_FROM_WRANGLER_TOML = "VARIABLE_FROM_WRANGLER_TOML_VALUE"
-
-[[d1_databases]]
-binding = "DB_FROM_WRANGLER_TOML"
-database_name = "DB_NAME"
-database_id = "DB_ID"
-
+NAME = "Hono"

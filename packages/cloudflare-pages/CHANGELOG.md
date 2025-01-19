@@ -1,5 +1,11 @@
 # @hono/vite-cloudflare-pages
 
+## 0.4.2
+
+### Patch Changes
+
+- [#153](https://github.com/honojs/vite-plugins/pull/153) [`6fb01bfa65b53c9236d45a0106250e4444a6c8f7`](https://github.com/honojs/vite-plugins/commit/6fb01bfa65b53c9236d45a0106250e4444a6c8f7) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: add `target` option as `webworker`
+
 ## 0.4.1
 
 ### Patch Changes

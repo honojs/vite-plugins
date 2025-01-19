@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": [
+    "src",
+    "test"
+  ],
+  "compilerOptions": {
+    "module": "ES2022",
+    "target": "ES2022",
+    "types": [
+      "vitest/globals",
+      "vite/client"
+    ]
+  },
+}

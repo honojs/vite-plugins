@@ -15,11 +15,14 @@ jobs:
     defaults:
       run:
         working-directory: ./packages/dev-server
+    strategy:
+      matrix:
+        node: [20, 22]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: 20.x
+          node-version: ${{ matrix.node }}
       - run: yarn install
       - run: yarn build
       - run: npx playwright install --with-deps

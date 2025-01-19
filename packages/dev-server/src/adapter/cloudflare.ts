@@ -2,14 +2,13 @@ import { WebSocketPair } from 'miniflare'
 import { getPlatformProxy } from 'wrangler'
 import type { Adapter, Env } from '../types.js'
 
-// We detect if the environment is `workerd` by checking if the WebSocketPair is available.
 Object.assign(globalThis, { WebSocketPair })
 
 type CloudflareAdapterOptions = {
   proxy: Parameters<typeof getPlatformProxy>[0]
 }
 
-let proxy: Awaited<ReturnType<typeof getPlatformProxy<Env>>>
+let proxy: Awaited<ReturnType<typeof getPlatformProxy<Env>>> | undefined = undefined
 
 export const cloudflareAdapter: (options?: CloudflareAdapterOptions) => Promise<Adapter> = async (
   options
@@ -17,16 +16,43 @@ export const cloudflareAdapter: (options?: CloudflareAdapterOptions) => Promise<
   proxy ??= await getPlatformProxy(options?.proxy)
   // Cache API provided by `getPlatformProxy` currently do nothing.
   Object.assign(globalThis, { caches: proxy.caches })
+  if (typeof globalThis.navigator === 'undefined') {
+    // @ts-expect-error not typed well
+    globalThis.navigator = {
+      userAgent: 'Cloudflare-Workers',
+    }
+  } else {
+    Object.defineProperty(globalThis.navigator, 'userAgent', {
+      value: 'Cloudflare-Workers',
+      writable: false,
+    })
+  }
+
+  Object.defineProperty(Request.prototype, 'cf', {
+    get: function () {
+      if (proxy !== undefined) {
+        return proxy.cf
+      }
+      throw new Error('Proxy is not initialized')
+    },
+    configurable: true,
+    enumerable: true,
+  })
+
   return {
     env: proxy.env,
     executionContext: proxy.ctx,
     onServerClose: async () => {
-      try {
-        await proxy.dispose()
-      } catch {
-        /**
-         * It throws an error if server is not running.
-         */
+      if (proxy !== undefined) {
+        try {
+          await proxy.dispose()
+        } catch {
+          /**
+           * It throws an error if server is not running.
+           */
+        } finally {
+          proxy = undefined
+        }
       }
     },
   }

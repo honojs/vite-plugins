@@ -1,5 +1,75 @@
 # @hono/vite-dev-server
 
+## 0.18.1
+
+### Patch Changes
+
+- [#212](https://github.com/honojs/vite-plugins/pull/212) [`01d28ca426646f4b75754767baeb41a11e0d8dfd`](https://github.com/honojs/vite-plugins/commit/01d28ca426646f4b75754767baeb41a11e0d8dfd) Thanks [@gobengo](https://github.com/gobengo)! - dev-server plugin getRequestListener fetchCallback now always returns Promise<Response> instead of sometimes returning Promise<null>
+
+## 0.18.0
+
+### Minor Changes
+
+- [#202](https://github.com/honojs/vite-plugins/pull/202) [`3eae0ff4685f53067b32d78d1d9393bddce165eb`](https://github.com/honojs/vite-plugins/commit/3eae0ff4685f53067b32d78d1d9393bddce165eb) Thanks [@meck93](https://github.com/meck93)! - feat: add CSP support to vite's `injectClientScript` option
+
+## 0.17.0
+
+### Minor Changes
+
+- [#191](https://github.com/honojs/vite-plugins/pull/191) [`1a9b6851c01ef17c3129a4432db96f67724ab966`](https://github.com/honojs/vite-plugins/commit/1a9b6851c01ef17c3129a4432db96f67724ab966) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: exlude files in `public` dir
+
+## 0.16.0
+
+### Minor Changes
+
+- [#175](https://github.com/honojs/vite-plugins/pull/175) [`c44f9391cf145192b3632c6eb71b15a8d5d3178b`](https://github.com/honojs/vite-plugins/commit/c44f9391cf145192b3632c6eb71b15a8d5d3178b) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: add `loadModule` option
+
+## 0.15.2
+
+### Patch Changes
+
+- [#173](https://github.com/honojs/vite-plugins/pull/173) [`840e6da43ba95bbfde767246f8ee071d8235f166`](https://github.com/honojs/vite-plugins/commit/840e6da43ba95bbfde767246f8ee071d8235f166) Thanks [@komapotter](https://github.com/komapotter)! - fix(dev-server): Add null check and error handling for proxy disposal in cloudflareAdapter
+
+## 0.15.1
+
+### Patch Changes
+
+- [#170](https://github.com/honojs/vite-plugins/pull/170) [`4137d3fd60cb7189c485c7b73c46d64fb7adb0af`](https://github.com/honojs/vite-plugins/commit/4137d3fd60cb7189c485c7b73c46d64fb7adb0af) Thanks [@arisris](https://github.com/arisris)! - (fix) missing export for initial node, bun adapter in the package.json from the previous version
+
+## 0.15.0
+
+### Minor Changes
+
+- [#167](https://github.com/honojs/vite-plugins/pull/167) [`044a023d63d1ce903aa6bab132b16d0799265766`](https://github.com/honojs/vite-plugins/commit/044a023d63d1ce903aa6bab132b16d0799265766) Thanks [@arisris](https://github.com/arisris)! - Add initial nodejs adapter
+
+- [#166](https://github.com/honojs/vite-plugins/pull/166) [`714951ca854e949834f9b5375342684849f5c260`](https://github.com/honojs/vite-plugins/commit/714951ca854e949834f9b5375342684849f5c260) Thanks [@arisris](https://github.com/arisris)! - Add Initial bun adapter
+
+### Patch Changes
+
+- [#165](https://github.com/honojs/vite-plugins/pull/165) [`0a59fddeaeae3cc1222779035c1f2b1c4753f1e3`](https://github.com/honojs/vite-plugins/commit/0a59fddeaeae3cc1222779035c1f2b1c4753f1e3) Thanks [@arisris](https://github.com/arisris)! - Remove miniflare from deps, and add it to peer optional.
+
+## 0.14.0
+
+### Minor Changes
+
+- [#161](https://github.com/honojs/vite-plugins/pull/161) [`6cb1002e01e7b7554b2efa873f8e46ca3d14c5fc`](https://github.com/honojs/vite-plugins/commit/6cb1002e01e7b7554b2efa873f8e46ca3d14c5fc) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: support `cf` property in Cloudflare adapter
+
+## 0.13.1
+
+### Patch Changes
+
+- [#156](https://github.com/honojs/vite-plugins/pull/156) [`e62bf1b49d96cd2d59d98572a034bee7514cd00f`](https://github.com/honojs/vite-plugins/commit/e62bf1b49d96cd2d59d98572a034bee7514cd00f) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: set `navigator.userAgent` correctly
+
+## 0.13.0
+
+### Minor Changes
+
+- [#152](https://github.com/honojs/vite-plugins/pull/152) [`1782639ce0b9dcc802d3ecbb5f14dd614b80f708`](https://github.com/honojs/vite-plugins/commit/1782639ce0b9dcc802d3ecbb5f14dd614b80f708) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: remove plugins
+
+### Patch Changes
+
+- [#150](https://github.com/honojs/vite-plugins/pull/150) [`a0c634394cf6dde72df8408d475598ccf35a9bc5`](https://github.com/honojs/vite-plugins/commit/a0c634394cf6dde72df8408d475598ccf35a9bc5) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: add `navigator.userAgent` value for the cloudflare adapter
+
 ## 0.12.2
 
 ### Patch Changes

@@ -1,7 +1,7 @@
-import fs from 'node:fs'
-import path from 'node:path'
 import { build } from 'vite'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import fs from 'node:fs'
+import path from 'node:path'
 import ssgPlugin from '../src/index'
 
 describe('ssgPlugin', () => {
@@ -9,6 +9,7 @@ describe('ssgPlugin', () => {
   const entryFile = './test/app.ts'
   const outDir = path.resolve(testDir, 'dist')
   const outputFile = path.resolve(outDir, 'index.html')
+  const outputFileWithDynamicImport = path.resolve(outDir, 'dynamic-import.txt')
 
   beforeAll(() => {
     fs.mkdirSync(testDir, { recursive: true })
@@ -37,6 +38,11 @@ describe('ssgPlugin', () => {
 
     const output = fs.readFileSync(outputFile, 'utf-8')
     expect(output).toBe('<html><body><h1>Hello!</h1></body></html>')
+
+    expect(fs.existsSync(outputFileWithDynamicImport)).toBe(true)
+
+    const outputDynamicImport = fs.readFileSync(outputFileWithDynamicImport, 'utf-8')
+    expect(outputDynamicImport).toBe('Dynamic import works: sample!')
 
     // Should not output files corresponding to a virtual entry
     expect(fs.existsSync(path.resolve(outDir, 'assets'))).toBe(false)

@@ -4,12 +4,16 @@ import { getRuntimeKey } from 'hono/adapter'
 const app = new Hono<{
   Bindings: {
     NAME: string
-    ASSETS: { fetch: typeof fetch }
   }
 }>()
 
 app.get('/', (c) => {
   c.header('x-via', 'vite')
+  return c.html('<h1>Hello Vite!</h1>')
+})
+
+app.get('/with-nonce', (c) => {
+  c.header('content-security-policy', 'script-src-elem \'self\' \'nonce-ZMuLoN/taD7JZTUXfl5yvQ==\';')
   return c.html('<h1>Hello Vite!</h1>')
 })
 
@@ -54,12 +58,6 @@ app.get('/stream', () => {
   })
 })
 
-app.get('/assets/hello.json', async (c) => {
-  const res = await c.env.ASSETS.fetch(new URL('/static/hello.json', c.req.url))
-  const data = await res.json()
-  return c.json(data)
-})
-
 // @ts-expect-error the response is string
 app.get('/invalid-response', () => {
   return '<h1>Hello!</h1>'
@@ -97,6 +95,13 @@ app.get('/cache', async (c) => {
     })
   )
   return c.text('first')
+})
+
+app.get('/cf', (c) => {
+  return c.json({
+    // @ts-expect-error `Request.cf` is not typed
+    cf: typeof c.req.raw.cf === 'object' ? true : false,
+  })
 })
 
 export default app

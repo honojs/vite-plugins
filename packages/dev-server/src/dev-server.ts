@@ -1,11 +1,10 @@
-import type http from 'http'
 import { getRequestListener } from '@hono/node-server'
 import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
-import { createViteRuntime } from 'vite'
-import type { ViteRuntime } from 'vite/runtime'
-import { getEnv as cloudflarePagesGetEnv } from './cloudflare-pages/index.js'
-import type { Env, Fetch, EnvFunc, Plugin, Adapter } from './types.js'
+import fs from 'fs'
+import type http from 'http'
+import path from 'path'
+import type { Env, Fetch, EnvFunc, Adapter, LoadModule } from './types.js'
 
 export type DevServerOptions = {
   entry?: string
@@ -14,7 +13,7 @@ export type DevServerOptions = {
   exclude?: (string | RegExp)[]
   ignoreWatching?: (string | RegExp)[]
   env?: Env | EnvFunc
-  plugins?: Plugin[]
+  loadModule?: LoadModule
   /**
    * This can be used to inject environment variables into the worker from your wrangler.toml for example,
    * by making use of the helper function `getPlatformProxy` from `wrangler`.
@@ -44,15 +43,9 @@ export type DevServerOptions = {
    *
    */
   adapter?: Adapter | Promise<Adapter> | (() => Adapter | Promise<Adapter>)
-  /**
-   * @deprecated
-   * The `cf` option is maintained for backward compatibility, but it will be obsolete in the future.
-   * Instead, use the `env` option.
-   */
-  cf?: Parameters<typeof cloudflarePagesGetEnv>[0]
 }
 
-export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'adapter'>> = {
+export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' | 'loadModule'>> = {
   entry: './src/index.ts',
   export: 'default',
   injectClientScript: true,
@@ -67,13 +60,16 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'cf' | 'ada
     /^\/node_modules\/.*/,
   ],
   ignoreWatching: [/\.wrangler/, /\.mf/],
-  plugins: [],
 }
 
 export function devServer(options?: DevServerOptions): VitePlugin {
+  let publicDirPath = ''
   const entry = options?.entry ?? defaultOptions.entry
   const plugin: VitePlugin = {
     name: '@hono/vite-dev-server',
+    configResolved(config) {
+      publicDirPath = config.publicDir
+    },
     configureServer: async (server) => {
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
         return async function (
@@ -81,8 +77,18 @@ export function devServer(options?: DevServerOptions): VitePlugin {
           res: http.ServerResponse,
           next: Connect.NextFunction
         ): Promise<void> {
-          const exclude = options?.exclude ?? defaultOptions.exclude
+          if (req.url) {
+            const filePath = path.join(publicDirPath, req.url)
+            try {
+              if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+                return next()
+              }
+            } catch {
+              // do nothing
+            }
+          }
 
+          const exclude = options?.exclude ?? defaultOptions.exclude
           for (const pattern of exclude) {
             if (req.url) {
               if (pattern instanceof RegExp) {
@@ -94,23 +100,33 @@ export function devServer(options?: DevServerOptions): VitePlugin {
               }
             }
           }
-          let appModule
+
+          let loadModule: LoadModule
+
+          if (options?.loadModule) {
+            loadModule = options.loadModule
+          } else {
+            loadModule = async (server, entry) => {
+              const appModule = await server.ssrLoadModule(entry)
+              const exportName = options?.export ?? defaultOptions.export
+              const app = appModule[exportName] as { fetch: Fetch }
+              if (!app) {
+                throw new Error(`Failed to find a named export "${exportName}" from ${entry}`)
+              }
+              return app
+            }
+          }
+
+          let app: { fetch: Fetch }
 
           try {
-            appModule = await server.ssrLoadModule(entry)
+            app = await loadModule(server, entry)
           } catch (e) {
             return next(e)
           }
 
-          const exportName = options?.export ?? defaultOptions.export
-          const app = appModule[exportName] as { fetch: Fetch }
-
-          if (!app) {
-            return next(new Error(`Failed to find a named export "${exportName}" from ${entry}`))
-          }
-
           getRequestListener(
-            async (request) => {
+            async (request): Promise<Response> => {
               let env: Env = {}
 
               if (options?.env) {
@@ -118,22 +134,6 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                   env = { ...env, ...(await options.env()) }
                 } else {
                   env = { ...env, ...options.env }
-                }
-              }
-              if (options?.cf) {
-                env = {
-                  ...env,
-                  ...(await cloudflarePagesGetEnv(options.cf)()),
-                }
-              }
-              if (options?.plugins) {
-                for (const plugin of options.plugins) {
-                  if (plugin.env) {
-                    env = {
-                      ...env,
-                      ...(typeof plugin.env === 'function' ? await plugin.env() : plugin.env),
-                    }
-                  }
                 }
               }
 
@@ -164,8 +164,11 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                 options?.injectClientScript !== false &&
                 response.headers.get('content-type')?.match(/^text\/html/)
               ) {
-                const script = '<script>import("/@vite/client")</script>'
-                return injectStringToResponse(response, script)
+                const nonce = response.headers
+                  .get('content-security-policy')
+                  ?.match(/'nonce-([^']+)'/)?.[1]
+                const script = `<script${nonce ? ` nonce="${nonce}"` : ''}>import("/@vite/client")</script>`
+                return injectStringToResponse(response, script) ?? response
               }
               return response
             },
@@ -191,13 +194,6 @@ export function devServer(options?: DevServerOptions): VitePlugin {
 
       server.middlewares.use(await createMiddleware(server))
       server.httpServer?.on('close', async () => {
-        if (options?.plugins) {
-          for (const plugin of options.plugins) {
-            if (plugin.onServerClose) {
-              await plugin.onServerClose()
-            }
-          }
-        }
         const adapter = await getAdapterFromOptions(options)
         if (adapter?.onServerClose) {
           await adapter.onServerClose()
