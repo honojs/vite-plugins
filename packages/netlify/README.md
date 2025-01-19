@@ -1,6 +1,6 @@
 # @hono/vite-netlify
 
-`@hono/vite-netlify` is a Vite plugin to build your Hono application for Bun.
+`@hono/vite-netlify` is a Vite plugin to build your Hono application for Netlify.
 
 ## Usage
 
