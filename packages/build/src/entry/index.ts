@@ -13,6 +13,13 @@ export type GetEntryContentOptions = {
   entry: string[]
   entryContentBeforeHooks?: EntryContentHook[]
   entryContentAfterHooks?: EntryContentHook[]
+  /**
+   * Explicitly specify the default export for the app. Make sure your export
+   * incorporates the app passed as the `appName` argument.
+   *
+   * @default `export default ${appName}`
+   */
+  entryContentDefaultExportHook?: EntryContentHook
   staticPaths?: string[]
 }
 
@@ -67,7 +74,10 @@ export const getEntryContent = async (options: GetEntryContentOptions) => {
         throw new Error("Can't import modules from [${globStr}]")
       }`
 
-  const mainAppStr = `import { Hono } from 'hono'
+  const defaultExportHook =
+    options.entryContentDefaultExportHook ?? (() => 'export default mainApp')
+
+  return `import { Hono } from 'hono'
 const mainApp = new Hono()
 
 ${await hooksToString('mainApp', options.entryContentBeforeHooks)}
@@ -76,6 +86,5 @@ ${appStr}
 
 ${await hooksToString('mainApp', options.entryContentAfterHooks)}
 
-export default mainApp`
-  return mainAppStr
+${await hooksToString('mainApp', [defaultExportHook])}`
 }

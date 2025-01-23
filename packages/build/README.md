@@ -9,6 +9,7 @@ Here are the modules included:
 - `@hono/vite-build/cloudflare-workers`
 - `@hono/vite-build/bun`
 - `@hono/vite-build/node`
+- `@hono/vite-build/netlify-functions`
 
 ## Usage
 
@@ -36,6 +37,7 @@ import build from '@hono/vite-build/bun'
 // import build from '@hono/vite-build/cloudflare-pages'
 // import build from '@hono/vite-build/cloudflare-workers'
 // import build from '@hono/vite-build/node'
+// import build from '@hono/vite-build/netlify-functions'
 
 export default defineConfig({
   plugins: [
@@ -51,7 +53,7 @@ export default defineConfig({
 
 ### Build
 
-Just run `vite build`.
+Just run `vite build`.
 
 ```bash
 npm exec vite build

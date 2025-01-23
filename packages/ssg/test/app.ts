@@ -7,7 +7,7 @@ app.get('/', (c) => {
 })
 
 app.get('/dynamic-import', async (c) => {
-  // @ts-expect-error
+  // @ts-expect-error this is a test
   const module = await import('./sample.js')
   return c.text('Dynamic import works: ' + module.default)
 })
