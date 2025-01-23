@@ -9,7 +9,8 @@ app.get('/', (c) => {
 })
 
 app.get('/with-nonce', (c) => {
-  c.header('content-security-policy', 'script-src-elem \'self\' \'nonce-ZMuLoN/taD7JZTUXfl5yvQ==\';')
+  // eslint-disable-next-line quotes -- allowing using double-quotes bc of embedded single quotes
+  c.header('content-security-policy', "script-src-elem 'self' 'nonce-ZMuLoN/taD7JZTUXfl5yvQ==';")
   return c.html('<h1>Hello Vite!</h1>')
 })
 

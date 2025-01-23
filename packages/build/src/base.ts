@@ -25,7 +25,10 @@ export type BuildOptions = {
 } & Omit<GetEntryContentOptions, 'entry'>
 
 export const defaultOptions: Required<
-  Omit<BuildOptions, 'entryContentAfterHooks' | 'entryContentBeforeHooks'>
+  Omit<
+    BuildOptions,
+    'entryContentAfterHooks' | 'entryContentBeforeHooks' | 'entryContentDefaultExportHook'
+  >
 > = {
   entry: ['src/index.ts', './src/index.tsx', './app/server.ts'],
   output: 'index.js',
@@ -46,7 +49,6 @@ const buildPlugin = (options: BuildOptions): Plugin => {
   const virtualEntryId = 'virtual:build-entry-module'
   const resolvedVirtualEntryId = '\0' + virtualEntryId
   let config: ResolvedConfig
-
   const output = options.output ?? defaultOptions.output
 
   return {
@@ -94,6 +96,7 @@ const buildPlugin = (options: BuildOptions): Plugin => {
           entry: Array.isArray(entry) ? entry : [entry],
           entryContentBeforeHooks: options.entryContentBeforeHooks,
           entryContentAfterHooks: options.entryContentAfterHooks,
+          entryContentDefaultExportHook: options.entryContentDefaultExportHook,
           staticPaths,
         })
       }
