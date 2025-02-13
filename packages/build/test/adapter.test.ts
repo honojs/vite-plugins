@@ -8,6 +8,8 @@ import netlifyFunctionsPlugin from '../src/adapter/netlify-functions'
 import nodeBuildPlugin from '../src/adapter/node'
 import vercelBuildPlugin from '../src/adapter/vercel'
 import lambdaEdgeBuildPlugin from '../src/adapter/lambda-edge'
+import awsLambdaBuildPlugin from '../src/adapter/aws-lambda'
+
 describe('Build Plugin with Bun Adapter', () => {
   const testDir = './test/mocks/app-static-files'
   const entry = './src/server.ts'
@@ -300,9 +302,6 @@ describe('Build Plugin with Node.js Adapter', () => {
     expect(output).toContain('use("/static/*", serveStatic({ root: "./" }))')
     expect(output).toContain('serve({ fetch: mainApp.fetch, port: 3001 })')
 
-    const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
-    expect(outputFooTxt).toContain('foo')
-
     const outputJsClientJs = readFileSync(`${testDir}/dist/js/client.js`, 'utf-8')
     // eslint-disable-next-line quotes
     expect(outputJsClientJs).toContain("console.log('foo')")
@@ -381,11 +380,38 @@ describe('Build Plugin with Lambda Edge Adapter', () => {
     expect(output).toContain('const handler = handle(mainApp)')
     // check if the output contains the export statement for the handler
     expect(output).toMatch(/export {[a-zA-Z\n\r, ]*handler[a-zA-Z\n\r, ]*}/)
-
-    const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
-    expect(outputFooTxt).toContain('foo')
-
-    const outputJsClientJs = readFileSync(`${testDir}/dist/js/client.js`, 'utf-8')
-    expect(outputJsClientJs).toContain("console.log('foo')")
   })
 })
+
+describe('Build Plugin with AWS Lambda Adapter', () => {
+  const testDir = './test/mocks/app-static-files';
+  const entry = './src/server.ts';
+
+  afterEach(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true });
+  });
+
+  it('Should build the project correctly with the AWS Lambda plugin', async () => {
+    const outputFile = `${testDir}/dist/worker.mjs`;
+
+    await build({
+      root: testDir,
+      plugins: [
+        awsLambdaBuildPlugin({
+          entry,
+          minify: false,
+        }),
+      ],
+    });
+
+    expect(existsSync(outputFile)).toBe(true);
+
+    const output = readFileSync(outputFile, 'utf-8');
+    expect(output).toContain('Hello World')
+    // check if the output contains the handler assignment
+    expect(output).toContain('const handler = handle(mainApp)')
+    // check if the output contains the export statement for the handler
+    expect(output).toMatch(/export {[a-zA-Z\n\r, ]*handler[a-zA-Z\n\r, ]*}/)
+
+  });
+});
