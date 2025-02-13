@@ -107,7 +107,15 @@ export function devServer(options?: DevServerOptions): VitePlugin {
             loadModule = options.loadModule
           } else {
             loadModule = async (server, entry) => {
-              const appModule = await server.ssrLoadModule(entry)
+              let appModule
+              try {
+                appModule = await server.ssrLoadModule(entry)
+              } catch (e) {
+                if (e instanceof Error) {
+                  server.ssrFixStacktrace(e)
+                }
+                throw e
+              }
               const exportName = options?.export ?? defaultOptions.export
               const app = appModule[exportName] as { fetch: Fetch }
               if (!app) {
