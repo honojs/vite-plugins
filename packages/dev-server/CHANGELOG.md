@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.18.2
+
+### Patch Changes
+
+- [#228](https://github.com/honojs/vite-plugins/pull/228) [`5153b84779b279274836512f7172c53e5cc11ae7`](https://github.com/honojs/vite-plugins/commit/5153b84779b279274836512f7172c53e5cc11ae7) Thanks [@mo36924](https://github.com/mo36924)! - fix: Fixed problem with source map not working when reading entry files
+
 ## 0.18.1
 
 ### Patch Changes
