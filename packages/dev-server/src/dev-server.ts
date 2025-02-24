@@ -208,6 +208,10 @@ export function devServer(options?: DevServerOptions): VitePlugin {
         }
       })
     },
+    handleHotUpdate({ server }) {
+      server.ws.send({ type: 'full-reload' })
+      return []
+    },
     config: () => {
       return {
         server: {
