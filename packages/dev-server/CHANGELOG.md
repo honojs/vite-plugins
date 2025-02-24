@@ -1,5 +1,13 @@
 # @hono/vite-dev-server
 
+## 0.18.2
+
+### Patch Changes
+
+- [#231](https://github.com/honojs/vite-plugins/pull/231) [`eb196d52a7f2059540c64a9c0b94298d49a00b90`](https://github.com/honojs/vite-plugins/commit/eb196d52a7f2059540c64a9c0b94298d49a00b90) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: support hot reload for Vite6
+
+- [#228](https://github.com/honojs/vite-plugins/pull/228) [`5153b84779b279274836512f7172c53e5cc11ae7`](https://github.com/honojs/vite-plugins/commit/5153b84779b279274836512f7172c53e5cc11ae7) Thanks [@mo36924](https://github.com/mo36924)! - fix: Fixed problem with source map not working when reading entry files
+
 ## 0.18.1
 
 ### Patch Changes
