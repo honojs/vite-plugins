@@ -107,6 +107,7 @@ export type DevServerOptions = {
     env?: Env
     onServerClose?: () => Promise<void>
   }
+  handleHotUpdate?: VitePlugin['handleHotUpdate']
 }
 ```
 
@@ -127,6 +128,13 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
     /^\/node_modules\/.*/,
   ],
   ignoreWatching: [/\.wrangler/],
+  handleHotUpdate: ({ server, modules }) => {
+    const isSSR = modules.some((mod) => mod._ssrModule)
+    if (isSSR) {
+      server.hot.send({ type: 'full-reload' })
+      return []
+    }
+  },
 }
 ```
 
