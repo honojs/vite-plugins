@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.18.3
+
+### Patch Changes
+
+- [#233](https://github.com/honojs/vite-plugins/pull/233) [`1dbcbb8654739f54beb0e4082b3639f4f4a9468f`](https://github.com/honojs/vite-plugins/commit/1dbcbb8654739f54beb0e4082b3639f4f4a9468f) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: enable HMR for client-side
+
 ## 0.18.2
 
 ### Patch Changes
