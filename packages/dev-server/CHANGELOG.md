@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.19.0
+
+### Minor Changes
+
+- [#235](https://github.com/honojs/vite-plugins/pull/235) [`367d2b088c14c29ae12701ab702305209b1959ce`](https://github.com/honojs/vite-plugins/commit/367d2b088c14c29ae12701ab702305209b1959ce) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: add `handleHotUpdate` option
+
 ## 0.18.3
 
 ### Patch Changes
