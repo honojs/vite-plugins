@@ -10,6 +10,7 @@ export type BuildOptions = {
    * @default ['src/index.ts', './src/index.tsx', './app/server.ts']
    */
   entry?: string | string[]
+  transformEntry?: ((code: string, id: string) => string) | undefined
   /**
    * @default './dist'
    */
@@ -27,7 +28,7 @@ export type BuildOptions = {
 export const defaultOptions: Required<
   Omit<
     BuildOptions,
-    'entryContentAfterHooks' | 'entryContentBeforeHooks' | 'entryContentDefaultExportHook'
+    'entryContentAfterHooks' | 'entryContentBeforeHooks' | 'entryContentDefaultExportHook' | 'transformEntry'
   >
 > = {
   entry: ['src/index.ts', './src/index.tsx', './app/server.ts'],
@@ -99,6 +100,23 @@ const buildPlugin = (options: BuildOptions): Plugin => {
           entryContentDefaultExportHook: options.entryContentDefaultExportHook,
           staticPaths,
         })
+      }
+    },
+    transform(code, id) {
+      const entry = options.entry ?? defaultOptions.entry
+
+      if (typeof entry === 'string') {
+        if (!id.endsWith(entry)) {
+          return
+        }
+      } else {
+        if (!entry.includes(id)) {
+          return
+        }
+      }
+
+      if (options.transformEntry !== undefined) {
+        return options.transformEntry(code, id)
       }
     },
     apply: options?.apply ?? defaultOptions.apply,
