@@ -43,6 +43,7 @@ export type DevServerOptions = {
    *
    */
   adapter?: Adapter | Promise<Adapter> | (() => Adapter | Promise<Adapter>)
+  handleHotUpdate?: VitePlugin['handleHotUpdate']
 }
 
 export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' | 'loadModule'>> = {
@@ -60,6 +61,15 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
     /^\/node_modules\/.*/,
   ],
   ignoreWatching: [/\.wrangler/, /\.mf/],
+  handleHotUpdate: ({ server, modules }) => {
+    // Force reload the page if any of the modules is SSR
+    const isSSR = modules.some((mod) => mod._ssrModule)
+    if (isSSR) {
+      server.hot.send({ type: 'full-reload' })
+      return []
+    }
+    // Apply HMR for the client-side modules
+  },
 }
 
 export function devServer(options?: DevServerOptions): VitePlugin {
@@ -208,15 +218,7 @@ export function devServer(options?: DevServerOptions): VitePlugin {
         }
       })
     },
-    handleHotUpdate({ server, modules }) {
-      // Force reload the page if any of the modules is SSR
-      const isSSR = modules.some((mod) => mod._ssrModule)
-      if (isSSR) {
-        server.hot.send({ type: 'full-reload' })
-        return []
-      }
-      // Apply HMR for the client-side modules
-    },
+    handleHotUpdate: options?.handleHotUpdate ?? defaultOptions.handleHotUpdate,
     config: () => {
       return {
         server: {
