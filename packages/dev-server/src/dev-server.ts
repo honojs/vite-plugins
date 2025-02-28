@@ -208,9 +208,14 @@ export function devServer(options?: DevServerOptions): VitePlugin {
         }
       })
     },
-    handleHotUpdate({ server }) {
-      server.ws.send({ type: 'full-reload' })
-      return []
+    handleHotUpdate({ server, modules }) {
+      // Force reload the page if any of the modules is SSR
+      const isSSR = modules.some((mod) => mod._ssrModule)
+      if (isSSR) {
+        server.hot.send({ type: 'full-reload' })
+        return []
+      }
+      // Apply HMR for the client-side modules
     },
     config: () => {
       return {
