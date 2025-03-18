@@ -1,5 +1,11 @@
 # @hono/vite-ssg
 
+## 0.1.2
+
+### Patch Changes
+
+- [#239](https://github.com/honojs/vite-plugins/pull/239) [`b27fca203320e55f74184541d35b4720e9b456c8`](https://github.com/honojs/vite-plugins/commit/b27fca203320e55f74184541d35b4720e9b456c8) Thanks [@ssssota](https://github.com/ssssota)! - Load .env.{mode} to bundle environment variable
+
 ## 0.1.1
 
 ### Patch Changes
