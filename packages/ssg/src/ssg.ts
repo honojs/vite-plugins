@@ -54,6 +54,7 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
       const server = await createServer({
         plugins: [],
         build: { ssr: true },
+        mode: config.mode,
       })
       const module = await server.ssrLoadModule(entry)
 
