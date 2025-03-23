@@ -43,6 +43,10 @@
     "./deno": {
       "types": "./dist/adapter/deno/index.d.ts",
       "import": "./dist/adapter/deno/index.js"
+    },
+    "./vercel": {
+      "types": "./dist/adapter/vercel/index.d.ts",
+      "import": "./dist/adapter/vercel/index.js"
     }
   },
   "typesVersions": {
@@ -64,6 +68,12 @@
       ],
       "netlify-functions": [
         "./dist/adapter/netlify-functions/index.d.ts"
+      ],
+      "deno": [
+        "./dist/adapter/deno/index.d.ts"
+      ],
+      "vercel": [
+        "./dist/adapter/vercel/index.d.ts"
       ]
     }
   },

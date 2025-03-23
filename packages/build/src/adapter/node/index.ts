@@ -10,6 +10,7 @@ export type NodeBuildOptions = {
 
 const nodeBuildPlugin = (pluginOptions?: NodeBuildOptions): Plugin => {
   const port = pluginOptions?.port ?? 3000
+
   return {
     ...buildPlugin({
       ...{

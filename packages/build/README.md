@@ -38,6 +38,7 @@ import build from '@hono/vite-build/bun'
 // import build from '@hono/vite-build/cloudflare-workers'
 // import build from '@hono/vite-build/node'
 // import build from '@hono/vite-build/netlify-functions'
+// import build from '@hono/vite-build/vercel'
 
 export default defineConfig({
   plugins: [
