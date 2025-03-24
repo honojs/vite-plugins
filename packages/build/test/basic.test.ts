@@ -2,10 +2,22 @@ import { build } from 'vite'
 import { existsSync, readFileSync, rmSync } from 'node:fs'
 import buildPlugin from '../src/base'
 
-describe('Base Plugin', () => {
+const cases = [
+  {
+    name: 'default export',
+    entry: './src/server.ts',
+    output: 'index.js',
+  },
+  {
+    name: 'with fetch export',
+    entry: './src/server-fetch.ts',
+    output: 'server-fetch.js',
+  },
+]
+
+describe.each(cases)('Build Plugin - $name', ({ entry, output }) => {
   const testDir = './test/mocks/app'
-  const entry = './src/server.ts'
-  const outputFile = `${testDir}/dist/index.js`
+  const outputFile = `${testDir}/dist/${output}`
 
   afterAll(() => {
     rmSync(`${testDir}/dist`, { recursive: true, force: true })
@@ -17,19 +29,20 @@ describe('Base Plugin', () => {
       plugins: [
         buildPlugin({
           entry,
+          output,
         }),
       ],
     })
 
     expect(existsSync(outputFile)).toBe(true)
 
-    const output = readFileSync(outputFile, 'utf-8')
-    expect(output).toContain('Hello World')
+    const outputContent = readFileSync(outputFile, 'utf-8')
+    expect(outputContent).toContain('Hello World')
   })
 
   it('Should return correct responses from the output file', async () => {
     const module = await import(outputFile)
-    const app = module['default']
+    const app = module.default
 
     let res = await app.request('/')
     expect(res.status).toBe(200)
