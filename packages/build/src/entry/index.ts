@@ -59,7 +59,13 @@ export const getEntryContent = async (options: GetEntryContentOptions) => {
       let added = false
       for (const [, app] of Object.entries(modules)) {
         if (app) {
-          mainApp.route('/', app)
+          mainApp.all('*', (c) => {
+            let executionCtx
+            try {
+              executionCtx = c.executionCtx
+            } catch {}
+            return app.fetch(c.req.raw, c.env, executionCtx)
+          })
           mainApp.notFound((c) => {
             let executionCtx
             try {
