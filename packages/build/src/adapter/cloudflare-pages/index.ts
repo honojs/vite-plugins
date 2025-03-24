@@ -4,7 +4,7 @@ import { resolve } from 'node:path'
 import type { BuildOptions } from '../../base.js'
 import buildPlugin, { defaultOptions } from '../../base.js'
 
-export type CloudflarePagesBuildOptions = Omit<BuildOptions, 'output'>
+export type CloudflarePagesBuildOptions = BuildOptions
 
 const WORKER_JS_NAME = '_worker.js'
 const ROUTES_JSON_NAME = '_routes.json'

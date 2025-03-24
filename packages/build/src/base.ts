@@ -11,12 +11,9 @@ export type BuildOptions = {
    */
   entry?: string | string[]
   /**
-   * @default 'index.js'
-   */
-  output?: string
-  /**
    * @default './dist'
    */
+  output?: string
   outputDir?: string
   external?: string[]
   /**
@@ -51,9 +48,8 @@ export const defaultOptions: Required<
 const buildPlugin = (options: BuildOptions): Plugin => {
   const virtualEntryId = 'virtual:build-entry-module'
   const resolvedVirtualEntryId = '\0' + virtualEntryId
-  const output = options.output ?? defaultOptions.output
-
   let config: ResolvedConfig
+  const output = options.output ?? defaultOptions.output
 
   return {
     name: '@hono/vite-build',
