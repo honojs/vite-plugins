@@ -63,7 +63,7 @@ const buildPlugin = (options: BuildOptions): Plugin => {
     },
     async load(id) {
       if (id === resolvedVirtualEntryId) {
-        let staticPaths: string[] = []
+        const staticPaths: string[] = options.staticPaths ?? []
         const direntPaths = []
         try {
           const publicDirPaths = readdirSync(resolve(config.root, config.publicDir), {
@@ -89,7 +89,7 @@ const buildPlugin = (options: BuildOptions): Plugin => {
           }
         })
 
-        staticPaths = Array.from(uniqueStaticPaths)
+        staticPaths.push(...Array.from(uniqueStaticPaths))
 
         const entry = options.entry ?? defaultOptions.entry
         return await getEntryContent({

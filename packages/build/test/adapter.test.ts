@@ -22,6 +22,8 @@ describe('Build Plugin with Bun Adapter', () => {
       plugins: [
         bunBuildPlugin({
           entry,
+          minify: false,
+          staticPaths: ['/static/*'],
         }),
       ],
     })
@@ -32,6 +34,7 @@ describe('Build Plugin with Bun Adapter', () => {
     expect(output).toContain('Hello World')
     expect(output).toContain('use("/foo.txt"')
     expect(output).toContain('use("/js/*"')
+    expect(output).toContain('use("/static/*", serveStatic({ root: "./" }))')
 
     const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
     expect(outputFooTxt).toContain('foo')
@@ -177,6 +180,8 @@ describe('Build Plugin with Deno Adapter', () => {
       plugins: [
         denoBuildPlugin({
           entry,
+          minify: false,
+          staticPaths: ['/static/*'],
         }),
       ],
     })
@@ -187,6 +192,7 @@ describe('Build Plugin with Deno Adapter', () => {
     expect(output).toContain('Hello World')
     expect(output).toContain('use("/foo.txt"')
     expect(output).toContain('use("/js/*"')
+    expect(output).toContain('use("/static/*", serveStatic({ root: "./" }))')
 
     const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
     expect(outputFooTxt).toContain('foo')
@@ -213,8 +219,9 @@ describe('Build Plugin with Node.js Adapter', () => {
       plugins: [
         nodeBuildPlugin({
           entry,
-          port: 3001,
           minify: false,
+          staticPaths: ['/static/*'],
+          port: 3001,
         }),
       ],
     })
@@ -225,6 +232,7 @@ describe('Build Plugin with Node.js Adapter', () => {
     expect(output).toContain('Hello World')
     expect(output).toContain('use("/foo.txt"')
     expect(output).toContain('use("/js/*"')
+    expect(output).toContain('use("/static/*", serveStatic({ root: "./" }))')
     expect(output).toContain('serve({ fetch: mainApp.fetch, port: 3001 })')
 
     const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
