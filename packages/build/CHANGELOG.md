@@ -1,5 +1,23 @@
 # @hono/vite-build
 
+## 1.4.0
+
+### Minor Changes
+
+- [#241](https://github.com/honojs/vite-plugins/pull/241) [`314c66da2b656d4705c4d0636cd1623b643dbd61`](https://github.com/honojs/vite-plugins/commit/314c66da2b656d4705c4d0636cd1623b643dbd61) Thanks [@justblender](https://github.com/justblender)! - Added a new Vercel build adapter.
+
+  This adapter can be imported from `@hono/vite-build/vercel` and will compile
+  your Hono app to comply with the specification requirements of the Vercel Build Output API.
+
+  Please note that this adapter produces output suitable only for Vercel Serverless Functions.
+  It does not support the Edge Runtime, which appears to be gradually phased out in favor of Vercel's Fluid compute architecture.
+
+  The default export will have the `@hono/node-server/vercel` adapter applied to it.
+
+### Patch Changes
+
+- [#244](https://github.com/honojs/vite-plugins/pull/244) [`2d8d6d202a106de6049febc524c29ec24f6911b9`](https://github.com/honojs/vite-plugins/commit/2d8d6d202a106de6049febc524c29ec24f6911b9) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: enable `staticPaths` option
+
 ## 1.3.1
 
 ### Patch Changes
