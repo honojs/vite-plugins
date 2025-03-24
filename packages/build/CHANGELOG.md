@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.3.1
+
+### Patch Changes
+
+- [#242](https://github.com/honojs/vite-plugins/pull/242) [`88ca94493ebb39cafe0d42bb741cce870ef58c68`](https://github.com/honojs/vite-plugins/commit/88ca94493ebb39cafe0d42bb741cce870ef58c68) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: support `fetch` export
+
 ## 1.3.0
 
 ### Minor Changes
