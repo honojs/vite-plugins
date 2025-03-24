@@ -5,7 +5,7 @@
  */
 export type VercelBuildConfigV3 = {
   /** Version identifier for the Build Output API. Must be 3. */
-  version: 3
+  version?: 3
   /**
    * Array of routing rules to handle incoming requests.
    * Routes are evaluated in order, where the first matching route will be applied.
@@ -263,4 +263,30 @@ type Cron = {
   path: string
   /** Cron schedule expression (e.g., "0 0 * * *" for daily at midnight) */
   schedule: string
+}
+
+/**
+ * Configuration for a serverless function in Vercel.
+ * This type **partially** represents the configuration object that should be output in the `.vercel/output/functions/<functionName>/config.json` file.
+ * @see https://vercel.com/docs/build-output-api/primitives#serverless-function-configuration
+ */
+export type VercelServerlessFunctionConfig = {
+  /** Indicates the initial file where code will be executed for the Serverless Function. */
+  handler?: string
+  /** Specifies which "launcher" will be used to execute the Serverless Function */
+  launcherType?: 'Nodejs'
+  /** Specifies which "runtime" will be used to execute the Serverless Function, only Node.js is supported currently */
+  runtime?: `nodejs${number}.x`
+  /** The amount of memory allocated to the function in MB */
+  memory?: number
+  /** The maximum duration of the function in seconds */
+  maxDuration?: number
+  /** The regions the function is available in */
+  regions?: string[]
+  /** Whether the function supports response streaming */
+  supportsResponseStreaming?: boolean
+  /** Enables request and response helpers methods */
+  shouldAddHelpers?: boolean
+  /** Enables source map generation */
+  shouldAddSourcemapSupport?: boolean
 }

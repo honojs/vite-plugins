@@ -1,13 +1,16 @@
 import type { Plugin, ResolvedConfig } from 'vite'
 import { existsSync, mkdirSync } from 'node:fs'
-import { writeFile } from 'node:fs/promises'
+import { cp, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import type { BuildOptions } from '../../base.js'
 import buildPlugin from '../../base.js'
-import type { VercelBuildConfigV3 } from './types.js'
+import type { VercelBuildConfigV3, VercelServerlessFunctionConfig } from './types.js'
 
 export type VercelBuildOptions = {
-  buildConfig?: VercelBuildConfigV3
+  vercel?: {
+    config?: VercelBuildConfigV3
+    function?: VercelServerlessFunctionConfig
+  }
 } & Omit<BuildOptions, 'output' | 'outputDir'>
 
 const BUNDLE_NAME = 'index.js'
@@ -24,9 +27,9 @@ const writeJSON = (path: string, data: Record<string, unknown>) => {
 const getRuntimeVersion = () => {
   try {
     const systemNodeVersion = process.versions.node.split('.')[0]
-    return `nodejs${systemNodeVersion}.x`
+    return `nodejs${Number(systemNodeVersion)}.x` as const
   } catch {
-    return 'nodejs22.x'
+    return 'nodejs22.x' as const
   }
 }
 
@@ -50,11 +53,17 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
       config = resolvedConfig
     },
     writeBundle: async () => {
+      const outputDir = resolve(config.root, config.build.outDir)
+      const functionDir = resolve(outputDir, 'functions', `${FUNCTION_NAME}.func`)
+
       const buildConfig: VercelBuildConfigV3 = {
-        ...pluginOptions?.buildConfig,
+        ...pluginOptions?.vercel?.config,
         version: 3,
         routes: [
-          ...(pluginOptions?.buildConfig?.routes ?? []),
+          ...(pluginOptions?.vercel?.config?.routes ?? []),
+          {
+            handle: 'filesystem',
+          },
           {
             src: '/(.*)',
             dest: `/${FUNCTION_NAME}`,
@@ -62,25 +71,26 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
         ],
       }
 
-      const funcFolder = resolve(
-        config.root,
-        config.build.outDir,
-        'functions',
-        `${FUNCTION_NAME}.func`
-      )
+      const functionConfig: VercelServerlessFunctionConfig = {
+        ...pluginOptions?.vercel?.function,
+        runtime: getRuntimeVersion(),
+        launcherType: 'Nodejs',
+        handler: BUNDLE_NAME,
+        shouldAddHelpers: true,
+        shouldAddSourcemapSupport: Boolean(config.build.sourcemap),
+        supportsResponseStreaming: true,
+      }
 
       await Promise.all([
-        writeJSON(resolve(config.root, config.build.outDir, 'config.json'), buildConfig),
-        writeJSON(resolve(funcFolder, 'package.json'), {
-          type: 'module',
+        // Copy static files to the .vercel/output/static directory
+        cp(resolve(config.root, config.publicDir), resolve(outputDir, 'static'), {
+          recursive: true,
         }),
-        writeJSON(resolve(funcFolder, '.vc-config.json'), {
-          launcherType: 'Nodejs',
-          runtime: getRuntimeVersion(),
-          handler: BUNDLE_NAME,
-          shouldAddHelpers: true,
-          shouldAddSourcemapSupport: Boolean(config.build.sourcemap),
-          supportsResponseStreaming: true,
+        // Write the all necessary config files
+        writeJSON(resolve(outputDir, 'config.json'), buildConfig),
+        writeJSON(resolve(functionDir, '.vc-config.json'), functionConfig),
+        writeJSON(resolve(functionDir, 'package.json'), {
+          type: 'module',
         }),
       ])
     },
