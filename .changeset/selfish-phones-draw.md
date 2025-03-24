@@ -1,5 +1,5 @@
 ---
-'@hono/vite-build': minor
+'@hono/vite-build': patch
 ---
 
-feat: support `fetch` export
+fix: support `fetch` export
