@@ -247,16 +247,16 @@ describe('Build Plugin with Node.js Adapter', () => {
 
 describe('Build Plugin with Vercel Adapter', () => {
   const testDir = './test/mocks/app-static-files'
-  const outputDir = `${testDir}/.vercel/output`
+  const vercelDir = `${testDir}/.vercel`
   const entry = './src/server.ts'
 
   afterEach(() => {
-    rmSync(outputDir, { recursive: true, force: true })
+    rmSync(vercelDir, { recursive: true, force: true })
   })
 
   it('Should build the project correctly with the plugin', async () => {
-    const outputFile = `${outputDir}/functions/__hono.func/index.js`
-    const configFile = `${outputDir}/config.json`
+    const outputFile = `${vercelDir}/output/functions/__hono.func/index.js`
+    const configFile = `${vercelDir}/output/config.json`
 
     await build({
       root: testDir,
@@ -275,6 +275,15 @@ describe('Build Plugin with Vercel Adapter', () => {
     expect(output).toContain('Hello World')
 
     const routes = readFileSync(configFile, 'utf-8')
-    expect(routes).toContain('{"version":3,"routes":[{"src":"/(.*)","dest":"/__hono"}]}')
+    expect(routes).toContain(
+      '{"version":3,"routes":[{"handle":"filesystem"},{"src":"/(.*)","dest":"/__hono"}]}'
+    )
+
+    const outputFooTxt = readFileSync(`${vercelDir}/output/static/foo.txt`, 'utf-8')
+    expect(outputFooTxt).toContain('foo')
+
+    const outputJsClientJs = readFileSync(`${vercelDir}/output/static/js/client.js`, 'utf-8')
+    // eslint-disable-next-line quotes
+    expect(outputJsClientJs).toContain("console.log('foo')")
   })
 })
