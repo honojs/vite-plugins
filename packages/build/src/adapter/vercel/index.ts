@@ -1,4 +1,5 @@
 import type { Plugin, ResolvedConfig } from 'vite'
+import { existsSync, mkdirSync } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import type { BuildOptions } from '../../base.js'
@@ -11,6 +12,14 @@ export type VercelBuildOptions = {
 
 const BUNDLE_NAME = 'index.js'
 const FUNCTION_NAME = '__hono'
+
+const writeJSON = (path: string, data: Record<string, unknown>) => {
+  const dir = resolve(path, '..')
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true })
+  }
+  return writeFile(path, JSON.stringify(data))
+}
 
 const getRuntimeVersion = () => {
   try {
@@ -53,28 +62,26 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
         ],
       }
 
-      const funcFolder = resolve(config.build.outDir, 'functions', `${FUNCTION_NAME}.func`)
-      const runtimeVersion = getRuntimeVersion()
+      const funcFolder = resolve(
+        config.root,
+        config.build.outDir,
+        'functions',
+        `${FUNCTION_NAME}.func`
+      )
 
-      await Promise.allSettled([
-        writeFile(resolve(config.build.outDir, 'config.json'), JSON.stringify(buildConfig)),
-        writeFile(
-          resolve(funcFolder, 'package.json'),
-          JSON.stringify({
-            type: 'module',
-          })
-        ),
-        writeFile(
-          resolve(funcFolder, '.vc-config.json'),
-          JSON.stringify({
-            launcherType: 'Nodejs',
-            runtime: runtimeVersion,
-            handler: BUNDLE_NAME,
-            shouldAddHelpers: true,
-            shouldAddSourcemapSupport: Boolean(config.build.sourcemap),
-            supportsResponseStreaming: true,
-          })
-        ),
+      await Promise.all([
+        writeJSON(resolve(config.root, config.build.outDir, 'config.json'), buildConfig),
+        writeJSON(resolve(funcFolder, 'package.json'), {
+          type: 'module',
+        }),
+        writeJSON(resolve(funcFolder, '.vc-config.json'), {
+          launcherType: 'Nodejs',
+          runtime: getRuntimeVersion(),
+          handler: BUNDLE_NAME,
+          shouldAddHelpers: true,
+          shouldAddSourcemapSupport: Boolean(config.build.sourcemap),
+          supportsResponseStreaming: true,
+        }),
       ])
     },
     name: '@hono/vite-build/vercel',

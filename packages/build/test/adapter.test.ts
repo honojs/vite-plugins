@@ -5,6 +5,7 @@ import cloudflarePagesPlugin from '../src/adapter/cloudflare-pages'
 import denoBuildPlugin from '../src/adapter/deno'
 import netlifyFunctionsPlugin from '../src/adapter/netlify-functions'
 import nodeBuildPlugin from '../src/adapter/node'
+import vercelBuildPlugin from '../src/adapter/vercel'
 
 describe('Build Plugin with Bun Adapter', () => {
   const testDir = './test/mocks/app-static-files'
@@ -233,5 +234,39 @@ describe('Build Plugin with Node.js Adapter', () => {
     const outputJsClientJs = readFileSync(`${testDir}/dist/js/client.js`, 'utf-8')
     // eslint-disable-next-line quotes
     expect(outputJsClientJs).toContain("console.log('foo')")
+  })
+})
+
+describe('Build Plugin with Vercel Adapter', () => {
+  const testDir = './test/mocks/app-static-files'
+  const outputDir = `${testDir}/.vercel/output`
+  const entry = './src/server.ts'
+
+  afterEach(() => {
+    rmSync(outputDir, { recursive: true, force: true })
+  })
+
+  it('Should build the project correctly with the plugin', async () => {
+    const outputFile = `${outputDir}/functions/__hono.func/index.js`
+    const configFile = `${outputDir}/config.json`
+
+    await build({
+      root: testDir,
+      plugins: [
+        vercelBuildPlugin({
+          entry,
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+    expect(existsSync(configFile)).toBe(true)
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('Hello World')
+
+    const routes = readFileSync(configFile, 'utf-8')
+    expect(routes).toContain('{"version":3,"routes":[{"src":"/(.*)","dest":"/__hono"}]}')
   })
 })
