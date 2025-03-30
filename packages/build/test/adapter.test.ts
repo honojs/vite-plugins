@@ -166,7 +166,7 @@ describe('Build Plugin with Cloudflare Pages Adapter', () => {
   })
 })
 
-describe('Build Plugin with Cloudflare Workers Adapter', () => {
+describe('Build Plugin with Cloudflare Workers Adapter with single entry file', () => {
   const testDir = './test/mocks/app-static-files'
   const outputFile = `${testDir}/dist/index.js`
 
@@ -196,6 +196,36 @@ describe('Build Plugin with Cloudflare Workers Adapter', () => {
 
     const result = app.scheduled()
     expect(result).toBe('Hello World')
+  })
+})
+
+describe('Build Plugin with Cloudflare Workers Adapter with multiple entry files', () => {
+  const testDir = './test/mocks/app-static-files'
+  const outputFile = 'index-multiple.js'
+  const outputPath = `${testDir}/dist/${outputFile}`
+
+  afterAll(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+  })
+
+  it('Should build the project correctly with the plugin', async () => {
+    await build({
+      root: testDir,
+      plugins: [
+        cloudflareWorkersPlugin({
+          entry: ['./src/server-fetch-with-handlers.ts', './src/server-fetch-with-handlers2.ts'],
+          output: outputFile,
+        }),
+      ],
+    })
+    expect(existsSync(outputPath)).toBe(true)
+
+    const output = readFileSync(outputPath, 'utf-8')
+    expect(output).toContain('Hello World')
+  })
+
+  it('Should cause a runtime error when the same handler is registered more than once', async () => {
+    expect(import(outputPath)).rejects.toThrow(/scheduled/)
   })
 })
 
