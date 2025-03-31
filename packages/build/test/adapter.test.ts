@@ -2,6 +2,7 @@ import { build } from 'vite'
 import { existsSync, readFileSync, rmSync } from 'node:fs'
 import bunBuildPlugin from '../src/adapter/bun'
 import cloudflarePagesPlugin from '../src/adapter/cloudflare-pages'
+import cloudflareWorkersPlugin from '../src/adapter/cloudflare-workers'
 import denoBuildPlugin from '../src/adapter/deno'
 import netlifyFunctionsPlugin from '../src/adapter/netlify-functions'
 import nodeBuildPlugin from '../src/adapter/node'
@@ -162,6 +163,69 @@ describe('Build Plugin with Cloudflare Pages Adapter', () => {
 
     const routes = readFileSync(routesFile, 'utf-8')
     expect(routes).toContain('{"version":1,"include":["/"],"exclude":["/customRoute"]}')
+  })
+})
+
+describe('Build Plugin with Cloudflare Workers Adapter with single entry file', () => {
+  const testDir = './test/mocks/app-static-files'
+  const outputFile = `${testDir}/dist/index.js`
+
+  afterAll(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+  })
+
+  it('Should build the project correctly with the plugin', async () => {
+    await build({
+      root: testDir,
+      plugins: [
+        cloudflareWorkersPlugin({
+          entry: './src/server-fetch-with-handlers.ts',
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('Hello World')
+  })
+
+  it('Should return correct result from the scheduled handler in the output file', async () => {
+    const module = await import(outputFile)
+    const app = module.default
+
+    const result = app.scheduled()
+    expect(result).toBe('Hello World')
+  })
+})
+
+describe('Build Plugin with Cloudflare Workers Adapter with multiple entry files', () => {
+  const testDir = './test/mocks/app-static-files'
+  const outputFile = 'index-multiple.js'
+  const outputPath = `${testDir}/dist/${outputFile}`
+
+  afterAll(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+  })
+
+  it('Should build the project correctly with the plugin', async () => {
+    await build({
+      root: testDir,
+      plugins: [
+        cloudflareWorkersPlugin({
+          entry: ['./src/server-fetch-with-handlers.ts', './src/server-fetch-with-handlers2.ts'],
+          output: outputFile,
+        }),
+      ],
+    })
+    expect(existsSync(outputPath)).toBe(true)
+
+    const output = readFileSync(outputPath, 'utf-8')
+    expect(output).toContain('Hello World')
+  })
+
+  it('Should cause a runtime error when the same handler is registered more than once', async () => {
+    expect(import(outputPath)).rejects.toThrow(/scheduled/)
   })
 })
 
