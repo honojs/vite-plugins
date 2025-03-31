@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.5.0
+
+### Minor Changes
+
+- [#247](https://github.com/honojs/vite-plugins/pull/247) [`e7f58050840cf2f6a1ec446e3e4e89b0b0a85014`](https://github.com/honojs/vite-plugins/commit/e7f58050840cf2f6a1ec446e3e4e89b0b0a85014) Thanks [@toga4](https://github.com/toga4)! - feat(build): support non-fetch handlers for Cloudflare Workers
+
 ## 1.4.0
 
 ### Minor Changes
