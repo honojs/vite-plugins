@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.6.0
+
+### Minor Changes
+
+- [#254](https://github.com/honojs/vite-plugins/pull/254) [`ee00f8b93a480ab332245c6d661b8001f24028e2`](https://github.com/honojs/vite-plugins/commit/ee00f8b93a480ab332245c6d661b8001f24028e2) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: export `defaultOptions` from Cloudflare Workers adpater
+
 ## 1.5.0
 
 ### Minor Changes
