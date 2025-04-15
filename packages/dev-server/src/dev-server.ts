@@ -87,6 +87,9 @@ export function devServer(options?: DevServerOptions): VitePlugin {
           res: http.ServerResponse,
           next: Connect.NextFunction
         ): Promise<void> {
+          if (req.headers['x-skip-hono-dev-server']) {
+            return next();
+          }
           if (req.url) {
             const filePath = path.join(publicDirPath, req.url)
             try {
