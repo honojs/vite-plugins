@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.6.1
+
+### Patch Changes
+
+- [#261](https://github.com/honojs/vite-plugins/pull/261) [`c116701a2423eb9882de6559223304b66305a281`](https://github.com/honojs/vite-plugins/commit/c116701a2423eb9882de6559223304b66305a281) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: correct `CloudflareWorkersBuildOptions` type
+
 ## 1.6.0
 
 ### Minor Changes
