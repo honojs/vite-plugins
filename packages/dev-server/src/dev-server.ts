@@ -145,7 +145,10 @@ export function devServer(options?: DevServerOptions): VitePlugin {
 
           getRequestListener(
             async (request): Promise<Response> => {
-              let env: Env = {}
+              let env: Env = {
+                incoming: req,
+                outgoing: res,
+              }
 
               if (options?.env) {
                 if (typeof options.env === 'function') {
