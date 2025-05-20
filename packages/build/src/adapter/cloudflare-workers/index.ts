@@ -4,7 +4,7 @@ import buildPlugin, { defaultOptions as baseDefaultOptions } from '../../base.js
 import type { GetEntryContentOptions } from '../../entry/index.js'
 
 export type CloudflareWorkersBuildOptions = BuildOptions &
-  Required<Pick<GetEntryContentOptions, 'entryContentAfterHooks' | 'entryContentDefaultExportHook'>>
+  Pick<GetEntryContentOptions, 'entryContentAfterHooks' | 'entryContentDefaultExportHook'>
 
 export const defaultOptions: CloudflareWorkersBuildOptions = {
   ...baseDefaultOptions,
