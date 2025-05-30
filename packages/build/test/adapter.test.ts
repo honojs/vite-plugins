@@ -164,6 +164,46 @@ describe('Build Plugin with Cloudflare Pages Adapter', () => {
     const routes = readFileSync(routesFile, 'utf-8')
     expect(routes).toContain('{"version":1,"include":["/"],"exclude":["/customRoute"]}')
   })
+
+  it('Should regenerate _routes.json when public directory changes (issue: emptyOutDir false with old files in dist)', async () => {
+    const routesFile = `${testDir}/dist/_routes.json`
+
+    // First build with old-file.txt in public directory
+    await build({
+      publicDir: 'public-with-old-file',
+      root: testDir,
+      plugins: [
+        cloudflarePagesPlugin({
+          entry: 'src/server.ts',
+        }),
+      ],
+    })
+
+    const firstRoutes = readFileSync(routesFile, 'utf-8')
+    expect(firstRoutes).toContain('/old-file.txt')
+
+    // Second build with different public directory (emptyOutDir: false by default)
+    // old-file.txt still exists in dist/ but new-file.txt is in public/
+    await build({
+      publicDir: 'public-no-old-file',
+      root: testDir,
+      build: {
+        emptyOutDir: false, // This is the default in base.ts
+      },
+      plugins: [
+        cloudflarePagesPlugin({
+          entry: 'src/server.ts',
+        }),
+      ],
+    })
+
+    const secondRoutes = readFileSync(routesFile, 'utf-8')
+
+    // Should reflect current public directory content (new-file.txt)
+    // and NOT include old-file.txt even though it exists in dist/
+    expect(secondRoutes).toContain('/new-file.txt')
+    expect(secondRoutes).not.toContain('/old-file.txt')
+  })
 })
 
 describe('Build Plugin with Cloudflare Workers Adapter with single entry file', () => {
