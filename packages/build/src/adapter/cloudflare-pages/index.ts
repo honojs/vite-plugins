@@ -30,10 +30,7 @@ const cloudflarePagesBuildPlugin = (pluginOptions?: CloudflarePagesBuildOptions)
         if (publicFiles.includes(ROUTES_JSON_NAME)) {
           return
         }
-      }
-
-      // Process files in public directory (not dist directory)
-      if (config.publicDir) {
+        // Process files in public directory (not dist directory)
         const publicPaths = await readdir(config.publicDir, {
           withFileTypes: true,
         })
