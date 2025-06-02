@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.6.2
+
+### Patch Changes
+
+- [#266](https://github.com/honojs/vite-plugins/pull/266) [`7e51cc7f29d0d64dc4bd9c27e0f6c5491ccba5c8`](https://github.com/honojs/vite-plugins/commit/7e51cc7f29d0d64dc4bd9c27e0f6c5491ccba5c8) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: fix the option types of Cloudflare Workers adapter
+
 ## 1.6.1
 
 ### Patch Changes
