@@ -304,7 +304,7 @@ describe('Build Plugin with Node.js Adapter', () => {
 
     const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
     expect(outputFooTxt).toContain('foo')
-    
+
     const outputJsClientJs = readFileSync(`${testDir}/dist/js/client.js`, 'utf-8')
     // eslint-disable-next-line quotes
     expect(outputJsClientJs).toContain("console.log('foo')")
