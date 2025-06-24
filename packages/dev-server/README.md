@@ -223,11 +223,12 @@ export default defineConfig(async () => {
 
 ## Helper
 
-### Conninfo
+### ConnInfo
 
-You can use the `conninfo` helper to get connection information. For more details: [ConnInfo Helper](https://hono.dev/docs/helpers/conninfo).
+You can use the ConnInfo helper to get connection information. For more details: [ConnInfo Helper](https://hono.dev/docs/helpers/conninfo).
 
 You can use it like this:
+
 ```typescript
 import { Hono } from 'hono'
 import { getConnInfo } from '@hono/vite-dev-server/conninfo'
@@ -241,6 +242,7 @@ app.get('/', (c) => {
 ```
 
 You can also use different ConnInfo Helpers in development and production environments as shown below:
+
 ```typescript
 const getConnInfo = import.meta.env.DEV
   ? (await import('@hono/vite-dev-server/conninfo')).getConnInfo
