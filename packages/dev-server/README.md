@@ -221,6 +221,34 @@ export default defineConfig(async () => {
 })
 ```
 
+## Helper
+
+### ConnInfo
+
+You can use the ConnInfo helper to get connection information. For more details: [ConnInfo Helper](https://hono.dev/docs/helpers/conninfo).
+
+You can use it like this:
+
+```typescript
+import { Hono } from 'hono'
+import { getConnInfo } from '@hono/vite-dev-server/conninfo'
+
+const app = new Hono()
+
+app.get('/', (c) => {
+  const info = getConnInfo(c) // info is `ConnInfo`
+  return c.text(`Your remote address is ${info.remote.address}`)
+})
+```
+
+You can also use different ConnInfo Helpers in development and production environments as shown below:
+
+```typescript
+const getConnInfo = import.meta.env.DEV
+  ? (await import('@hono/vite-dev-server/conninfo')).getConnInfo
+  : (await import('hono/bun')).getConnInfo
+```
+
 ## Client-side
 
 You can write client-side scripts and import them into your application using Vite's features.

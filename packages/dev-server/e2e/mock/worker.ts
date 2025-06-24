@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { getRuntimeKey } from 'hono/adapter'
+import { getConnInfo } from '../../src/conninfo'
 
 const app = new Hono<{
   Bindings: {
@@ -103,6 +104,11 @@ app.get('/cf', (c) => {
     // @ts-expect-error `Request.cf` is not typed
     cf: typeof c.req.raw.cf === 'object' ? true : false,
   })
+})
+
+app.get('/ip', (c) => {
+  // @ts-expect-error context is correct
+  return c.text(getConnInfo(c).remote?.address ?? 'x')
 })
 
 export default app
