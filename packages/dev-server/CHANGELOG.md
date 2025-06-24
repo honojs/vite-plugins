@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.20.0
+
+### Minor Changes
+
+- [#252](https://github.com/honojs/vite-plugins/pull/252) [`56d7c63933da084418bf9798b151d2fee696fa95`](https://github.com/honojs/vite-plugins/commit/56d7c63933da084418bf9798b151d2fee696fa95) Thanks [@Hill-98](https://github.com/Hill-98)! - feat: add `getConnInfo` helper function
+
 ## 0.19.1
 
 ### Patch Changes
