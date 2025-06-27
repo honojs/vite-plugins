@@ -21,6 +21,8 @@ export type BuildOptions = {
    */
   minify?: boolean
   emptyOutDir?: boolean
+  copyPublicDir?: boolean
+  sourcemap?: boolean
   apply?: ((this: void, config: UserConfig, env: ConfigEnv) => boolean) | undefined
 } & Omit<GetEntryContentOptions, 'entry'>
 
@@ -36,6 +38,8 @@ export const defaultOptions: Required<
   external: [],
   minify: true,
   emptyOutDir: false,
+  copyPublicDir: true,
+  sourcemap: false,
   apply: (_config, { command, mode }) => {
     if (command === 'build' && mode !== 'client') {
       return true
@@ -114,6 +118,8 @@ const buildPlugin = (options: BuildOptions): Plugin => {
           emptyOutDir: options?.emptyOutDir ?? defaultOptions.emptyOutDir,
           minify: options?.minify ?? defaultOptions.minify,
           ssr: true,
+          copyPublicDir: options?.copyPublicDir ?? defaultOptions.copyPublicDir,
+          sourcemap: options?.sourcemap ?? defaultOptions.sourcemap,
           rollupOptions: {
             external: [...builtinModules, /^node:/],
             input: virtualEntryId,
