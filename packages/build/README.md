@@ -100,6 +100,7 @@ type BuildOptions = {
   external?: string[]
   minify?: boolean
   emptyOutDir?: boolean
+  preset?: 'hono' | 'hono/tiny' | 'hono/quick'
 }
 ```
 
@@ -114,6 +115,7 @@ export const defaultOptions = {
   minify: true,
   emptyOutDir: false,
   staticPaths: [],
+  preset: 'hono',
 }
 ```
 
