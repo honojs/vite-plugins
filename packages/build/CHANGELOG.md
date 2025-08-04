@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.7.0
+
+### Minor Changes
+
+- [#279](https://github.com/honojs/vite-plugins/pull/279) [`b45925cf08f82d607f850191589ff154d0c1ea5f`](https://github.com/honojs/vite-plugins/commit/b45925cf08f82d607f850191589ff154d0c1ea5f) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: add `preset` option
+
 ## 1.6.2
 
 ### Patch Changes
