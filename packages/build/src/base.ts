@@ -43,6 +43,7 @@ export const defaultOptions: Required<
     return false
   },
   staticPaths: [],
+  preset: 'hono',
 }
 
 const buildPlugin = (options: BuildOptions): Plugin => {
@@ -50,6 +51,7 @@ const buildPlugin = (options: BuildOptions): Plugin => {
   const resolvedVirtualEntryId = '\0' + virtualEntryId
   let config: ResolvedConfig
   const output = options.output ?? defaultOptions.output
+  const preset = options.preset ?? defaultOptions.preset
 
   return {
     name: '@hono/vite-build',
@@ -98,6 +100,7 @@ const buildPlugin = (options: BuildOptions): Plugin => {
           entryContentAfterHooks: options.entryContentAfterHooks,
           entryContentDefaultExportHook: options.entryContentDefaultExportHook,
           staticPaths,
+          preset,
         })
       }
     },

@@ -51,3 +51,32 @@ describe.each(cases)('Build Plugin - $name', ({ entry, output }) => {
     expect(res.status).toBe(404)
   })
 })
+
+describe('Build Plugin - preset option', () => {
+  const testDir = './test/mocks/app'
+  const outputFile = `${testDir}/dist/index.js`
+
+  afterAll(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+  })
+
+  it('Should build the project with the correct preset', async () => {
+    await build({
+      root: testDir,
+      plugins: [
+        buildPlugin({
+          entry: './src/server-tiny.ts',
+          output: 'index.js',
+          preset: 'hono/tiny',
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+
+    const outputContent = readFileSync(outputFile, 'utf-8')
+    expect(outputContent).not.toContain('RegExpRouter')
+    expect(outputContent).not.toContain('TrieRouter')
+    expect(outputContent).toContain('PatternRouter')
+  })
+})
