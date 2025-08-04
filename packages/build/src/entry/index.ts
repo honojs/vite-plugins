@@ -9,6 +9,9 @@ export type EntryContentHook = (
   options?: EntryContentHookOptions
 ) => string | Promise<string>
 
+const presets = ['hono', 'hono/tiny', 'hono/quick'] as const
+export type Preset = (typeof presets)[number]
+
 export type GetEntryContentOptions = {
   entry: string[]
   entryContentBeforeHooks?: EntryContentHook[]
@@ -21,6 +24,10 @@ export type GetEntryContentOptions = {
    */
   entryContentDefaultExportHook?: EntryContentHook
   staticPaths?: string[]
+  /**
+   * @default `hono`
+   */
+  preset?: Preset
 }
 
 const normalizePaths = (paths: string[]) => {
@@ -34,6 +41,13 @@ const normalizePaths = (paths: string[]) => {
 }
 
 export const getEntryContent = async (options: GetEntryContentOptions) => {
+  const preset = presets.includes(options.preset ?? 'hono')
+    ? options.preset ?? 'hono'
+    : (console.warn(
+        `Invalid preset: ${options.preset}. Must be one of: ${presets.join(', ')}. Using 'hono' as default.`
+      ),
+      'hono')
+
   const staticPaths = options.staticPaths ?? ['']
   const globStr = normalizePaths(options.entry)
     .map((e) => `'${e}'`)
@@ -83,7 +97,7 @@ export const getEntryContent = async (options: GetEntryContentOptions) => {
   const defaultExportHook =
     options.entryContentDefaultExportHook ?? (() => 'export default mainApp')
 
-  return `import { Hono } from 'hono'
+  return `import { Hono } from '${preset}'
 const mainApp = new Hono()
 
 ${await hooksToString('mainApp', options.entryContentBeforeHooks)}
