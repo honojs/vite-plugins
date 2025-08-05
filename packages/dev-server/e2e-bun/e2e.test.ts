@@ -84,3 +84,13 @@ test('Should set `workerd` as a runtime key', async ({ page }) => {
   expect(res?.ok()).toBe(true)
   expect(await res?.text()).toBe('bun')
 })
+
+test('Should contain an injected script tag - /fizzbuzz?n=500', async ({ page }) => {
+  await page.goto('/fizzbuzz?n=500')
+
+  const lastScriptTag = await page.$('script:last-of-type')
+  expect(lastScriptTag).not.toBeNull()
+
+  const content = await lastScriptTag?.textContent()
+  expect(content).toBe('import("/@vite/client")')
+})

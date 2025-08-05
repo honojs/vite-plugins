@@ -65,4 +65,32 @@ app.get('/invalid-error-response', (c) => {
 
 app.get('/runtime', (c) => c.text(getRuntimeKey()))
 
+// Issue: https://github.com/honojs/vite-plugins/issues/277
+
+const fizzbuzz = (i: number): string => {
+  if (i % 15 == 0) {
+    return 'fizzbuzz'
+  }
+  if (i % 5 == 0) {
+    return 'buzz'
+  }
+  if (i % 3 == 0) {
+    return 'fizz'
+  }
+  return `${i}`
+}
+
+app.get('/fizzbuzz', (c) => {
+  const n = Number(c.req.query('n')) || 0
+
+  return c.html(
+    '<main>' +
+      Array.from(
+        { length: n },
+        (_, i) => `<div class="fizzbuzz-item">${fizzbuzz(i + 1)}</div>`
+      ).join('') +
+      '</main>'
+  )
+})
+
 export default app
