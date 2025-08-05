@@ -257,33 +257,21 @@ function injectStringToResponse(response: Response, content: string) {
   }
 
   const reader = stream.getReader()
-  const newContentReader = new ReadableStream({
-    start(controller) {
-      controller.enqueue(newContent)
-      controller.close()
-    },
-  }).getReader()
 
   const combinedStream = new ReadableStream({
     async start(controller) {
+      // First, read and enqueue all existing content
       for (;;) {
-        const [existingResult, newContentResult] = await Promise.all([
-          reader.read(),
-          newContentReader.read(),
-        ])
-
-        if (existingResult.done && newContentResult.done) {
-          controller.close()
+        const result = await reader.read()
+        if (result.done) {
           break
         }
-
-        if (!existingResult.done) {
-          controller.enqueue(existingResult.value)
-        }
-        if (!newContentResult.done) {
-          controller.enqueue(newContentResult.value)
-        }
+        controller.enqueue(result.value)
       }
+
+      // After existing content is complete, append the new content
+      controller.enqueue(newContent)
+      controller.close()
     },
   })
 
