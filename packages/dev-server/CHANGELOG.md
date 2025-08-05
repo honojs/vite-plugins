@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.20.1
+
+### Patch Changes
+
+- [#281](https://github.com/honojs/vite-plugins/pull/281) [`275a177401b7c8402890c0089ad90f4ed95dbf8f`](https://github.com/honojs/vite-plugins/commit/275a177401b7c8402890c0089ad90f4ed95dbf8f) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: inject vite client script at end of streaming response
+
 ## 0.20.0
 
 ### Minor Changes
