@@ -1188,7 +1188,7 @@ __metadata:
     vite: ^6.1.1
     vitest: ^1.2.1
   peerDependencies:
-    hono: ">=4.0.0"
+    hono: ">=4.8.0"
   languageName: unknown
   linkType: soft
 
