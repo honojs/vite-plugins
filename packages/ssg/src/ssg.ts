@@ -1,15 +1,18 @@
 import type { Hono } from 'hono'
 import { toSSG } from 'hono/ssg'
+import type { SSGPlugin } from 'hono/ssg'
 import type { Plugin, ResolvedConfig } from 'vite'
 import { createServer } from 'vite'
 import { relative } from 'node:path'
 
 type SSGOptions = {
   entry?: string
+  plugins?: SSGPlugin[]
 }
 
 export const defaultOptions: Required<SSGOptions> = {
   entry: './src/index.tsx',
+  plugins: [],
 }
 
 export const ssgBuild = (options?: SSGOptions): Plugin => {
@@ -81,7 +84,7 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
             return
           },
         },
-        { dir: outDir }
+        { dir: outDir, plugins: options?.plugins ?? defaultOptions.plugins }
       )
 
       server.close()

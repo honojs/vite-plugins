@@ -1,3 +1,4 @@
+import type { SSGPlugin } from 'hono/ssg'
 import { build } from 'vite'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import fs from 'node:fs'
@@ -79,5 +80,42 @@ describe('ssgPlugin', () => {
 
     const entryOutput = fs.readFileSync(entryOutputFile, 'utf-8')
     expect(entryOutput.length).toBeGreaterThan(0)
+  })
+
+  it('Should apply ssg plugins', async () => {
+    let beforeRequestCalled = false
+    let afterResponseCalled = false
+    let afterGenerateCalled = false
+
+    const testPlugin: SSGPlugin = {
+      beforeRequestHook: (req) => {
+        beforeRequestCalled = true
+        return req
+      },
+      afterResponseHook: (res) => {
+        afterResponseCalled = true
+        return res
+      },
+      afterGenerateHook: () => {
+        afterGenerateCalled = true
+      },
+    }
+
+    await build({
+      plugins: [
+        ssgPlugin({
+          entry: entryFile,
+          plugins: [testPlugin],
+        }),
+      ],
+      build: {
+        outDir,
+        emptyOutDir: true,
+      },
+    })
+
+    expect(beforeRequestCalled).toBe(true)
+    expect(afterResponseCalled).toBe(true)
+    expect(afterGenerateCalled).toBe(true)
   })
 })
