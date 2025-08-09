@@ -1181,7 +1181,7 @@ __metadata:
   resolution: "@hono/vite-ssg@workspace:packages/ssg"
   dependencies:
     glob: ^10.3.10
-    hono: ^4.2.7
+    hono: ^4.9.0
     publint: ^0.1.12
     rimraf: ^5.0.1
     tsup: ^7.2.0
@@ -3768,6 +3768,13 @@ __metadata:
   version: 4.6.12
   resolution: "hono@npm:4.6.12"
   checksum: a2690db239d6390efdc4080d2ac35155ad0f1f87c3f39ee56578fa3a8631e5dd173c31cff493588205b81a4fd19997f3ccffea19dd2f0b4040a65cc85b1f07e8
+  languageName: node
+  linkType: hard
+
+"hono@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "hono@npm:4.9.0"
+  checksum: 1e4f34d3d622507dbd1107d029e5fe5861cc3d69b78e2f3f9fbe0a8bd42a6c700b3fadb748b73780c6fc24d694ae2f36b52969884a6480b454bb8e0224be81d3
   languageName: node
   linkType: hard
 
