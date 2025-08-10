@@ -60,6 +60,12 @@ The options are below.
 ```ts
 type SSGOptions = {
   entry?: string
+  /**
+   * Hono SSG plugins to use.
+   * These are not Vite plugins, but plugins for Hono's static site generation.
+   * @see https://hono.dev/docs/helpers/ssg#plugins
+   */
+  plugins?: SSGPlugin[]
 }
 ```
 
@@ -68,6 +74,7 @@ Default values:
 ```ts
 const defaultOptions = {
   entry: './src/index.tsx',
+  plugins: [],
 }
 ```
 
