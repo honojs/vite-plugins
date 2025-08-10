@@ -1,5 +1,11 @@
 # @hono/vite-ssg
 
+## 0.2.0
+
+### Minor Changes
+
+- [#283](https://github.com/honojs/vite-plugins/pull/283) [`4c28821fbf889deba5e10c7fd7f81f50530431c7`](https://github.com/honojs/vite-plugins/commit/4c28821fbf889deba5e10c7fd7f81f50530431c7) Thanks [@3w36zj6](https://github.com/3w36zj6)! - feat: add support for ssg plugins
+
 ## 0.1.2
 
 ### Patch Changes
