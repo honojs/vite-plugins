@@ -1,6 +1,6 @@
 import type { SSGPlugin } from 'hono/ssg'
 import { build } from 'vite'
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
 import ssgPlugin from '../src/index'
@@ -83,22 +83,14 @@ describe('ssgPlugin', () => {
   })
 
   it('Should apply ssg plugins', async () => {
-    let beforeRequestCalled = false
-    let afterResponseCalled = false
-    let afterGenerateCalled = false
+    const beforeRequestHook = vi.fn((req) => req)
+    const afterResponseHook = vi.fn((res) => res)
+    const afterGenerateHook = vi.fn()
 
     const testPlugin: SSGPlugin = {
-      beforeRequestHook: (req) => {
-        beforeRequestCalled = true
-        return req
-      },
-      afterResponseHook: (res) => {
-        afterResponseCalled = true
-        return res
-      },
-      afterGenerateHook: () => {
-        afterGenerateCalled = true
-      },
+      beforeRequestHook,
+      afterResponseHook,
+      afterGenerateHook,
     }
 
     await build({
@@ -114,8 +106,8 @@ describe('ssgPlugin', () => {
       },
     })
 
-    expect(beforeRequestCalled).toBe(true)
-    expect(afterResponseCalled).toBe(true)
-    expect(afterGenerateCalled).toBe(true)
+    expect(beforeRequestHook).toHaveBeenCalled()
+    expect(afterResponseHook).toHaveBeenCalled()
+    expect(afterGenerateHook).toHaveBeenCalled()
   })
 })
