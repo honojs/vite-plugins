@@ -20,6 +20,20 @@ test('Should contain an injected script tag', async ({ page }) => {
   expect(content).toBe('import("/docs/@vite/client")')
 })
 
+test('Should exclude the file specified in the exclude option', async ({ page }) => {
+  let response = await page.goto('/file.ts')
+  expect(response?.status()).toBe(404)
+
+  response = await page.goto('/app/foo')
+  expect(response?.status()).toBe(404)
+
+  response = await page.goto('/favicon.ico')
+  expect(response?.status()).toBe(404)
+
+  response = await page.goto('/static/foo.png')
+  expect(response?.status()).toBe(404)
+})
+
 test('Should return files in the wrong public directory', async ({ page }) => {
   const res = await page.goto('/hono-logo.png')
   expect(res?.status()).toBe(404)
