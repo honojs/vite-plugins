@@ -6,6 +6,54 @@ import type http from 'http'
 import path from 'path'
 import type { Env, Fetch, EnvFunc, Adapter, LoadModule } from './types.js'
 
+/**
+ * Removes the basePath prefix from a route string.
+ *
+ * @param basePath - The base path to remove.
+ * @param route - The route string to process.
+ * @returns The route string with basePath removed from the start.
+ *
+ * @example
+ * ```ts
+ * removeBasePath("/docs/", "/docs/foo/bar") -> "/foo/bar"
+ * removeBasePath("/docs", "/docs/foo/bar") -> "/foo/bar"
+ * removeBasePath("/", "/docs/foo/bar") -> "/docs/foo/bar"
+ * ```
+ */
+const removeBasePath = (basePath: string, route: string): string => {
+  if (!route.startsWith(basePath)) return route
+  const offset = basePath.length - (basePath.endsWith('/') ? 1 : 0)
+  return route.slice(offset)
+}
+
+/**
+ * Joins two paths by resolving any slash collisions between them.
+ *
+ * @param basePath - The base path to join.
+ * @param path - The path to append to the basePath.
+ * @returns The joined path with redundant slashes resolved.
+ *
+ * @example
+ * ```ts
+ * joinPath("/base/", "/foo") -> "/base/foo"
+ * joinPath("/base", "foo") -> "/base/foo"
+ * joinPath("/base", "/foo/bar") -> "/base/foo/bar"
+ * joinPath("/foo/bar/", "/baz/qux") -> "/foo/bar/baz/qux"
+ * joinPath("/foo/bar", "baz/qux") -> "/foo/bar/baz/qux"
+ * ```
+ */
+const joinPath = (basePath: string, path: string): string => {
+  // Remove trailing slash from base.
+  const baseClean = basePath !== '/' ? basePath.replace(/\/+$/, '') : basePath
+  // Remove leading slash from path.
+  const pathClean = path.replace(/^\/+/, '')
+  // Special case: if base is '/', avoid double slash
+  if (baseClean === '/') {
+    return `/${pathClean}`
+  }
+  return `${baseClean}/${pathClean}`
+}
+
 export type DevServerOptions = {
   entry?: string
   export?: string
@@ -72,13 +120,17 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
   },
 }
 
+const defaultViteBase = '/'
+
 export function devServer(options?: DevServerOptions): VitePlugin {
   let publicDirPath = ''
+  let viteBase = defaultViteBase
   const entry = options?.entry ?? defaultOptions.entry
   const plugin: VitePlugin = {
     name: '@hono/vite-dev-server',
     configResolved(config) {
       publicDirPath = config.publicDir
+      viteBase = config.base
     },
     configureServer: async (server) => {
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
@@ -87,8 +139,20 @@ export function devServer(options?: DevServerOptions): VitePlugin {
           res: http.ServerResponse,
           next: Connect.NextFunction
         ): Promise<void> {
+          if (viteBase !== defaultViteBase && !req.url?.startsWith(viteBase)) {
+            // handle all other URL that are not /<viteBase>
+            res.statusCode = 404
+            res.setHeader('Content-Type', 'text/plain')
+            res.end(
+              `This URL is not handled by the hono server since you're using a custom vite base ${viteBase}`
+            )
+            return
+          }
           if (req.url) {
-            const filePath = path.join(publicDirPath, req.url)
+            const urlFile = removeBasePath(viteBase, req.url)
+            // filePath should be the path to the public file
+            // but req.url should still have the viteBase inside (for vite)
+            const filePath = path.join(publicDirPath, urlFile)
             try {
               if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
                 return next()
@@ -96,6 +160,7 @@ export function devServer(options?: DevServerOptions): VitePlugin {
             } catch {
               // do nothing
             }
+            req.url = urlFile
           }
 
           const exclude = options?.exclude ?? defaultOptions.exclude
@@ -185,10 +250,11 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                 options?.injectClientScript !== false &&
                 response.headers.get('content-type')?.match(/^text\/html/)
               ) {
+                const viteScript = joinPath(viteBase, '/@vite/client')
                 const nonce = response.headers
                   .get('content-security-policy')
                   ?.match(/'nonce-([^']+)'/)?.[1]
-                const script = `<script${nonce ? ` nonce="${nonce}"` : ''}>import("/@vite/client")</script>`
+                const script = `<script${nonce ? ` nonce="${nonce}"` : ''}>import("${viteScript}")</script>`
                 return injectStringToResponse(response, script) ?? response
               }
               return response
