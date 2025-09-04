@@ -111,4 +111,11 @@ app.get('/ip', (c) => {
   return c.text(getConnInfo(c).remote?.address ?? 'x')
 })
 
+app.get('/path', (c) => {
+  return c.json({
+    path: c.req.path,
+    url: c.req.url,
+  })
+})
+
 export default app
