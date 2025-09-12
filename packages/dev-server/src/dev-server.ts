@@ -6,34 +6,6 @@ import type http from 'http'
 import path from 'path'
 import type { Env, Fetch, EnvFunc, Adapter, LoadModule } from './types.js'
 
-/**
- * Joins two paths by resolving any slash collisions between them.
- *
- * @param basePath - The base path to join.
- * @param path - The path to append to the basePath.
- * @returns The joined path with redundant slashes resolved.
- *
- * @example
- * ```ts
- * joinPath("/base/", "/foo") -> "/base/foo"
- * joinPath("/base", "foo") -> "/base/foo"
- * joinPath("/base", "/foo/bar") -> "/base/foo/bar"
- * joinPath("/foo/bar/", "/baz/qux") -> "/foo/bar/baz/qux"
- * joinPath("/foo/bar", "baz/qux") -> "/foo/bar/baz/qux"
- * ```
- */
-const joinPath = (basePath: string, path: string): string => {
-  // Remove trailing slash from base.
-  const baseClean = basePath !== '/' ? basePath.replace(/\/+$/, '') : basePath
-  // Remove leading slash from path.
-  const pathClean = path.replace(/^\/+/, '')
-  // Special case: if base is '/', avoid double slash
-  if (baseClean === '/') {
-    return `/${pathClean}`
-  }
-  return `${baseClean}/${pathClean}`
-}
-
 export type DevServerOptions = {
   entry?: string
   export?: string
@@ -217,7 +189,7 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                 options?.injectClientScript !== false &&
                 response.headers.get('content-type')?.match(/^text\/html/)
               ) {
-                const viteScript = joinPath(viteBase, '/@vite/client')
+                const viteScript = path.posix.join(viteBase, '/@vite/client')
                 const nonce = response.headers
                   .get('content-security-policy')
                   ?.match(/'nonce-([^']+)'/)?.[1]
