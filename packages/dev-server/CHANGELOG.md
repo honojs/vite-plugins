@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.21.0
+
+### Minor Changes
+
+- [#286](https://github.com/honojs/vite-plugins/pull/286) [`6313a175bbe20002840ef7b1d781be06ae7aab62`](https://github.com/honojs/vite-plugins/commit/6313a175bbe20002840ef7b1d781be06ae7aab62) Thanks [@Its-Just-Nans](https://github.com/Its-Just-Nans)! - use the vitejs base for the vite injection
+
 ## 0.20.1
 
 ### Patch Changes
