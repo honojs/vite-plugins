@@ -1,15 +1,12 @@
 import { defineConfig } from 'vite'
-import devServer, { defaultOptions } from '../src'
-import cloudflareAdapter from '../src/adapter/cloudflare'
+import devServer from '../src'
 
 export default defineConfig(async () => {
   return {
-    base: process.env.VBASE, // possible custom base
+    base: '/docs/',
     plugins: [
       devServer({
         entry: '../e2e/mock/worker.ts',
-        exclude: [...defaultOptions.exclude, '/app/**'],
-        adapter: cloudflareAdapter,
       }),
     ],
   }
