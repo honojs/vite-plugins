@@ -72,13 +72,17 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
   },
 }
 
+const defaultBase = '/'
+
 export function devServer(options?: DevServerOptions): VitePlugin {
   let publicDirPath = ''
+  let viteBase = defaultBase
   const entry = options?.entry ?? defaultOptions.entry
   const plugin: VitePlugin = {
     name: '@hono/vite-dev-server',
     configResolved(config) {
       publicDirPath = config.publicDir
+      viteBase = config.base
     },
     configureServer: async (server) => {
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
@@ -185,10 +189,11 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                 options?.injectClientScript !== false &&
                 response.headers.get('content-type')?.match(/^text\/html/)
               ) {
+                const viteScript = path.posix.join(viteBase, '/@vite/client')
                 const nonce = response.headers
                   .get('content-security-policy')
                   ?.match(/'nonce-([^']+)'/)?.[1]
-                const script = `<script${nonce ? ` nonce="${nonce}"` : ''}>import("/@vite/client")</script>`
+                const script = `<script${nonce ? ` nonce="${nonce}"` : ''}>import("${viteScript}")</script>`
                 return injectStringToResponse(response, script) ?? response
               }
               return response
