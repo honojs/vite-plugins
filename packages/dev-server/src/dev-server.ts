@@ -56,6 +56,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
     /.*\.tsx$/,
     /^\/@.+$/,
     /\?t\=\d+$/,
+    /[?&]tsr-split=[^&]*(&t=[^&]*)?$/, // Support for TanStack Router code splitting
     /^\/favicon\.ico$/,
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
