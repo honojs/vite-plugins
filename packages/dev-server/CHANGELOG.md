@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.21.1
+
+### Patch Changes
+
+- [#293](https://github.com/honojs/vite-plugins/pull/293) [`59de7dc8653971297692503b61e42f7f0c2f4ed9`](https://github.com/honojs/vite-plugins/commit/59de7dc8653971297692503b61e42f7f0c2f4ed9) Thanks [@chtushar](https://github.com/chtushar)! - feat: add support for TanStack Router code splitting in dev-server
+
 ## 0.21.0
 
 ### Minor Changes
