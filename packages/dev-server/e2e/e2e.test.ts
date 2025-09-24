@@ -138,5 +138,5 @@ test('Should not crash when receiving a HEAD request', async () => {
 
 test('Should return ip address', async ({ page }) => {
   const response = await page.goto('/ip')
-  expect(['127.0.0.1', '::1'].includes(await response?.text() ?? '')).toBe(true)
+  expect(['127.0.0.1', '::1'].includes((await response?.text()) ?? '')).toBe(true)
 })
