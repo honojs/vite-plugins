@@ -44,6 +44,11 @@ export type DevServerOptions = {
    */
   adapter?: Adapter | Promise<Adapter> | (() => Adapter | Promise<Adapter>)
   handleHotUpdate?: VitePlugin['handleHotUpdate']
+  /**
+   * Base path where the application is served. This behaves like calling `.basePath()` on a Hono instance but does not depend on Hono.
+   * Provide an empty string or `/` to serve from the root, or a leading-slash path such as `/foo/bar`.
+   */
+  base?: '' | `/${string}`
 }
 
 export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' | 'loadModule'>> = {
@@ -70,19 +75,138 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
     }
     // Apply HMR for the client-side modules
   },
+  base: '',
 }
 
 const defaultBase = '/'
+
+/**
+ * Safely parse the URL path from a given string.
+ * Returns the pathname if parsing is successful, otherwise returns undefined.
+ *
+ * @example
+ * safeParseUrlPath('/foo/bar?query=123') // returns '/foo/bar'
+ */
+const safeParseUrlPath = (value: string): string | undefined => {
+  try {
+    // Use dummy scheme host to parse relative URLs.
+    return new URL(value, 'http://localhost').pathname
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * Normalize the base path by ensuring it starts with a leading slash and does not end with a trailing slash.
+ * If the base is empty, '/', or undefined, it returns an empty string.
+ *
+ * @example
+ * normalizeBasePath('/foo/bar/') // returns '/foo/bar'
+ * normalizeBasePath('foo/bar') // returns '/foo/bar'
+ * normalizeBasePath('/') // returns ''
+ * normalizeBasePath('') // returns ''
+ * normalizeBasePath(undefined) // returns ''
+ */
+const normalizeBasePath = (base: string | undefined): string => {
+  if (!base || base === '/') {
+    return ''
+  }
+  return (base.startsWith('/') ? base : `/${base}`).replace(/\/+$/g, '')
+}
+
+/**
+ * Create a function that rewrites the request URL by removing the base path prefix.
+ * If the request URL does not start with the base path, it returns the original request.
+ * If no base is provided, it returns undefined.
+ *
+ * @example
+ * const rewriteRequest = createBasePathRewriter('/foo/bar')
+ * const newRequest = rewriteRequest(new Request('http://localhost/foo/bar/baz'))
+ * newRequest.url // 'http://localhost/baz'
+ */
+const createBasePathRewriter = (
+  base: string | undefined
+): ((request: Request) => Request) | undefined => {
+  const normalizedBase = normalizeBasePath(base)
+  if (!normalizedBase) {
+    return undefined
+  }
+  const prefixLength = normalizedBase.length
+  const prefixWithSlash = `${normalizedBase}/`
+  return (request) => {
+    const url = new URL(request.url)
+    const { pathname } = url
+    if (pathname === normalizedBase) {
+      url.pathname = '/'
+    } else if (pathname.startsWith(prefixWithSlash)) {
+      url.pathname = pathname.slice(prefixLength) || '/'
+    } else {
+      return request
+    }
+    return new Request(url, request)
+  }
+}
+
+/**
+ * Create a guard function that returns true only when a pathname should be handled by the dev server
+ * based on the configured base path. When no base is provided, it always allows the request.
+ *
+ * @example
+ * const shouldHandlePath = createBasePathGuard('/foo/bar')
+ * shouldHandlePath('/foo/bar') // true
+ * shouldHandlePath('/') // false
+ */
+const createBasePathGuard = (base: string | undefined): ((pathname?: string) => boolean) => {
+  const normalizedBase = normalizeBasePath(base)
+  if (!normalizedBase) {
+    return () => true
+  }
+  const withTrailingSlash = `${normalizedBase}/`
+  return (pathname) => {
+    return !!pathname && (pathname === normalizedBase || pathname.startsWith(withTrailingSlash))
+  }
+}
 
 export function devServer(options?: DevServerOptions): VitePlugin {
   let publicDirPath = ''
   let viteBase = defaultBase
   const entry = options?.entry ?? defaultOptions.entry
+  const rewriteRequestForBase = createBasePathRewriter(options?.base ?? defaultOptions.base)
+  const shouldHandlePath = createBasePathGuard(options?.base ?? defaultOptions.base)
+  let viteBaseSetByUser: string | undefined
   const plugin: VitePlugin = {
     name: '@hono/vite-dev-server',
+    config: (config) => {
+      viteBaseSetByUser = config?.base
+
+      const baseOption = options?.base
+      return {
+        ...(baseOption !== undefined
+          ? {
+              base: baseOption === '' ? '/' : baseOption,
+            }
+          : {}),
+        server: {
+          watch: {
+            ignored: options?.ignoreWatching ?? defaultOptions.ignoreWatching,
+          },
+        },
+      }
+    },
     configResolved(config) {
       publicDirPath = config.publicDir
       viteBase = config.base
+
+      const honoBase = options?.base
+      const honoBaseIsSet = honoBase !== undefined
+      const viteBaseIsSet = viteBaseSetByUser !== undefined && viteBaseSetByUser !== '/'
+
+      if (viteBaseIsSet && honoBaseIsSet) {
+        console.warn(
+          `The following Vite config options will be overridden by @hono/vite-dev-server:
+  - base: "${viteBaseSetByUser}" -> "${honoBase}"`
+        )
+      }
     },
     configureServer: async (server) => {
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
@@ -113,6 +237,11 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                 return next()
               }
             }
+          }
+
+          const pathname = req.url ? safeParseUrlPath(req.url) : undefined
+          if (!shouldHandlePath(pathname)) {
+            return next()
           }
 
           let loadModule: LoadModule
@@ -174,8 +303,8 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                   throw new Error('`passThroughOnException` is not supported')
                 },
               }
-
-              const response = await app.fetch(request, env, executionContext)
+              const requestForApp = rewriteRequestForBase ? rewriteRequestForBase(request) : request
+              const response = await app.fetch(requestForApp, env, executionContext)
 
               /**
                * If the response is not instance of `Response`, throw it so that it can be handled
@@ -227,15 +356,6 @@ export function devServer(options?: DevServerOptions): VitePlugin {
       })
     },
     handleHotUpdate: options?.handleHotUpdate ?? defaultOptions.handleHotUpdate,
-    config: () => {
-      return {
-        server: {
-          watch: {
-            ignored: options?.ignoreWatching ?? defaultOptions.ignoreWatching,
-          },
-        },
-      }
-    },
   }
   return plugin
 }
