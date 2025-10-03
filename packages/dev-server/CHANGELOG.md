@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.22.0
+
+### Minor Changes
+
+- [#296](https://github.com/honojs/vite-plugins/pull/296) [`a9aa4b0a294c11b3702002a0a517e04d9afb7ab4`](https://github.com/honojs/vite-plugins/commit/a9aa4b0a294c11b3702002a0a517e04d9afb7ab4) Thanks [@nakasyou](https://github.com/nakasyou)! - support .vue and .svelte for excluding
+
 ## 0.21.1
 
 ### Patch Changes
