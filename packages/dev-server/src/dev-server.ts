@@ -60,6 +60,10 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
     /^\/favicon\.ico$/,
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
+    /.*\.svelte$/,
+    /.*\.vue$/,
+    /.*\.js$/,
+    /.*\.jsx$/,
   ],
   ignoreWatching: [/\.wrangler/, /\.mf/],
   handleHotUpdate: ({ server, modules }) => {
