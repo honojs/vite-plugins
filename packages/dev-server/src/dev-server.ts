@@ -46,8 +46,13 @@ export type DevServerOptions = {
   adapter?: Adapter | Promise<Adapter> | (() => Adapter | Promise<Adapter>)
   handleHotUpdate?: VitePlugin['handleHotUpdate']
   /**
-   * Base path where the application is served. This behaves like calling `.basePath()` on a Hono instance but does not depend on Hono.
+   * Base path where the application is served. This behaves like calling `.basePath()` on a Hono instance but does not depend on Hono. Note that `c.req` will contain paths without the base you specify here.
+   *
    * Provide an empty string or `/` to serve from the root, or a leading-slash path such as `/foo/bar`.
+   *
+   * When this option is set, the Vite `base` configuration will be overridden by the vite-dev-server.
+   *
+   * For example, if you set `base` to `/foo/bar`, when a browser requests `/foo/bar/path` the vite-dev-server will handle that request and pass `/path` to your application.
    */
   base?: '' | `/${string}`
 }

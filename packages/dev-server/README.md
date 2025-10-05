@@ -108,6 +108,7 @@ export type DevServerOptions = {
     onServerClose?: () => Promise<void>
   }
   handleHotUpdate?: VitePlugin['handleHotUpdate']
+  base?: '' | `/${string}`
 }
 ```
 
@@ -135,6 +136,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
       return []
     }
   },
+  base: '/',
 }
 ```
 
@@ -168,6 +170,30 @@ You can add target directories for the server to watch.
 ### `adapter`
 
 You can pass the `env` value of a specified environment to the application.
+
+### `base`
+
+The `base` option specifies the base path under which your application is served. It provides behavior equivalent to Hono's `.basePath()`, but does not depend on Hono itself. Note that `c.req` will contain paths without the base you specify here.
+
+Provide an empty string or `/` to serve from the root, or a leading-slash path such as `/foo/bar`.
+
+When this option is set, the Vite `base` configuration will be overridden by the vite-dev-server.
+
+For example, if you set `base` to `/foo/bar`, when a browser requests `/foo/bar/path` the vite-dev-server will handle that request and pass `/path` to your application.
+
+```ts
+import { defineConfig } from 'vite'
+import devServer from '@hono/vite-dev-server'
+
+export default defineConfig({
+  plugins: [
+    devServer({
+      entry: 'src/index.tsx',
+      base: '/foo/bar', // The app runs under '/foo/bar'
+    }),
+  ],
+})
+```
 
 ## Adapter
 
