@@ -29,6 +29,7 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
   return {
     name: '@hono/vite-ssg',
     apply: 'build',
+    enforce: 'post',
     async config() {
       return {
         build: {
