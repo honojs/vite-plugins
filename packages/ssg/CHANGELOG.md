@@ -1,5 +1,11 @@
 # @hono/vite-ssg
 
+## 0.2.1
+
+### Patch Changes
+
+- [#299](https://github.com/honojs/vite-plugins/pull/299) [`5ff83b02ab87903af8e3d656df7a37dc4a43384b`](https://github.com/honojs/vite-plugins/commit/5ff83b02ab87903af8e3d656df7a37dc4a43384b) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: set `enforce` as `post`
+
 ## 0.2.0
 
 ### Minor Changes
