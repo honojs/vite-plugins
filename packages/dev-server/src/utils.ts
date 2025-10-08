@@ -29,7 +29,8 @@ export const normalizeBasePath = (base: string | undefined): string => {
   if (!base || base === '/') {
     return ''
   }
-  return (base.startsWith('/') ? base : `/${base}`).replace(/\/+$/g, '')
+  const collapsed = (base.startsWith('/') ? base : `/${base}`).replace(/\/+/g, '/')
+  return collapsed.replace(/\/+$/g, '')
 }
 
 /**

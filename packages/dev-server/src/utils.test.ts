@@ -40,6 +40,13 @@ describe('normalizeBasePath', () => {
     expect(normalizeBasePath('/foo/bar//')).toBe('/foo/bar')
     expect(normalizeBasePath('/foo')).toBe('/foo')
   })
+
+  it('Should collapse consecutive slashes and normalize to expected output', () => {
+    expect(normalizeBasePath('//')).toBe('')
+    expect(normalizeBasePath('///')).toBe('')
+    expect(normalizeBasePath('/foo//bar//')).toBe('/foo/bar')
+    expect(normalizeBasePath('foo///bar/')).toBe('/foo/bar')
+  })
 })
 
 describe('createBasePathRewriter', () => {
