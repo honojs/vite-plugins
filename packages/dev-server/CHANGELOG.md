@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.23.0
+
+### Minor Changes
+
+- [#295](https://github.com/honojs/vite-plugins/pull/295) [`c81946732953c3dec4d8c41217654eb9ce30ddc9`](https://github.com/honojs/vite-plugins/commit/c81946732953c3dec4d8c41217654eb9ce30ddc9) Thanks [@3w36zj6](https://github.com/3w36zj6)! - add base option to configure application routing base path
+
 ## 0.22.0
 
 ### Minor Changes
