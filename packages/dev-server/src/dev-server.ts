@@ -5,6 +5,7 @@ import fs from 'fs'
 import type http from 'http'
 import path from 'path'
 import type { Env, Fetch, EnvFunc, Adapter, LoadModule } from './types.js'
+import { createBasePathGuard, createBasePathRewriter, safeParseUrlPath } from './utils.js'
 
 export type DevServerOptions = {
   entry?: string
@@ -44,6 +45,16 @@ export type DevServerOptions = {
    */
   adapter?: Adapter | Promise<Adapter> | (() => Adapter | Promise<Adapter>)
   handleHotUpdate?: VitePlugin['handleHotUpdate']
+  /**
+   * Base path where the application is served. This behaves like calling `.basePath()` on a Hono instance but does not depend on Hono. Note that `c.req` will contain paths without the base you specify here.
+   *
+   * Provide an empty string or `/` to serve from the root, or a leading-slash path such as `/foo/bar`.
+   *
+   * When this option is set, the Vite `base` configuration will be overridden by the vite-dev-server.
+   *
+   * For example, if you set `base` to `/foo/bar`, when a browser requests `/foo/bar/path` the vite-dev-server will handle that request and pass `/path` to your application.
+   */
+  base?: '' | `/${string}`
 }
 
 export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' | 'loadModule'>> = {
@@ -75,6 +86,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
     }
     // Apply HMR for the client-side modules
   },
+  base: '',
 }
 
 const defaultBase = '/'
@@ -83,11 +95,42 @@ export function devServer(options?: DevServerOptions): VitePlugin {
   let publicDirPath = ''
   let viteBase = defaultBase
   const entry = options?.entry ?? defaultOptions.entry
+  const rewriteRequestForBase = createBasePathRewriter(options?.base ?? defaultOptions.base)
+  const shouldHandlePath = createBasePathGuard(options?.base ?? defaultOptions.base)
+  let viteBaseSetByUser: string | undefined
   const plugin: VitePlugin = {
     name: '@hono/vite-dev-server',
+    config: (config) => {
+      viteBaseSetByUser = config?.base
+
+      const baseOption = options?.base
+      return {
+        ...(baseOption !== undefined
+          ? {
+              base: baseOption === '' ? '/' : baseOption,
+            }
+          : {}),
+        server: {
+          watch: {
+            ignored: options?.ignoreWatching ?? defaultOptions.ignoreWatching,
+          },
+        },
+      }
+    },
     configResolved(config) {
       publicDirPath = config.publicDir
       viteBase = config.base
+
+      const honoBase = options?.base
+      const honoBaseIsSet = honoBase !== undefined
+      const viteBaseIsSet = viteBaseSetByUser !== undefined && viteBaseSetByUser !== '/'
+
+      if (viteBaseIsSet && honoBaseIsSet) {
+        console.warn(
+          `The following Vite config options will be overridden by @hono/vite-dev-server:
+  - base: "${viteBaseSetByUser}" -> "${honoBase}"`
+        )
+      }
     },
     configureServer: async (server) => {
       async function createMiddleware(server: ViteDevServer): Promise<Connect.HandleFunction> {
@@ -118,6 +161,11 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                 return next()
               }
             }
+          }
+
+          const pathname = req.url ? safeParseUrlPath(req.url) : undefined
+          if (!shouldHandlePath(pathname)) {
+            return next()
           }
 
           let loadModule: LoadModule
@@ -179,8 +227,8 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                   throw new Error('`passThroughOnException` is not supported')
                 },
               }
-
-              const response = await app.fetch(request, env, executionContext)
+              const requestForApp = rewriteRequestForBase ? rewriteRequestForBase(request) : request
+              const response = await app.fetch(requestForApp, env, executionContext)
 
               /**
                * If the response is not instance of `Response`, throw it so that it can be handled
@@ -232,15 +280,6 @@ export function devServer(options?: DevServerOptions): VitePlugin {
       })
     },
     handleHotUpdate: options?.handleHotUpdate ?? defaultOptions.handleHotUpdate,
-    config: () => {
-      return {
-        server: {
-          watch: {
-            ignored: options?.ignoreWatching ?? defaultOptions.ignoreWatching,
-          },
-        },
-      }
-    },
   }
   return plugin
 }
