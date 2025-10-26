@@ -1,5 +1,5 @@
 import type { Hono } from 'hono'
-import { toSSG } from 'hono/ssg'
+import { toSSG, defaultExtensionMap } from 'hono/ssg'
 import type { SSGPlugin } from 'hono/ssg'
 import type { Plugin, ResolvedConfig } from 'vite'
 import { createServer } from 'vite'
@@ -13,11 +13,13 @@ type SSGOptions = {
    * @see https://hono.dev/docs/helpers/ssg#plugins
    */
   plugins?: SSGPlugin[]
+  extensionMap?: Record<string, string>
 }
 
 export const defaultOptions: Required<SSGOptions> = {
   entry: './src/index.tsx',
   plugins: [],
+  extensionMap: defaultExtensionMap,
 }
 
 export const ssgBuild = (options?: SSGOptions): Plugin => {
@@ -90,7 +92,11 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
             return
           },
         },
-        { dir: outDir, plugins: options?.plugins ?? defaultOptions.plugins }
+        {
+          dir: outDir,
+          plugins: options?.plugins ?? defaultOptions.plugins,
+          extensionMap: options?.extensionMap ?? defaultOptions.extensionMap,
+        }
       )
 
       server.close()
