@@ -1,5 +1,11 @@
 # @hono/vite-ssg
 
+## 0.3.0
+
+### Minor Changes
+
+- [#304](https://github.com/honojs/vite-plugins/pull/304) [`1a6b277b6ecc58450113b63f6b3bf2e2e4fce35a`](https://github.com/honojs/vite-plugins/commit/1a6b277b6ecc58450113b63f6b3bf2e2e4fce35a) Thanks [@epelz](https://github.com/epelz)! - add ssg build option to specify extensionMap
+
 ## 0.2.1
 
 ### Patch Changes
