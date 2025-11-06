@@ -89,6 +89,7 @@
   },
   "homepage": "https://github.com/honojs/vite-plugins",
   "devDependencies": {
+    "@types/node": "^24.10.0",
     "glob": "^10.3.10",
     "hono": "^4.6.12",
     "publint": "^0.1.12",

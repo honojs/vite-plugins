@@ -84,6 +84,7 @@
   "homepage": "https://github.com/honojs/vite-plugins",
   "devDependencies": {
     "@playwright/test": "^1.37.1",
+    "@types/node": "^24.10.0",
     "glob": "^10.3.10",
     "hono": "^4.4.11",
     "miniflare": "^3.20240701.0",
