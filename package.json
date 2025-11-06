@@ -11,7 +11,7 @@
     "node": ">=18.14.1"
   },
   "scripts": {
-    "build": "yarn workspaces foreach run build",
+    "build": "yarn workspaces foreach -A --exclude hono-vite-plugins-monorepo run build",
     "lint": "eslint 'packages/**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix 'packages/**/*.{ts,tsx}'",
     "format": "prettier --check 'packages/**/*.{ts,tsx}'",
