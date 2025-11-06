@@ -1113,10 +1113,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hono/node-server@npm:^1.19.6":
+  version: 1.19.6
+  resolution: "@hono/node-server@npm:1.19.6"
+  peerDependencies:
+    hono: ^4
+  checksum: 10c0/f3caacbbfa1826b669ef7b3fd486ad9d66ea0df0662e4957ebaedacabaa14e3d19cc127c0a74d527ebda64b1aef3670c6949d7fad772b06a27b945a5b770d85b
+  languageName: node
+  linkType: hard
+
 "@hono/vite-build@workspace:packages/build":
   version: 0.0.0-use.local
   resolution: "@hono/vite-build@workspace:packages/build"
   dependencies:
+    "@hono/node-server": "npm:^1.19.6"
     "@types/node": "npm:^24.10.0"
     glob: "npm:^10.3.10"
     hono: "npm:^4.6.12"
