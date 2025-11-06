@@ -1,5 +1,11 @@
 # @hono/vite-cloudflare-pages
 
+## 0.4.3
+
+### Patch Changes
+
+- [#311](https://github.com/honojs/vite-plugins/pull/311) [`8c30a5abdac0ac29165c94a2a8aa7fe5e4dba740`](https://github.com/honojs/vite-plugins/commit/8c30a5abdac0ac29165c94a2a8aa7fe5e4dba740) Thanks [@yusukebe](https://github.com/yusukebe)! - chore: fake update
+
 ## 0.4.2
 
 ### Patch Changes
