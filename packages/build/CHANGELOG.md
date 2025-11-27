@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.8.0
+
+### Minor Changes
+
+- [#315](https://github.com/honojs/vite-plugins/pull/315) [`d9ecb01ac8220d85c539081b139e4117b53ba711`](https://github.com/honojs/vite-plugins/commit/d9ecb01ac8220d85c539081b139e4117b53ba711) Thanks [@chadxz](https://github.com/chadxz)! - Added `shutdownTimeoutMs` option to the Node adapter for graceful shutdown on SIGINT/SIGTERM signals. Set to a timeout in milliseconds to enable graceful shutdown, or 0 to wait indefinitely for connections to close.
+
 ## 1.7.0
 
 ### Minor Changes
