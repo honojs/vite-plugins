@@ -2,7 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "include": [
     "src",
-    "test"
+    "test",
+    "e2e",
+    "playwright.config.ts"
   ],
   "compilerOptions": {
     "module": "es2022",
