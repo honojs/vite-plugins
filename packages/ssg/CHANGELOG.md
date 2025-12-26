@@ -1,5 +1,11 @@
 # @hono/vite-ssg
 
+## 0.3.1
+
+### Patch Changes
+
+- [#318](https://github.com/honojs/vite-plugins/pull/318) [`9bc8f280de0922aa461e715d3751294425313c80`](https://github.com/honojs/vite-plugins/commit/9bc8f280de0922aa461e715d3751294425313c80) Thanks [@3w36zj6](https://github.com/3w36zj6)! - respect resolve options when creating server
+
 ## 0.3.0
 
 ### Minor Changes
