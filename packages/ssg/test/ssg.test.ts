@@ -29,6 +29,11 @@ describe('ssgPlugin', () => {
           entry: entryFile,
         }),
       ],
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '.'),
+        },
+      },
       build: {
         outDir,
         emptyOutDir: true,
@@ -45,6 +50,11 @@ describe('ssgPlugin', () => {
     const outputDynamicImport = fs.readFileSync(outputFileWithDynamicImport, 'utf-8')
     expect(outputDynamicImport).toBe('Dynamic import works: sample!')
 
+    const aliasOutput = path.resolve(outDir, 'alias-module.txt')
+    expect(fs.existsSync(aliasOutput)).toBe(true)
+    const aliasContent = fs.readFileSync(aliasOutput, 'utf-8')
+    expect(aliasContent.trim()).toBe('Foo')
+
     // Should not output files corresponding to a virtual entry
     expect(fs.existsSync(path.resolve(outDir, 'assets'))).toBe(false)
   })
@@ -58,6 +68,11 @@ describe('ssgPlugin', () => {
           entry: entryFile,
         }),
       ],
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '.'),
+        },
+      },
       build: {
         rollupOptions: {
           input: entryFile,
@@ -100,6 +115,11 @@ describe('ssgPlugin', () => {
           plugins: [testPlugin],
         }),
       ],
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '.'),
+        },
+      },
       build: {
         outDir,
         emptyOutDir: true,

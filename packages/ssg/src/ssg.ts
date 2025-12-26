@@ -63,6 +63,7 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
 
       // Create a server to load the module
       const server = await createServer({
+        resolve: config.resolve,
         plugins: [],
         build: { ssr: true },
         mode: config.mode,
