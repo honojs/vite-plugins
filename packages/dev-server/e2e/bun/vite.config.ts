@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import devServer, { defaultOptions } from '../src'
+import devServer, { defaultOptions } from '../../src'
 
 export default defineConfig(async () => {
   return {

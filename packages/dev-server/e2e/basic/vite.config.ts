@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
-import devServer, { defaultOptions } from '../src'
-import cloudflareAdapter from '../src/adapter/cloudflare'
+import devServer, { defaultOptions } from '../../src'
+import cloudflareAdapter from '../../src/adapter/cloudflare'
 
 export default defineConfig(async () => {
   return {
