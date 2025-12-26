@@ -1,6 +1,6 @@
 import { test as baseTest } from '@playwright/test'
 import type { ChildProcess } from 'node:child_process'
-import { exec, spawn } from 'node:child_process'
+import { exec, spawn, execSync } from 'node:child_process'
 import { createConnection, createServer } from 'node:net'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -89,6 +89,28 @@ export const prepareDevServerSetup = (
     const port = await getAvailablePort()
 
     const viteConfig = './vite.config.ts'
+
+    const isCmdAvailable = (cmd: string) => {
+      try {
+        execSync(`command -v ${cmd}`, { stdio: 'ignore' })
+        return true
+      } catch {
+        return false
+      }
+    }
+
+    if (runtime === 'bun') {
+      if (!isCmdAvailable('bun')) {
+        // eslint-disable-next-line
+        throw new Error("'bun' not found in PATH.")
+      }
+    } else {
+      if (!isCmdAvailable('node')) {
+        // eslint-disable-next-line
+        throw new Error("'node' not found in PATH.")
+      }
+    }
+
     const command =
       runtime === 'bun'
         ? `bun --bun vite --port ${port} --strictPort -c ${viteConfig}`
