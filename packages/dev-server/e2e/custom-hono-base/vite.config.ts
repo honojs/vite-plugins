@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite'
-import devServer, { defaultOptions } from '../src'
+import devServer from '../../src'
 
 export default defineConfig(async () => {
   return {
     plugins: [
       devServer({
-        entry: './mock/app.ts',
-        exclude: [...defaultOptions.exclude, '/app/**'],
+        entry: '../basic/mock/worker.ts',
+        base: '/foo/bar',
       }),
     ],
   }

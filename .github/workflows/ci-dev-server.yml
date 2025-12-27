@@ -23,20 +23,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - run: yarn install
-      - run: yarn build
-      - run: npx playwright install --with-deps
-      - run: yarn test
-  ci-bun:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./packages/dev-server
-    steps:
-      - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: '1.0.25'
       - run: yarn install
+      - run: yarn build
       - run: npx playwright install --with-deps
-      - run: bun run test:e2e:bun
+      - run: yarn test
