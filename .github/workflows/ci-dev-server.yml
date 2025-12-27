@@ -15,17 +15,15 @@ jobs:
     defaults:
       run:
         working-directory: ./packages/dev-server
-    strategy:
-      matrix:
-        node: [20, 22]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node }}
-      - uses: oven-sh/setup-bun@v1
+          node-version-file: .tool-versions
+          cache: yarn
+      - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: '1.0.25'
+          bun-version-file: .tool-versions
       - run: yarn install
       - run: yarn build
       - run: npx playwright install --with-deps
