@@ -15,14 +15,12 @@ jobs:
     defaults:
       run:
         working-directory: ./packages/dev-server
-    strategy:
-      matrix:
-        node: [20, 22]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node }}
+          node-version-file: .tool-versions
+          cache: yarn
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: '1.0.25'
