@@ -24,9 +24,10 @@ jobs:
     if: ${{ github.event_name == 'push' || !github.event.pull_request.draft }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 24.x
+          node-version-file: .tool-versions
+          cache: yarn
       - run: yarn install --frozen-lockfile
       - run: yarn run format:fix
       - run: yarn run lint:fix
