@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.24.0
+
+### Minor Changes
+
+- [#322](https://github.com/honojs/vite-plugins/pull/322) [`041fd216c35a5db1a170f8311bdca3fe90ce377d`](https://github.com/honojs/vite-plugins/commit/041fd216c35a5db1a170f8311bdca3fe90ce377d) Thanks [@kenn](https://github.com/kenn)! - Add .md/.mdx to defaultOptions.exclude
+
 ## 0.23.0
 
 ### Minor Changes
