@@ -1,5 +1,11 @@
 # @hono/vite-ssg
 
+## 0.3.2
+
+### Patch Changes
+
+- [#325](https://github.com/honojs/vite-plugins/pull/325) [`3cffe86130d30909ad7799cc8adb157c47a0ae3a`](https://github.com/honojs/vite-plugins/commit/3cffe86130d30909ad7799cc8adb157c47a0ae3a) Thanks [@3w36zj6](https://github.com/3w36zj6)! - include Node.js builtin modules explicitly
+
 ## 0.3.1
 
 ### Patch Changes
