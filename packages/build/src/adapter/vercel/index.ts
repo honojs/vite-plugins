@@ -38,6 +38,7 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
 
   return {
     ...buildPlugin({
+      ssrTarget: 'node',
       output: `functions/${FUNCTION_NAME}.func/${BUNDLE_NAME}`,
       outputDir: '.vercel/output',
       ...{

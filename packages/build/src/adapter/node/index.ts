@@ -22,6 +22,7 @@ const nodeBuildPlugin = (pluginOptions?: NodeBuildOptions): Plugin => {
 
   return {
     ...buildPlugin({
+      ssrTarget: 'node',
       ...{
         entryContentBeforeHooks: [
           async (appName, options) => {

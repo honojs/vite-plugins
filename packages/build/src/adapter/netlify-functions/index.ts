@@ -9,6 +9,7 @@ export default function netlifyFunctionsBuildPlugin(
 ): Plugin {
   return {
     ...buildPlugin({
+      ssrTarget: 'node',
       ...{
         entryContentBeforeHooks: [() => 'import { handle } from "hono/netlify"'],
         entryContentAfterHooks: [() => 'export const config = { path: "/*", preferStatic: true }'],

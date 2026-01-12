@@ -22,6 +22,10 @@ export type BuildOptions = {
   minify?: boolean
   emptyOutDir?: boolean
   apply?: ((this: void, config: UserConfig, env: ConfigEnv) => boolean) | undefined
+  /**
+   * @default 'webworker'
+   */
+  ssrTarget?: 'node' | 'webworker'
 } & Omit<GetEntryContentOptions, 'entry'>
 
 export const defaultOptions: Required<
@@ -44,6 +48,7 @@ export const defaultOptions: Required<
   },
   staticPaths: [],
   preset: 'hono',
+  ssrTarget: 'webworker',
 }
 
 const buildPlugin = (options: BuildOptions): Plugin => {
@@ -110,7 +115,7 @@ const buildPlugin = (options: BuildOptions): Plugin => {
         ssr: {
           external: options?.external ?? defaultOptions.external,
           noExternal: true,
-          target: 'webworker',
+          target: options?.ssrTarget ?? defaultOptions.ssrTarget,
         },
         build: {
           outDir: options?.outputDir ?? defaultOptions.outputDir,
