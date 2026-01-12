@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.9.0
+
+### Minor Changes
+
+- [#328](https://github.com/honojs/vite-plugins/pull/328) [`3e9010da1687c46e610a5ea9ec7a80c9be57684a`](https://github.com/honojs/vite-plugins/commit/3e9010da1687c46e610a5ea9ec7a80c9be57684a) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: add `ssrTarget` option
+
 ## 1.8.0
 
 ### Minor Changes
