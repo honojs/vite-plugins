@@ -79,6 +79,10 @@
     "access": "public"
   },
   "homepage": "https://github.com/honojs/vite-plugins",
+  "keywords": [
+    "hono",
+    "vite-plugin"
+  ],
   "devDependencies": {
     "@playwright/test": "^1.37.1",
     "@types/node": "^24.10.0",
