@@ -161,8 +161,23 @@ describe('Build Plugin with Cloudflare Pages Adapter', () => {
     const output = readFileSync(outputFile, 'utf-8')
     expect(output).toContain('Hello World')
 
-    const routes = readFileSync(routesFile, 'utf-8')
+    let routes = readFileSync(routesFile, 'utf-8')
     expect(routes).toContain('{"version":1,"include":["/"],"exclude":["/customRoute"]}')
+
+    // Even if _routes.json exists in dist, it should be updated when publicDir content changes
+    await build({
+      publicDir: 'public',
+      root: testDir,
+      plugins: [
+        cloudflarePagesPlugin({
+          entry: 'src/server.ts',
+        }),
+      ],
+    })
+
+    expect(existsSync(routesFile)).toBe(true)
+    routes = readFileSync(routesFile, 'utf-8')
+    expect(routes).toContain('foo.txt')
   })
 })
 
