@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.9.1
+
+### Patch Changes
+
+- [#330](https://github.com/honojs/vite-plugins/pull/330) [`11107bc013ac40c891b4a57d0ef718d822b1fa2c`](https://github.com/honojs/vite-plugins/commit/11107bc013ac40c891b4a57d0ef718d822b1fa2c) Thanks [@ryuapp](https://github.com/ryuapp)! - Add vite-plugin keyword for [Vite plugin registry](https://registry.vite.dev/)
+
 ## 1.9.0
 
 ### Minor Changes
