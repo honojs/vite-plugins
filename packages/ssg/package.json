@@ -39,6 +39,10 @@
     "access": "public"
   },
   "homepage": "https://github.com/honojs/vite-plugins",
+  "keywords": [
+    "hono",
+    "vite-plugin"
+  ],
   "devDependencies": {
     "@types/node": "^24.10.0",
     "glob": "^10.3.10",
