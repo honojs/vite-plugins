@@ -9,7 +9,7 @@ export type EntryContentHook = (
   options?: EntryContentHookOptions
 ) => string | Promise<string>
 
-const presets = ['hono', 'hono/tiny', 'hono/quick'] as const
+const presets = ['hono', 'hono/tiny', 'hono/quick', '@hono/hono'] as const
 export type Preset = (typeof presets)[number]
 
 export type GetEntryContentOptions = {
