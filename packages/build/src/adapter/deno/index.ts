@@ -13,8 +13,8 @@ const denoBuildPlugin = (pluginOptions?: DenoBuildOptions): Plugin => {
       ...{
         entryContentBeforeHooks: [
           async (appName, options) => {
-            // eslint-disable-next-line quotes
-            let code = "import { serveStatic } from 'hono/deno'\n"
+            const preset = pluginOptions?.preset ?? 'hono'
+            let code = `import { serveStatic } from '${preset}/deno'\n`
             code += serveStaticHook(appName, {
               filePaths: options?.staticPaths,
               root: pluginOptions?.staticRoot,
