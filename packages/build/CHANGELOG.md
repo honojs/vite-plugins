@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.9.2
+
+### Patch Changes
+
+- [#332](https://github.com/honojs/vite-plugins/pull/332) [`beeff30a8ed43a6071ba7e40d52a7e5c196cb322`](https://github.com/honojs/vite-plugins/commit/beeff30a8ed43a6071ba7e40d52a7e5c196cb322) Thanks [@0x339](https://github.com/0x339)! - chore(@hono/vite-build): add '@hono/hono' preset for deno adapter
+
 ## 1.9.1
 
 ### Patch Changes
