@@ -275,6 +275,26 @@ const getConnInfo = import.meta.env.DEV
   : (await import('hono/bun')).getConnInfo
 ```
 
+### Tips
+
+You can get vite dev server's instance from request context.
+
+```typescript
+import { Hono } from 'hono'
+import type { ViteDevServer } from 'vite'
+
+const app = new Hono()
+
+app.get('/', (c) => {
+  const vite = (c.env as any).vite as ViteDevServer
+
+  // ...
+
+  const html = await vite.transformIndexHtml(c.req.url, someHtmlString)
+  return c.html(html)
+})
+```
+
 ## Client-side
 
 You can write client-side scripts and import them into your application using Vite's features.
