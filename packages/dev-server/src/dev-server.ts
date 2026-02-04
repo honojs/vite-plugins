@@ -206,6 +206,7 @@ export function devServer(options?: DevServerOptions): VitePlugin {
               let env: Env = {
                 incoming: req,
                 outgoing: res,
+                vite: server,
               }
 
               if (options?.env) {
