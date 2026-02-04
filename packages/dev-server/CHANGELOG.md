@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.25.0
+
+### Minor Changes
+
+- [#334](https://github.com/honojs/vite-plugins/pull/334) [`ba1294e143eb3a7dd23bf7ca68c08119a70bdfa4`](https://github.com/honojs/vite-plugins/commit/ba1294e143eb3a7dd23bf7ca68c08119a70bdfa4) Thanks [@paring-chan](https://github.com/paring-chan)! - expose vite server via `c.env.vite`
+
 ## 0.24.1
 
 ### Patch Changes
