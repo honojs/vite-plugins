@@ -283,10 +283,10 @@ You can get vite dev server's instance from request context.
 import { Hono } from 'hono'
 import type { ViteDevServer } from 'vite'
 
-const app = new Hono()
+const app = new Hono<{ Bindings: { vite: ViteDevServer } }>()
 
 app.get('/', (c) => {
-  const vite = (c.env as any).vite as ViteDevServer
+  const vite = c.env.vite
 
   // ...
 
