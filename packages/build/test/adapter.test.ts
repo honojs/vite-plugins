@@ -45,6 +45,26 @@ describe('Build Plugin with Bun Adapter', () => {
     // eslint-disable-next-line quotes
     expect(outputJsClientJs).toContain("console.log('foo')")
   })
+
+  it('Should preserve websocket from entry default export in generated bundle', async () => {
+    const outputFile = `${testDir}/dist/index.js`
+
+    await build({
+      root: testDir,
+      plugins: [
+        bunBuildPlugin({
+          entry: './src/server-fetch-with-websocket.ts',
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('websocket')
+    expect(output).toMatch(/fetch:\s*mainApp\.fetch\.bind\(mainApp\)/)
+  })
 })
 
 describe('Build Plugin with Netlify Functions Adapter', () => {
