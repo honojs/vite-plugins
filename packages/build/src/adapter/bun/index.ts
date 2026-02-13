@@ -39,7 +39,7 @@ const bunBuildPlugin = (pluginOptions?: BunBuildOptions): Plugin => {
       ...{
         entryContentBeforeHooks: [
           async (appName, options) => {
-            let code = "import { serveStatic } from 'hono/bun'\n"
+            let code = 'import { serveStatic } from \'hono/bun\'\n'
             code += serveStaticHook(appName, {
               filePaths: options?.staticPaths,
               root: pluginOptions?.staticRoot,
