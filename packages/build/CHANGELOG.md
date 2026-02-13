@@ -1,5 +1,29 @@
 # @hono/vite-build
 
+## 1.9.2
+
+### Patch Changes
+
+- [#332](https://github.com/honojs/vite-plugins/pull/332) [`beeff30a8ed43a6071ba7e40d52a7e5c196cb322`](https://github.com/honojs/vite-plugins/commit/beeff30a8ed43a6071ba7e40d52a7e5c196cb322) Thanks [@0x339](https://github.com/0x339)! - chore(@hono/vite-build): add '@hono/hono' preset for deno adapter
+
+## 1.9.1
+
+### Patch Changes
+
+- [#330](https://github.com/honojs/vite-plugins/pull/330) [`11107bc013ac40c891b4a57d0ef718d822b1fa2c`](https://github.com/honojs/vite-plugins/commit/11107bc013ac40c891b4a57d0ef718d822b1fa2c) Thanks [@ryuapp](https://github.com/ryuapp)! - Add vite-plugin keyword for [Vite plugin registry](https://registry.vite.dev/)
+
+## 1.9.0
+
+### Minor Changes
+
+- [#328](https://github.com/honojs/vite-plugins/pull/328) [`3e9010da1687c46e610a5ea9ec7a80c9be57684a`](https://github.com/honojs/vite-plugins/commit/3e9010da1687c46e610a5ea9ec7a80c9be57684a) Thanks [@yusukebe](https://github.com/yusukebe)! - feat: add `ssrTarget` option
+
+## 1.8.0
+
+### Minor Changes
+
+- [#315](https://github.com/honojs/vite-plugins/pull/315) [`d9ecb01ac8220d85c539081b139e4117b53ba711`](https://github.com/honojs/vite-plugins/commit/d9ecb01ac8220d85c539081b139e4117b53ba711) Thanks [@chadxz](https://github.com/chadxz)! - Added `shutdownTimeoutMs` option to the Node adapter for graceful shutdown on SIGINT/SIGTERM signals. Set to a timeout in milliseconds to enable graceful shutdown, or 0 to wait indefinitely for connections to close.
+
 ## 1.7.0
 
 ### Minor Changes

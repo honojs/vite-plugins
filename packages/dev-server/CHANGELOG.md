@@ -1,5 +1,47 @@
 # @hono/vite-dev-server
 
+## 0.25.0
+
+### Minor Changes
+
+- [#334](https://github.com/honojs/vite-plugins/pull/334) [`ba1294e143eb3a7dd23bf7ca68c08119a70bdfa4`](https://github.com/honojs/vite-plugins/commit/ba1294e143eb3a7dd23bf7ca68c08119a70bdfa4) Thanks [@paring-chan](https://github.com/paring-chan)! - expose vite server via `c.env.vite`
+
+## 0.24.1
+
+### Patch Changes
+
+- [#330](https://github.com/honojs/vite-plugins/pull/330) [`11107bc013ac40c891b4a57d0ef718d822b1fa2c`](https://github.com/honojs/vite-plugins/commit/11107bc013ac40c891b4a57d0ef718d822b1fa2c) Thanks [@ryuapp](https://github.com/ryuapp)! - Add vite-plugin keyword for [Vite plugin registry](https://registry.vite.dev/)
+
+## 0.24.0
+
+### Minor Changes
+
+- [#322](https://github.com/honojs/vite-plugins/pull/322) [`041fd216c35a5db1a170f8311bdca3fe90ce377d`](https://github.com/honojs/vite-plugins/commit/041fd216c35a5db1a170f8311bdca3fe90ce377d) Thanks [@kenn](https://github.com/kenn)! - Add .md/.mdx to defaultOptions.exclude
+
+## 0.23.0
+
+### Minor Changes
+
+- [#295](https://github.com/honojs/vite-plugins/pull/295) [`c81946732953c3dec4d8c41217654eb9ce30ddc9`](https://github.com/honojs/vite-plugins/commit/c81946732953c3dec4d8c41217654eb9ce30ddc9) Thanks [@3w36zj6](https://github.com/3w36zj6)! - add base option to configure application routing base path
+
+## 0.22.0
+
+### Minor Changes
+
+- [#296](https://github.com/honojs/vite-plugins/pull/296) [`a9aa4b0a294c11b3702002a0a517e04d9afb7ab4`](https://github.com/honojs/vite-plugins/commit/a9aa4b0a294c11b3702002a0a517e04d9afb7ab4) Thanks [@nakasyou](https://github.com/nakasyou)! - support .vue and .svelte for excluding
+
+## 0.21.1
+
+### Patch Changes
+
+- [#293](https://github.com/honojs/vite-plugins/pull/293) [`59de7dc8653971297692503b61e42f7f0c2f4ed9`](https://github.com/honojs/vite-plugins/commit/59de7dc8653971297692503b61e42f7f0c2f4ed9) Thanks [@chtushar](https://github.com/chtushar)! - feat: add support for TanStack Router code splitting in dev-server
+
+## 0.21.0
+
+### Minor Changes
+
+- [#286](https://github.com/honojs/vite-plugins/pull/286) [`6313a175bbe20002840ef7b1d781be06ae7aab62`](https://github.com/honojs/vite-plugins/commit/6313a175bbe20002840ef7b1d781be06ae7aab62) Thanks [@Its-Just-Nans](https://github.com/Its-Just-Nans)! - use the vitejs base for the vite injection
+
 ## 0.20.1
 
 ### Patch Changes

@@ -318,7 +318,10 @@ describe('Build Plugin with Node.js Adapter', () => {
     expect(output).toContain('use("/foo.txt"')
     expect(output).toContain('use("/js/*"')
     expect(output).toContain('use("/static/*", serveStatic({ root: "./" }))')
+    // graceful shutdown is disabled by default
     expect(output).toContain('serve({ fetch: mainApp.fetch, port: 3001 })')
+    expect(output).not.toContain('const server = serve')
+    expect(output).not.toContain('const gracefulShutdown')
 
     const outputFooTxt = readFileSync(`${testDir}/dist/foo.txt`, 'utf-8')
     expect(outputFooTxt).toContain('foo')
@@ -326,6 +329,50 @@ describe('Build Plugin with Node.js Adapter', () => {
     const outputJsClientJs = readFileSync(`${testDir}/dist/js/client.js`, 'utf-8')
     // eslint-disable-next-line quotes
     expect(outputJsClientJs).toContain("console.log('foo')")
+  })
+
+  it('Should build with graceful shutdown when shutdownTimeoutMs is set', async () => {
+    const outputFile = `${testDir}/dist/index.js`
+
+    await build({
+      root: testDir,
+      plugins: [
+        nodeBuildPlugin({
+          entry,
+          minify: false,
+          port: 3001,
+          shutdownTimeoutMs: 30000,
+        }),
+      ],
+    })
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('const server = serve({ fetch: mainApp.fetch, port: 3001 })')
+    expect(output).toContain('const gracefulShutdown')
+    expect(output).toMatch(/process\.on\(['"]SIGINT['"], gracefulShutdown\)/)
+    expect(output).toMatch(/process\.on\(['"]SIGTERM['"], gracefulShutdown\)/)
+    // 30000 may be minified to 3e4
+    expect(output).toMatch(/setTimeout\(\(\) => process\.exit\(1\), (30000|3e4)\)\.unref\(\)/)
+  })
+
+  it('Should build with graceful shutdown and no timeout when shutdownTimeoutMs is 0', async () => {
+    const outputFile = `${testDir}/dist/index.js`
+
+    await build({
+      root: testDir,
+      plugins: [
+        nodeBuildPlugin({
+          entry,
+          minify: false,
+          shutdownTimeoutMs: 0,
+        }),
+      ],
+    })
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('const gracefulShutdown')
+    expect(output).toMatch(/process\.on\(['"]SIGINT['"], gracefulShutdown\)/)
+    expect(output).not.toMatch(/setTimeout\(\(\) => process\.exit\(1\)/)
   })
 })
 

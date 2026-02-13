@@ -2,12 +2,15 @@
   "extends": "../../tsconfig.base.json",
   "include": [
     "src",
-    "test"
+    "test",
+    "e2e",
+    "playwright.config.ts"
   ],
   "compilerOptions": {
-    "module": "ES2022",
+    "module": "es2022",
     "target": "ES2022",
     "types": [
+      "node",
       "vitest/globals",
       "vite/client"
     ]

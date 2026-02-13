@@ -1,0 +1,36 @@
+name: autofix.ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/**'
+  pull_request:
+    branches: ['*']
+    paths:
+      - 'packages/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  autofix:
+    name: autofix
+    runs-on: ubuntu-24.04
+    if: ${{ github.event_name == 'push' || !github.event.pull_request.draft }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .tool-versions
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn run format:fix
+      - run: yarn run lint:fix
+      - uses: autofix-ci/action@v1
+        with:
+          commit-message: 'ci: apply automated fixes'

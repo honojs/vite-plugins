@@ -1,15 +1,25 @@
 import type { Hono } from 'hono'
-import { toSSG } from 'hono/ssg'
+import { toSSG, defaultExtensionMap } from 'hono/ssg'
+import type { SSGPlugin } from 'hono/ssg'
 import type { Plugin, ResolvedConfig } from 'vite'
 import { createServer } from 'vite'
 import { relative } from 'node:path'
 
 type SSGOptions = {
   entry?: string
+  /**
+   * Hono SSG plugins to use.
+   * These are not Vite plugins, but plugins for Hono's static site generation.
+   * @see https://hono.dev/docs/helpers/ssg#plugins
+   */
+  plugins?: SSGPlugin[]
+  extensionMap?: Record<string, string>
 }
 
 export const defaultOptions: Required<SSGOptions> = {
   entry: './src/index.tsx',
+  plugins: [],
+  extensionMap: defaultExtensionMap,
 }
 
 export const ssgBuild = (options?: SSGOptions): Plugin => {
@@ -21,6 +31,7 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
   return {
     name: '@hono/vite-ssg',
     apply: 'build',
+    enforce: 'post',
     async config() {
       return {
         build: {
@@ -52,6 +63,10 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
 
       // Create a server to load the module
       const server = await createServer({
+        resolve: {
+          ...config.resolve,
+          builtins: [...config.resolve.builtins, /^node:/],
+        },
         plugins: [],
         build: { ssr: true },
         mode: config.mode,
@@ -81,7 +96,11 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
             return
           },
         },
-        { dir: outDir }
+        {
+          dir: outDir,
+          plugins: options?.plugins ?? defaultOptions.plugins,
+          extensionMap: options?.extensionMap ?? defaultOptions.extensionMap,
+        }
       )
 
       server.close()

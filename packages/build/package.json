@@ -1,7 +1,7 @@
 {
   "name": "@hono/vite-build",
   "description": "Vite plugin to build your Hono app",
-  "version": "1.7.0",
+  "version": "1.9.2",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
   "type": "module",
@@ -88,7 +88,13 @@
     "access": "public"
   },
   "homepage": "https://github.com/honojs/vite-plugins",
+  "keywords": [
+    "hono",
+    "vite-plugin"
+  ],
   "devDependencies": {
+    "@hono/node-server": "^1.19.6",
+    "@types/node": "^24.10.0",
     "glob": "^10.3.10",
     "hono": "^4.6.12",
     "publint": "^0.1.12",

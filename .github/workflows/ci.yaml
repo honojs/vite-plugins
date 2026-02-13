@@ -1,26 +1,29 @@
-name: ci-ssg
+name: ci
 on:
   push:
     branches: [main]
     paths:
-      - 'packages/ssg/**'
+      - 'packages/**'
   pull_request:
     branches: ['*']
     paths:
-      - 'packages/ssg/**'
+      - 'packages/**'
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
-        working-directory: ./packages/ssg
+        working-directory: ./
+    strategy:
+      matrix:
+        task: [format, lint]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
         with:
           node-version-file: .tool-versions
           cache: yarn
-      - run: yarn install
-      - run: yarn build
-      - run: yarn test
+      - run: yarn install --frozen-lockfile
+      - name: Run task
+        run: yarn ${{ matrix.task }}

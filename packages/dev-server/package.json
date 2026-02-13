@@ -1,14 +1,13 @@
 {
   "name": "@hono/vite-dev-server",
   "description": "Vite dev-server plugin for Hono",
-  "version": "0.20.1",
+  "version": "0.25.0",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
   "type": "module",
   "scripts": {
     "test:unit": "vitest --run ./src",
-    "test:e2e": "playwright test -c e2e/playwright.config.ts e2e/e2e.test.ts",
-    "test:e2e:bun": "playwright test -c e2e-bun/playwright.config.ts e2e-bun/e2e.test.ts",
+    "test:e2e": "playwright test",
     "test": "yarn test:unit && yarn test:e2e",
     "build": "rimraf dist && tsup --format esm,cjs --dts && publint",
     "watch": "tsup --watch",
@@ -80,8 +79,13 @@
     "access": "public"
   },
   "homepage": "https://github.com/honojs/vite-plugins",
+  "keywords": [
+    "hono",
+    "vite-plugin"
+  ],
   "devDependencies": {
     "@playwright/test": "^1.37.1",
+    "@types/node": "^24.10.0",
     "glob": "^10.3.10",
     "hono": "^4.4.11",
     "miniflare": "^3.20240701.0",

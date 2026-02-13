@@ -36,6 +36,7 @@ export const defaultOptions: BunBuildOptions = {
 const bunBuildPlugin = (pluginOptions?: BunBuildOptions): Plugin => {
   return {
     ...buildPlugin({
+      ssrTarget: 'node',
       ...{
         entryContentBeforeHooks: [
           async (appName, options) => {

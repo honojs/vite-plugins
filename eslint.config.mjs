@@ -1,3 +1,5 @@
+// @ts-check
 import baseConfig from '@hono/eslint-config'
 
-export default [...baseConfig]
+/** @type {import('eslint').Linter.Config[]} */
+export default [{ ignores: ['packages/*/dist/**'] }, ...baseConfig]

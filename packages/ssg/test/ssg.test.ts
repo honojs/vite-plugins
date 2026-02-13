@@ -1,5 +1,6 @@
+import type { SSGPlugin } from 'hono/ssg'
 import { build } from 'vite'
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
 import ssgPlugin from '../src/index'
@@ -28,6 +29,11 @@ describe('ssgPlugin', () => {
           entry: entryFile,
         }),
       ],
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '.'),
+        },
+      },
       build: {
         outDir,
         emptyOutDir: true,
@@ -44,6 +50,11 @@ describe('ssgPlugin', () => {
     const outputDynamicImport = fs.readFileSync(outputFileWithDynamicImport, 'utf-8')
     expect(outputDynamicImport).toBe('Dynamic import works: sample!')
 
+    const aliasOutput = path.resolve(outDir, 'alias-module.txt')
+    expect(fs.existsSync(aliasOutput)).toBe(true)
+    const aliasContent = fs.readFileSync(aliasOutput, 'utf-8')
+    expect(aliasContent.trim()).toBe('Foo')
+
     // Should not output files corresponding to a virtual entry
     expect(fs.existsSync(path.resolve(outDir, 'assets'))).toBe(false)
   })
@@ -57,6 +68,11 @@ describe('ssgPlugin', () => {
           entry: entryFile,
         }),
       ],
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '.'),
+        },
+      },
       build: {
         rollupOptions: {
           input: entryFile,
@@ -79,5 +95,39 @@ describe('ssgPlugin', () => {
 
     const entryOutput = fs.readFileSync(entryOutputFile, 'utf-8')
     expect(entryOutput.length).toBeGreaterThan(0)
+  })
+
+  it('Should apply ssg plugins', async () => {
+    const beforeRequestHook = vi.fn((req) => req)
+    const afterResponseHook = vi.fn((res) => res)
+    const afterGenerateHook = vi.fn()
+
+    const testPlugin: SSGPlugin = {
+      beforeRequestHook,
+      afterResponseHook,
+      afterGenerateHook,
+    }
+
+    await build({
+      plugins: [
+        ssgPlugin({
+          entry: entryFile,
+          plugins: [testPlugin],
+        }),
+      ],
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '.'),
+        },
+      },
+      build: {
+        outDir,
+        emptyOutDir: true,
+      },
+    })
+
+    expect(beforeRequestHook).toHaveBeenCalled()
+    expect(afterResponseHook).toHaveBeenCalled()
+    expect(afterGenerateHook).toHaveBeenCalled()
   })
 })
