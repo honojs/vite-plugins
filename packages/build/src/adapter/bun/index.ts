@@ -40,6 +40,7 @@ const bunBuildPlugin = (pluginOptions?: BunBuildOptions): Plugin => {
       ...{
         entryContentBeforeHooks: [
           async (appName, options) => {
+            // eslint-disable-next-line quotes
             let code = "import { serveStatic } from 'hono/bun'\n"
             code += serveStaticHook(appName, {
               filePaths: options?.staticPaths,
