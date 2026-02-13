@@ -1,5 +1,12 @@
 # @hono/vite-build
 
+## 1.9.3
+
+### Patch Changes
+
+- [#337](https://github.com/honojs/vite-plugins/pull/337) [`a759e7533a915215154d4a211893d309e80199b4`](https://github.com/honojs/vite-plugins/commit/a759e7533a915215154d4a211893d309e80199b4) Thanks [@meck93](https://github.com/meck93)! - Fix Bun adapter build output to preserve an entry's `websocket` handler in the generated default export.
+  This prevents Bun runtime WebSocket upgrade failures when apps export `{ fetch, websocket }`.
+
 ## 1.9.2
 
 ### Patch Changes
