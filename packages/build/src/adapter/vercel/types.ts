@@ -342,17 +342,16 @@ export type VercelServerlessFunctionConfig = {
  * Extends the base serverless function config with Node.js launcher options.
  * @see https://vercel.com/docs/build-output-api/v3/primitives#nodejs-config
  */
-export type VercelNodejsServerlessFunctionConfig =
-  VercelServerlessFunctionConfig & {
-    /** Specifies which "launcher" will be used to execute the Serverless Function */
-    launcherType: 'Nodejs'
-    /** Enables request and response helpers methods */
-    shouldAddHelpers?: boolean
-    /** Enables source map generation */
-    shouldAddSourcemapSupport?: boolean
-    /** AWS Handler Value for when the serverless function uses AWS Lambda syntax */
-    awsLambdaHandler?: string
-  }
+export type VercelNodejsServerlessFunctionConfig = VercelServerlessFunctionConfig & {
+  /** Specifies which "launcher" will be used to execute the Serverless Function */
+  launcherType: 'Nodejs'
+  /** Enables request and response helpers methods */
+  shouldAddHelpers?: boolean
+  /** Enables source map generation */
+  shouldAddSourcemapSupport?: boolean
+  /** AWS Handler Value for when the serverless function uses AWS Lambda syntax */
+  awsLambdaHandler?: string
+}
 
 /**
  * Configuration for an Edge Function in Vercel.
