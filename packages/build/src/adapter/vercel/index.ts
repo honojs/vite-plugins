@@ -4,12 +4,12 @@ import { cp, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import type { BuildOptions } from '../../base.js'
 import buildPlugin from '../../base.js'
-import type { VercelBuildConfigV3, VercelServerlessFunctionConfig } from './types.js'
+import type { VercelBuildConfigV3, VercelNodejsServerlessFunctionConfig } from './types.js'
 
 export type VercelBuildOptions = {
   vercel?: {
     config?: VercelBuildConfigV3
-    function?: VercelServerlessFunctionConfig
+    function?: Partial<VercelNodejsServerlessFunctionConfig>
   }
 } & Omit<BuildOptions, 'output' | 'outputDir'>
 
@@ -50,7 +50,7 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
       },
       ...pluginOptions,
     }),
-    configResolved: (resolvedConfig) => {
+    configResolved: (resolvedConfig: ResolvedConfig) => {
       config = resolvedConfig
     },
     writeBundle: async () => {
@@ -72,21 +72,23 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
         ],
       }
 
-      const functionConfig: VercelServerlessFunctionConfig = {
+      const functionConfig: VercelNodejsServerlessFunctionConfig = {
         ...pluginOptions?.vercel?.function,
         runtime: getRuntimeVersion(),
         launcherType: 'Nodejs',
         handler: BUNDLE_NAME,
-        shouldAddHelpers: true,
+        shouldAddHelpers: Boolean(pluginOptions?.vercel?.function?.shouldAddHelpers),
         shouldAddSourcemapSupport: Boolean(config.build.sourcemap),
         supportsResponseStreaming: true,
       }
 
+      const publicDirPath = resolve(config.root, config.publicDir)
+
       await Promise.all([
         // Copy static files to the .vercel/output/static directory
-        cp(resolve(config.root, config.publicDir), resolve(outputDir, 'static'), {
-          recursive: true,
-        }),
+        ...(existsSync(publicDirPath)
+          ? [cp(publicDirPath, resolve(outputDir, 'static'), { recursive: true })]
+          : []),
         // Write the all necessary config files
         writeJSON(resolve(outputDir, 'config.json'), buildConfig),
         writeJSON(resolve(functionDir, '.vc-config.json'), functionConfig),
