@@ -82,11 +82,13 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
         supportsResponseStreaming: true,
       }
 
+      const publicDirPath = resolve(config.root, config.publicDir)
+
       await Promise.all([
         // Copy static files to the .vercel/output/static directory
-        cp(resolve(config.root, config.publicDir), resolve(outputDir, 'static'), {
-          recursive: true,
-        }),
+        ...(existsSync(publicDirPath)
+          ? [cp(publicDirPath, resolve(outputDir, 'static'), { recursive: true })]
+          : []),
         // Write the all necessary config files
         writeJSON(resolve(outputDir, 'config.json'), buildConfig),
         writeJSON(resolve(functionDir, '.vc-config.json'), functionConfig),
