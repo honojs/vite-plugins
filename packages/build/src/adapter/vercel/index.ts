@@ -77,7 +77,7 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
         runtime: getRuntimeVersion(),
         launcherType: 'Nodejs',
         handler: BUNDLE_NAME,
-        shouldAddHelpers: true,
+        shouldAddHelpers: Boolean(pluginOptions?.vercel?.function?.shouldAddHelpers),
         shouldAddSourcemapSupport: Boolean(config.build.sourcemap),
         supportsResponseStreaming: true,
       }
