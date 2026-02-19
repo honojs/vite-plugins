@@ -125,6 +125,49 @@ export const defaultOptions = {
 
 This plugin generates `_routes.json` automatically. The automatic generation can be overridden by creating a `public/_routes.json`. See [Create a `_routes.json` file](https://developers.cloudflare.com/pages/functions/routing/#create-a-_routesjson-file) on Cloudflare Docs for more details.
 
+### Vercel
+
+By default, the Vercel adapter emits a single function named `__hono` and a catch-all route.
+
+To emit multiple functions, configure `vercel.functions`:
+
+```ts
+import { defineConfig } from 'vite'
+import build from '@hono/vite-build/vercel'
+
+export default defineConfig({
+  plugins: [
+    build({
+      minify: false,
+      vercel: {
+        function: {
+          maxDuration: 10,
+        },
+        functions: [
+          {
+            name: 'api',
+            entry: './src/server.ts',
+          },
+          {
+            name: 'auth',
+            entry: './src/auth.ts',
+            function: {
+              maxDuration: 30,
+            },
+          },
+        ],
+      },
+    }),
+  ],
+})
+```
+
+If `vercel.functions[].routes` is omitted, the adapter generates a default route pattern of
+`^/<function-name>(?:/.*)?$`.
+
+Each route in `vercel.functions[].routes` defaults `dest` to `/<function-name>` if omitted.
+Per-function config in `vercel.functions[].function` overrides shared `vercel.function` values.
+
 ## Example project
 
 `src/index.tsx`:

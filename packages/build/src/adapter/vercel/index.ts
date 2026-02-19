@@ -1,3 +1,4 @@
+import { build as viteBuild } from 'vite'
 import type { Plugin, ResolvedConfig } from 'vite'
 import { existsSync, mkdirSync } from 'node:fs'
 import { cp, writeFile } from 'node:fs/promises'
@@ -6,15 +7,33 @@ import type { BuildOptions } from '../../base.js'
 import buildPlugin from '../../base.js'
 import type { VercelBuildConfigV3, VercelNodejsServerlessFunctionConfig } from './types.js'
 
+type VercelSourceRoute = Extract<NonNullable<VercelBuildConfigV3['routes']>[number], { src: string }>
+
+export type VercelFunctionBuildConfig = {
+  name: string
+  entry: BuildOptions['entry']
+  routes?: Array<Omit<VercelSourceRoute, 'dest'> & { dest?: string }>
+  function?: Partial<VercelNodejsServerlessFunctionConfig>
+}
+
 export type VercelBuildOptions = {
   vercel?: {
     config?: VercelBuildConfigV3
     function?: Partial<VercelNodejsServerlessFunctionConfig>
+    functions?: VercelFunctionBuildConfig[]
   }
 } & Omit<BuildOptions, 'output' | 'outputDir'>
 
 const BUNDLE_NAME = 'index.js'
 const FUNCTION_NAME = '__hono'
+
+const functionEntryHooks = {
+  entryContentAfterHooks: [
+    // eslint-disable-next-line quotes
+    () => "import { handle } from '@hono/node-server/vercel'",
+  ],
+  entryContentDefaultExportHook: (appName: string) => `export default handle(${appName})`,
+}
 
 const writeJSON = (path: string, data: Record<string, unknown>) => {
   const dir = resolve(path, '..')
@@ -33,20 +52,63 @@ const getRuntimeVersion = () => {
   }
 }
 
+const escapeRegex = (value: string) => {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+const getDefaultRoutePattern = (functionName: string) => {
+  return `^/${escapeRegex(functionName)}(?:/.*)?$`
+}
+
+const getFunctionConfig = (
+  config: ResolvedConfig,
+  commonConfig: Partial<VercelNodejsServerlessFunctionConfig> | undefined,
+  functionConfig: Partial<VercelNodejsServerlessFunctionConfig> | undefined
+): VercelNodejsServerlessFunctionConfig => {
+  return {
+    ...commonConfig,
+    ...functionConfig,
+    runtime: getRuntimeVersion(),
+    launcherType: 'Nodejs',
+    handler: BUNDLE_NAME,
+    shouldAddHelpers: Boolean(functionConfig?.shouldAddHelpers ?? commonConfig?.shouldAddHelpers),
+    shouldAddSourcemapSupport: Boolean(config.build.sourcemap),
+    supportsResponseStreaming: true,
+  }
+}
+
 const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
   let config: ResolvedConfig
+  const configuredFunctions = pluginOptions?.vercel?.functions ?? []
+  const hasMultiFunctionConfig = configuredFunctions.length > 0
+  const primaryFunction = hasMultiFunctionConfig
+    ? configuredFunctions[0]
+    : {
+        name: FUNCTION_NAME,
+        entry: pluginOptions?.entry,
+      }
+
+  if (hasMultiFunctionConfig) {
+    const seen = new Set<string>()
+    for (const currentFunction of configuredFunctions) {
+      if (!currentFunction.name) {
+        throw new Error('`vercel.functions[].name` is required and cannot be empty.')
+      }
+      if (seen.has(currentFunction.name)) {
+        throw new Error(`Duplicate Vercel function name: "${currentFunction.name}".`)
+      }
+      seen.add(currentFunction.name)
+    }
+  }
 
   return {
     ...buildPlugin({
       ssrTarget: 'node',
-      output: `functions/${FUNCTION_NAME}.func/${BUNDLE_NAME}`,
+      entry: primaryFunction.entry,
+      output: `functions/${primaryFunction.name}.func/${BUNDLE_NAME}`,
       outputDir: '.vercel/output',
       ...{
-        entryContentAfterHooks: [
-          // eslint-disable-next-line quotes
-          () => "import { handle } from '@hono/node-server/vercel'",
-        ],
-        entryContentDefaultExportHook: (appName) => `export default handle(${appName})`,
+        ...functionEntryHooks,
       },
       ...pluginOptions,
     }),
@@ -55,7 +117,48 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
     },
     writeBundle: async () => {
       const outputDir = resolve(config.root, config.build.outDir)
-      const functionDir = resolve(outputDir, 'functions', `${FUNCTION_NAME}.func`)
+      const firstFunctionDir = resolve(outputDir, 'functions', `${primaryFunction.name}.func`)
+
+      if (hasMultiFunctionConfig) {
+        for (const currentFunction of configuredFunctions.slice(1)) {
+          await viteBuild({
+            root: config.root,
+            configFile: false,
+            plugins: [
+              buildPlugin({
+                ssrTarget: 'node',
+                output: `functions/${currentFunction.name}.func/${BUNDLE_NAME}`,
+                outputDir: config.build.outDir,
+                entry: currentFunction.entry,
+                minify: pluginOptions?.minify,
+                emptyOutDir: false,
+                ...functionEntryHooks,
+              }),
+            ],
+            build: {
+              sourcemap: config.build.sourcemap,
+            },
+            publicDir: false,
+          })
+        }
+      }
+
+      const routes = hasMultiFunctionConfig
+        ? configuredFunctions.flatMap((currentFunction) =>
+            (currentFunction.routes && currentFunction.routes.length > 0
+              ? currentFunction.routes
+              : [{ src: getDefaultRoutePattern(currentFunction.name) }]
+            ).map((route) => ({
+              ...route,
+              dest: route.dest ?? `/${currentFunction.name}`,
+            }))
+          )
+        : [
+            {
+              src: '/(.*)',
+              dest: `/${FUNCTION_NAME}`,
+            },
+          ]
 
       const buildConfig: VercelBuildConfigV3 = {
         ...pluginOptions?.vercel?.config,
@@ -65,24 +168,36 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
           {
             handle: 'filesystem',
           },
-          {
-            src: '/(.*)',
-            dest: `/${FUNCTION_NAME}`,
-          },
+          ...routes,
         ],
       }
 
-      const functionConfig: VercelNodejsServerlessFunctionConfig = {
-        ...pluginOptions?.vercel?.function,
-        runtime: getRuntimeVersion(),
-        launcherType: 'Nodejs',
-        handler: BUNDLE_NAME,
-        shouldAddHelpers: Boolean(pluginOptions?.vercel?.function?.shouldAddHelpers),
-        shouldAddSourcemapSupport: Boolean(config.build.sourcemap),
-        supportsResponseStreaming: true,
-      }
+      const functionConfigs = hasMultiFunctionConfig
+        ? configuredFunctions.map((currentFunction) => ({
+            name: currentFunction.name,
+            config: getFunctionConfig(config, pluginOptions?.vercel?.function, currentFunction.function),
+          }))
+        : [
+            {
+              name: FUNCTION_NAME,
+              config: getFunctionConfig(config, pluginOptions?.vercel?.function, undefined),
+            },
+          ]
 
       const publicDirPath = resolve(config.root, config.publicDir)
+
+      const functionConfigWrites = functionConfigs.map((item) => {
+        const functionDir = hasMultiFunctionConfig
+          ? resolve(outputDir, 'functions', `${item.name}.func`)
+          : firstFunctionDir
+
+        return Promise.all([
+          writeJSON(resolve(functionDir, '.vc-config.json'), item.config),
+          writeJSON(resolve(functionDir, 'package.json'), {
+            type: 'module',
+          }),
+        ])
+      })
 
       await Promise.all([
         // Copy static files to the .vercel/output/static directory
@@ -91,10 +206,7 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
           : []),
         // Write the all necessary config files
         writeJSON(resolve(outputDir, 'config.json'), buildConfig),
-        writeJSON(resolve(functionDir, '.vc-config.json'), functionConfig),
-        writeJSON(resolve(functionDir, 'package.json'), {
-          type: 'module',
-        }),
+        ...functionConfigWrites,
       ])
     },
     name: '@hono/vite-build/vercel',
