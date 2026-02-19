@@ -417,4 +417,108 @@ describe('Build Plugin with Vercel Adapter', () => {
     // eslint-disable-next-line quotes
     expect(outputJsClientJs).toContain("console.log('foo')")
   })
+
+  it('Should build multiple Vercel functions when vercel.functions is configured', async () => {
+    const fooOutputFile = `${vercelDir}/output/functions/foo.func/index.js`
+    const barOutputFile = `${vercelDir}/output/functions/bar.func/index.js`
+    const fooConfigFile = `${vercelDir}/output/functions/foo.func/.vc-config.json`
+    const barConfigFile = `${vercelDir}/output/functions/bar.func/.vc-config.json`
+    const configFile = `${vercelDir}/output/config.json`
+
+    await build({
+      root: testDir,
+      plugins: [
+        vercelBuildPlugin({
+          minify: false,
+          vercel: {
+            function: {
+              maxDuration: 10,
+            },
+            functions: [
+              {
+                name: 'foo',
+                entry: './src/server.ts',
+                routes: [{ src: '^/foo(?:/.*)?$' }],
+              },
+              {
+                name: 'bar',
+                entry: './src/server-alt.ts',
+                routes: [{ src: '^/bar(?:/.*)?$' }],
+                function: {
+                  maxDuration: 30,
+                },
+              },
+            ],
+          },
+        }),
+      ],
+    })
+
+    expect(existsSync(fooOutputFile)).toBe(true)
+    expect(existsSync(barOutputFile)).toBe(true)
+    expect(existsSync(configFile)).toBe(true)
+
+    expect(readFileSync(fooOutputFile, 'utf-8')).toContain('Hello World')
+    expect(readFileSync(barOutputFile, 'utf-8')).toContain('Hello Alt World')
+
+    const fooFnConfig = JSON.parse(readFileSync(fooConfigFile, 'utf-8'))
+    const barFnConfig = JSON.parse(readFileSync(barConfigFile, 'utf-8'))
+    expect(fooFnConfig.maxDuration).toBe(10)
+    expect(barFnConfig.maxDuration).toBe(30)
+
+    const routes = readFileSync(configFile, 'utf-8')
+    expect(routes).toContain('"src":"^/foo(?:/.*)?$","dest":"/foo"')
+    expect(routes).toContain('"src":"^/bar(?:/.*)?$","dest":"/bar"')
+    expect(routes).not.toContain('/__hono')
+  })
+
+  it('Should generate default route patterns when vercel.functions[].routes is omitted', async () => {
+    const configFile = `${vercelDir}/output/config.json`
+
+    await build({
+      root: testDir,
+      plugins: [
+        vercelBuildPlugin({
+          minify: false,
+          vercel: {
+            functions: [
+              {
+                name: 'foo',
+                entry: './src/server.ts',
+              },
+              {
+                name: 'bar',
+                entry: './src/server-alt.ts',
+              },
+            ],
+          },
+        }),
+      ],
+    })
+
+    const routes = readFileSync(configFile, 'utf-8')
+    expect(routes).toContain('"src":"^/foo(?:/.*)?$","dest":"/foo"')
+    expect(routes).toContain('"src":"^/bar(?:/.*)?$","dest":"/bar"')
+  })
+
+  it('Should throw when vercel.functions contains duplicate names', async () => {
+    expect(() =>
+      vercelBuildPlugin({
+        vercel: {
+          functions: [
+            {
+              name: 'foo',
+              entry: './src/server.ts',
+              routes: [{ src: '^/foo(?:/.*)?$' }],
+            },
+            {
+              name: 'foo',
+              entry: './src/server-alt.ts',
+              routes: [{ src: '^/bar(?:/.*)?$' }],
+            },
+          ],
+        },
+      })
+    ).toThrow('Duplicate Vercel function name: "foo".')
+  })
 })
