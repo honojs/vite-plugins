@@ -47,6 +47,14 @@
     "./vercel": {
       "types": "./dist/adapter/vercel/index.d.ts",
       "import": "./dist/adapter/vercel/index.js"
+    },
+    "./lambda-edge": {
+      "types": "./dist/adapter/lambda-edge/index.d.ts",
+      "import": "./dist/adapter/lambda-edge/index.js"
+    },
+    "./aws-lambda": {
+      "types": "./dist/adapter/aws-lambda/index.d.ts",
+      "import": "./dist/adapter/aws-lambda/index.js"
     }
   },
   "typesVersions": {
@@ -74,6 +82,12 @@
       ],
       "vercel": [
         "./dist/adapter/vercel/index.d.ts"
+      ],
+      "lambda-edge": [
+        "./dist/adapter/lambda-edge/index.d.ts"
+      ],
+      "aws-lambda": [
+        "./dist/adapter/aws-lambda/index.d.ts"
       ]
     }
   },
