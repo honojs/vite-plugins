@@ -1,5 +1,5 @@
 import { build } from 'vite'
-import { existsSync, readFileSync, rmSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import bunBuildPlugin from '../src/adapter/bun'
 import cloudflarePagesPlugin from '../src/adapter/cloudflare-pages'
 import cloudflareWorkersPlugin from '../src/adapter/cloudflare-workers'
@@ -64,6 +64,41 @@ describe('Build Plugin with Bun Adapter', () => {
     const output = readFileSync(outputFile, 'utf-8')
     expect(output).toContain('websocket')
     expect(output).toMatch(/fetch:\s*mainApp\.fetch\.bind\(mainApp\)/)
+  })
+})
+
+describe('Build Plugin with Bun Adapter - no publicDir', () => {
+  const testDir = './test/mocks/app'
+  const entry = './src/server.ts'
+  const distDir = `${testDir}/dist`
+
+  beforeEach(() => {
+    // Simulate a prior client build that placed assets in dist/static/
+    mkdirSync(`${distDir}/static`, { recursive: true })
+    writeFileSync(`${distDir}/static/styles.css`, 'body{}')
+  })
+
+  afterEach(() => {
+    rmSync(distDir, { recursive: true, force: true })
+  })
+
+  it('Should discover outDir static paths even when publicDir does not exist', async () => {
+    const outputFile = `${distDir}/index.js`
+
+    await build({
+      root: testDir,
+      plugins: [
+        bunBuildPlugin({
+          entry,
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('use("/static/*", serveStatic({ root: "./" }))')
   })
 })
 
