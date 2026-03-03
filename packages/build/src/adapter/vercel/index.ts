@@ -7,7 +7,10 @@ import type { BuildOptions } from '../../base.js'
 import buildPlugin from '../../base.js'
 import type { VercelBuildConfigV3, VercelNodejsServerlessFunctionConfig } from './types.js'
 
-type VercelSourceRoute = Extract<NonNullable<VercelBuildConfigV3['routes']>[number], { src: string }>
+type VercelSourceRoute = Extract<
+  NonNullable<VercelBuildConfigV3['routes']>[number],
+  { src: string }
+>
 
 export type VercelFunctionBuildConfig = {
   name: string
@@ -175,7 +178,11 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
       const functionConfigs = hasMultiFunctionConfig
         ? configuredFunctions.map((currentFunction) => ({
             name: currentFunction.name,
-            config: getFunctionConfig(config, pluginOptions?.vercel?.function, currentFunction.function),
+            config: getFunctionConfig(
+              config,
+              pluginOptions?.vercel?.function,
+              currentFunction.function
+            ),
           }))
         : [
             {
