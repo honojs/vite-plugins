@@ -1,7 +1,7 @@
 /**
  * Main configuration type for Vercel Build Output API v3.
  * This type represents the root configuration object that should be output in the `.vercel/output/config.json` file.
- * @see https://vercel.com/docs/build-output-api/configuration
+ * @see https://vercel.com/docs/build-output-api/v3/configuration
  */
 export type VercelBuildConfigV3 = {
   /** Version identifier for the Build Output API. Must be 3. */
@@ -14,33 +14,38 @@ export type VercelBuildConfigV3 = {
   /**
    * Configuration for Vercel's Image Optimization feature.
    * Defines how images should be optimized, cached, and served.
-   * @see https://vercel.com/docs/build-output-api/configuration#images
+   * @see https://vercel.com/docs/build-output-api/v3/configuration#images
    */
   images?: ImagesConfig
   /**
    * Custom domain wildcard configurations for internationalization.
    * Maps domain names to values that can be referenced by the routes configuration.
-   * @see https://vercel.com/docs/build-output-api/configuration#wildcard
+   * @see https://vercel.com/docs/build-output-api/v3/configuration#wildcard
    */
   wildcard?: WildCard[]
   /**
    * File-specific overrides for static files in the `.vercel/output/static` directory.
    * Allows overriding Content-Type headers and URL paths for static files.
-   * @see https://vercel.com/docs/build-output-api/configuration#overrides
+   * @see https://vercel.com/docs/build-output-api/v3/configuration#overrides
    */
   overrides?: Record<string, Override>
   /**
    * Array of file paths or glob patterns to be cached between builds.
    * Only relevant when Vercel is building from source code.
-   * @see https://vercel.com/docs/build-output-api/configuration#cache
+   * @see https://vercel.com/docs/build-output-api/v3/configuration#cache
    */
   cache?: string[]
   /**
    * Scheduled tasks configuration for production deployments.
    * Defines API routes that should be invoked on a schedule.
-   * @see https://vercel.com/docs/build-output-api/configuration#crons
+   * @see https://vercel.com/docs/build-output-api/v3/configuration#crons
    */
   crons?: Cron[]
+  /**
+   * Framework metadata for display purposes only.
+   * @see https://vercel.com/docs/build-output-api/v3/configuration#framework
+   */
+  framework?: Framework
 }
 
 /**
@@ -71,15 +76,19 @@ type Source = {
   /** HTTP status code to return (e.g., 308 for redirects) */
   status?: number
   /** Conditions that must be present in the request for the route to match */
-  has?: Array<HostHasField | HeaderHasField | CookieHasField | QueryHasField>
+  has?: HasField
   /** Conditions that must be absent from the request for the route to match */
-  missing?: Array<HostHasField | HeaderHasField | CookieHasField | QueryHasField>
+  missing?: HasField
   /** Configuration for locale-based routing and redirects */
   locale?: Locale
   /** Raw source patterns used by middleware */
   middlewareRawSrc?: string[]
   /** Path to the middleware implementation file */
   middlewarePath?: string
+  /** Mitigation action to apply to the route */
+  mitigate?: Mitigate
+  /** List of transforms to apply to the route */
+  transforms?: Transform[]
 }
 
 /**
@@ -94,54 +103,56 @@ type Locale = {
 }
 
 /**
- * Host-based condition for route matching.
- * Used to match requests based on the Host header.
+ * Matchable value for complex route condition matching.
+ * Allows matching against values using various comparison operators.
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#source-route-matchablevalue
  */
-type HostHasField = {
-  /** Identifies this as a host matching condition */
-  type: 'host'
-  /** Pattern to match against the Host header */
-  value: string
+type MatchableValue = {
+  /** Value must equal this value */
+  eq?: string | number
+  /** Value must not equal this value */
+  neq?: string
+  /** Value must be included in this array */
+  inc?: string[]
+  /** Value must not be included in this array */
+  ninc?: string[]
+  /** Value must start with this prefix */
+  pre?: string
+  /** Value must end with this suffix */
+  suf?: string
+  /** Value must match this regular expression */
+  re?: string
+  /** Value must be greater than this number */
+  gt?: number
+  /** Value must be greater than or equal to this number */
+  gte?: number
+  /** Value must be less than this number */
+  lt?: number
+  /** Value must be less than or equal to this number */
+  lte?: number
 }
 
 /**
- * Header-based condition for route matching.
- * Used to match requests based on HTTP headers.
+ * Condition fields for route matching based on request properties.
+ * Used in `has` and `missing` arrays on Source routes.
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#source-route-hasfield
  */
-type HeaderHasField = {
-  /** Identifies this as a header matching condition */
-  type: 'header'
-  /** Name of the header to match */
-  key: string
-  /** Optional value the header should match */
-  value?: string
-}
-
-/**
- * Cookie-based condition for route matching.
- * Used to match requests based on cookie values.
- */
-type CookieHasField = {
-  /** Identifies this as a cookie matching condition */
-  type: 'cookie'
-  /** Name of the cookie to match */
-  key: string
-  /** Optional value the cookie should match */
-  value?: string
-}
-
-/**
- * Query parameter condition for route matching.
- * Used to match requests based on query string parameters.
- */
-type QueryHasField = {
-  /** Identifies this as a query parameter matching condition */
-  type: 'query'
-  /** Name of the query parameter to match */
-  key: string
-  /** Optional value the query parameter should match */
-  value?: string
-}
+type HasField = Array<
+  | {
+      /** Identifies this as a host matching condition */
+      type: 'host'
+      /** Pattern to match against the Host header */
+      value: string | MatchableValue
+    }
+  | {
+      /** Identifies the condition type: header, cookie, or query parameter */
+      type: 'header' | 'cookie' | 'query'
+      /** Name of the header, cookie, or query parameter to match */
+      key: string
+      /** Optional value the field should match */
+      value?: string | MatchableValue
+    }
+>
 
 /**
  * Special handler phases for request processing.
@@ -171,8 +182,34 @@ type Handler = {
 }
 
 /**
+ * Mitigation action to apply to a route.
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#source-route-mitigate
+ */
+type Mitigate = {
+  /** The mitigation action to apply */
+  action: 'challenge' | 'deny'
+}
+
+/**
+ * Transform to apply to request or response properties on a route.
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#source-route-transform
+ */
+type Transform = {
+  /** The target of the transform: request headers, request query, or response headers */
+  type: 'request.headers' | 'request.query' | 'response.headers'
+  /** The operation to perform */
+  op: 'append' | 'set' | 'delete'
+  /** The target key for the transform (regex matching not supported) */
+  target: {
+    key: string | Omit<MatchableValue, 're'>
+  }
+  /** Arguments for the transform operation */
+  args?: string | string[]
+}
+
+/**
  * Supported image formats for the Image Optimization API.
- * @see https://vercel.com/docs/build-output-api/configuration#images
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#images
  */
 type ImageFormat = 'image/avif' | 'image/webp'
 
@@ -206,7 +243,7 @@ type LocalPattern = {
 
 /**
  * Configuration for Vercel's Image Optimization feature.
- * @see https://vercel.com/docs/build-output-api/configuration#images
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#images
  */
 type ImagesConfig = {
   /** Array of allowed image widths for resizing */
@@ -234,7 +271,7 @@ type ImagesConfig = {
 /**
  * Configuration for custom domain wildcards.
  * Used for internationalization and dynamic routing based on domains.
- * @see https://vercel.com/docs/build-output-api/configuration#wildcard
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#wildcard
  */
 type WildCard = {
   /** Domain name to match for this wildcard configuration */
@@ -245,7 +282,7 @@ type WildCard = {
 
 /**
  * Configuration for path or content-type overrides of static files.
- * @see https://vercel.com/docs/build-output-api/configuration#overrides
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#overrides
  */
 type Override = {
   /** URL path where the static file will be accessible */
@@ -256,7 +293,7 @@ type Override = {
 
 /**
  * Configuration for scheduled tasks (Cron Jobs).
- * @see https://vercel.com/docs/build-output-api/configuration#crons
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#crons
  */
 type Cron = {
   /** Path to the API route that handles the cron job */
@@ -266,27 +303,94 @@ type Cron = {
 }
 
 /**
- * Configuration for a serverless function in Vercel.
- * This type **partially** represents the configuration object that should be output in the `.vercel/output/functions/<functionName>/config.json` file.
- * @see https://vercel.com/docs/build-output-api/primitives#serverless-function-configuration
+ * Framework metadata for display purposes.
+ * @see https://vercel.com/docs/build-output-api/v3/configuration#framework
+ */
+type Framework = {
+  /** Framework version string */
+  version: string
+}
+
+/**
+ * Base configuration for a serverless function in Vercel.
+ * This type represents the `.vc-config.json` configuration within a `.func` directory.
+ * @see https://vercel.com/docs/build-output-api/v3/primitives#serverless-function-configuration
  */
 export type VercelServerlessFunctionConfig = {
-  /** Indicates the initial file where code will be executed for the Serverless Function. */
-  handler?: string
-  /** Specifies which "launcher" will be used to execute the Serverless Function */
-  launcherType?: 'Nodejs'
-  /** Specifies which "runtime" will be used to execute the Serverless Function, only Node.js is supported currently */
-  runtime?: `nodejs${number}.x`
-  /** The amount of memory allocated to the function in MB */
+  /** Indicates the initial file where code will be executed for the Serverless Function */
+  handler: string
+  /** Specifies which "runtime" will be used to execute the Serverless Function */
+  runtime: string
+  /** The amount of memory (RAM in MB) allocated to the function */
   memory?: number
   /** The maximum duration of the function in seconds */
   maxDuration?: number
+  /** Map of additional environment variables available to the function */
+  environment?: Record<string, string>
   /** The regions the function is available in */
   regions?: string[]
+  /** Instruction set architecture the function supports */
+  architecture?: 'x86_64' | 'arm64'
+  /** Whether the custom runtime supports Lambda runtime wrappers */
+  supportsWrapper?: boolean
   /** Whether the function supports response streaming */
   supportsResponseStreaming?: boolean
+}
+
+/**
+ * Node.js-specific serverless function configuration.
+ * Extends the base serverless function config with Node.js launcher options.
+ * @see https://vercel.com/docs/build-output-api/v3/primitives#nodejs-config
+ */
+export type VercelNodejsServerlessFunctionConfig = VercelServerlessFunctionConfig & {
+  /** Specifies which "launcher" will be used to execute the Serverless Function */
+  launcherType: 'Nodejs'
   /** Enables request and response helpers methods */
   shouldAddHelpers?: boolean
   /** Enables source map generation */
   shouldAddSourcemapSupport?: boolean
+  /** AWS Handler Value for when the serverless function uses AWS Lambda syntax */
+  awsLambdaHandler?: string
+}
+
+/**
+ * Configuration for an Edge Function in Vercel.
+ * This type represents the `.vc-config.json` configuration for Edge Functions.
+ * @see https://vercel.com/docs/build-output-api/v3/primitives#edge-function-configuration
+ */
+export type VercelEdgeFunctionConfig = {
+  /** Must be 'edge' to indicate this is an Edge Function */
+  runtime: 'edge'
+  /** Initial file where code will be executed for the Edge Function */
+  entrypoint: string
+  /** List of environment variable names available to the Edge Function */
+  envVarsInUse?: string[]
+  /** Regions the edge function will be available in (defaults to 'all') */
+  regions?: 'all' | string | string[]
+}
+
+/**
+ * Configuration for a Prerender Function in Vercel (ISR).
+ * This type represents the `.prerender-config.json` configuration file.
+ * @see https://vercel.com/docs/build-output-api/v3/primitives#prerender-configuration-file
+ */
+export type VercelPrerenderFunctionConfig = {
+  /** Cache expiration time in seconds, or false to never expire */
+  expiration: number | false
+  /** Group number for co-revalidating prerender assets together */
+  group?: number
+  /** Random token for Draft Mode bypass cookie (`__prerender_bypass`) */
+  bypassToken?: string
+  /** Name of the optional fallback file relative to the configuration file */
+  fallback?: string
+  /** Query string parameter names that will be cached independently */
+  allowQuery?: string[]
+  /** When true, the query string will be present on the request argument */
+  passQuery?: boolean
+  /** Initial headers to include with the build-time prerendered response */
+  initialHeaders?: Record<string, string>
+  /** Initial HTTP status code for the build-time prerendered response (default 200) */
+  initialStatus?: number
+  /** When true, expose the response body regardless of status code including errors */
+  exposeErrBody?: boolean
 }
