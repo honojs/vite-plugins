@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.25.1
+
+### Patch Changes
+
+- [#345](https://github.com/honojs/vite-plugins/pull/345) [`02ecfba5288458de55b71237e509a8b0c0567701`](https://github.com/honojs/vite-plugins/commit/02ecfba5288458de55b71237e509a8b0c0567701) Thanks [@yusukebe](https://github.com/yusukebe)! - chore: bump `@hono/node-server`
+
 ## 0.25.0
 
 ### Minor Changes
