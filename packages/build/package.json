@@ -93,7 +93,7 @@
     "vite-plugin"
   ],
   "devDependencies": {
-    "@hono/node-server": "^1.19.6",
+    "@hono/node-server": "^1.19.11",
     "@types/node": "^24.10.0",
     "glob": "^10.3.10",
     "hono": "^4.6.12",

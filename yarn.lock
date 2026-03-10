@@ -1104,21 +1104,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/node-server@npm:^1.14.2":
-  version: 1.14.2
-  resolution: "@hono/node-server@npm:1.14.2"
+"@hono/node-server@npm:^1.19.11":
+  version: 1.19.11
+  resolution: "@hono/node-server@npm:1.19.11"
   peerDependencies:
     hono: ^4
-  checksum: 10c0/03bf6f421adcbabdf2f91a749028f7b733832e8592878dab6a831b48e1897b5b5c7868f659419a81dc84401ae5b720befdb76b8e8eda9f815edc7d10f35e8253
-  languageName: node
-  linkType: hard
-
-"@hono/node-server@npm:^1.19.6":
-  version: 1.19.6
-  resolution: "@hono/node-server@npm:1.19.6"
-  peerDependencies:
-    hono: ^4
-  checksum: 10c0/f3caacbbfa1826b669ef7b3fd486ad9d66ea0df0662e4957ebaedacabaa14e3d19cc127c0a74d527ebda64b1aef3670c6949d7fad772b06a27b945a5b770d85b
+  checksum: 10c0/34b1c29c249c5cd95469980b5c359370f3cbab49b3603f324a4afbf895d68b8d5485c71f1887769eabeb3499276c49e7102084234b4feb3853edb748aaa85f50
   languageName: node
   linkType: hard
 
@@ -1126,7 +1117,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hono/vite-build@workspace:packages/build"
   dependencies:
-    "@hono/node-server": "npm:^1.19.6"
+    "@hono/node-server": "npm:^1.19.11"
     "@types/node": "npm:^24.10.0"
     glob: "npm:^10.3.10"
     hono: "npm:^4.6.12"
@@ -1161,7 +1152,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hono/vite-dev-server@workspace:packages/dev-server"
   dependencies:
-    "@hono/node-server": "npm:^1.14.2"
+    "@hono/node-server": "npm:^1.19.11"
     "@playwright/test": "npm:^1.37.1"
     "@types/node": "npm:^24.10.0"
     glob: "npm:^10.3.10"
