@@ -126,7 +126,11 @@ const buildPlugin = (options: BuildOptions): Plugin => {
           minify: options?.minify ?? defaultOptions.minify,
           ssr: true,
           rollupOptions: {
-            external: [...builtinModules, /^node:/, ...(options?.external ?? defaultOptions.external)],
+            external: [
+              ...builtinModules,
+              /^node:/,
+              ...(options?.external ?? defaultOptions.external),
+            ],
             input: virtualEntryId,
             output: {
               entryFileNames: output,
