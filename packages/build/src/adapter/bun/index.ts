@@ -51,6 +51,7 @@ const bunBuildPlugin = (pluginOptions?: BunBuildOptions): Plugin => {
         ],
       },
       ...pluginOptions,
+      external: ['bun', ...(pluginOptions?.external ?? [])],
       entryContentAfterHooks:
         pluginOptions?.entryContentAfterHooks ?? defaultOptions.entryContentAfterHooks,
       entryContentDefaultExportHook:
