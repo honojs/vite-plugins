@@ -2,15 +2,15 @@
   "name": "@hono/vite-dev-server",
   "description": "Vite dev-server plugin for Hono",
   "version": "0.25.1",
-  "types": "dist/index.d.ts",
-  "module": "dist/index.js",
+  "types": "dist/index.d.mts",
+  "module": "dist/index.mjs",
   "type": "module",
   "scripts": {
     "test:unit": "vitest --run ./src",
     "test:e2e": "playwright test",
     "test": "yarn test:unit && yarn test:e2e",
-    "build": "rimraf dist && tsup --format esm,cjs --dts && publint",
-    "watch": "tsup --watch",
+    "build": "yarn run -T tsdown",
+    "watch": "yarn run -T tsdown --watch",
     "prerelease": "yarn build && yarn test",
     "release": "yarn publish"
   },
@@ -24,29 +24,49 @@
         "default": "./dist/index.cjs"
       },
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
       }
     },
     "./conninfo": {
-      "types": "./dist/conninfo.d.ts",
-      "require": "./dist/conninfo.cjs",
-      "import": "./dist/conninfo.js"
+      "require": {
+        "types": "./dist/conninfo.d.cts",
+        "default": "./dist/conninfo.cjs"
+      },
+      "import": {
+        "types": "./dist/conninfo.d.mts",
+        "default": "./dist/conninfo.mjs"
+      }
     },
     "./cloudflare": {
-      "types": "./dist/adapter/cloudflare.d.ts",
-      "require": "./dist/adapter/cloudflare.cjs",
-      "import": "./dist/adapter/cloudflare.js"
+      "require": {
+        "types": "./dist/adapter/cloudflare.d.cts",
+        "default": "./dist/adapter/cloudflare.cjs"
+      },
+      "import": {
+        "types": "./dist/adapter/cloudflare.d.mts",
+        "default": "./dist/adapter/cloudflare.mjs"
+      }
     },
     "./node": {
-      "types": "./dist/adapter/node.d.ts",
-      "require": "./dist/adapter/node.cjs",
-      "import": "./dist/adapter/node.js"
+      "require": {
+        "types": "./dist/adapter/node.d.cts",
+        "default": "./dist/adapter/node.cjs"
+      },
+      "import": {
+        "types": "./dist/adapter/node.d.mts",
+        "default": "./dist/adapter/node.mjs"
+      }
     },
     "./bun": {
-      "types": "./dist/adapter/bun.d.ts",
-      "require": "./dist/adapter/bun.cjs",
-      "import": "./dist/adapter/bun.js"
+      "require": {
+        "types": "./dist/adapter/bun.d.cts",
+        "default": "./dist/adapter/bun.cjs"
+      },
+      "import": {
+        "types": "./dist/adapter/bun.d.mts",
+        "default": "./dist/adapter/bun.mjs"
+      }
     }
   },
   "typesVersions": {
@@ -86,13 +106,9 @@
   "devDependencies": {
     "@playwright/test": "^1.37.1",
     "@types/node": "^24.10.0",
-    "glob": "^10.3.10",
     "hono": "^4.4.11",
     "miniflare": "^3.20240701.0",
     "playwright": "^1.39.0",
-    "publint": "^0.2.5",
-    "rimraf": "^5.0.1",
-    "tsup": "^7.2.0",
     "vite": "^6.1.1",
     "vitest": "^0.34.6",
     "wrangler": "^3.63.1"
