@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.10.1
+
+### Patch Changes
+
+- [#349](https://github.com/honojs/vite-plugins/pull/349) [`7680ba2f76618082b3be6f94da7ef61429f08567`](https://github.com/honojs/vite-plugins/commit/7680ba2f76618082b3be6f94da7ef61429f08567) Thanks [@Moshyfawn](https://github.com/Moshyfawn)! - Propagate user externals to rollupOptions.external and auto-externalize bare "bun" specifier in Bun adapter
+
 ## 1.10.0
 
 ### Minor Changes
