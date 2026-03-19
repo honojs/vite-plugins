@@ -21,13 +21,6 @@
       "import": "./dist/index.mjs"
     }
   },
-  "typesVersions": {
-    "*": {
-      "types": [
-        "./dist/types"
-      ]
-    }
-  },
   "author": "Yusuke Wada <yusuke@kamawada.com> (https://github.com/yusukebe)",
   "license": "MIT",
   "repository": {

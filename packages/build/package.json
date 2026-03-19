@@ -49,34 +49,6 @@
       "import": "./dist/adapter/vercel/index.mjs"
     }
   },
-  "typesVersions": {
-    "*": {
-      "types": [
-        "./dist/types"
-      ],
-      "bun": [
-        "./dist/adapter/bun/index.d.ts"
-      ],
-      "node": [
-        "./dist/adapter/node/index.d.ts"
-      ],
-      "cloudflare-pages": [
-        "./dist/adapter/cloudflare-pages/index.d.ts"
-      ],
-      "cloudflare-workers": [
-        "./dist/adapter/cloudflare-workers/index.d.ts"
-      ],
-      "netlify-functions": [
-        "./dist/adapter/netlify-functions/index.d.ts"
-      ],
-      "deno": [
-        "./dist/adapter/deno/index.d.ts"
-      ],
-      "vercel": [
-        "./dist/adapter/vercel/index.d.ts"
-      ]
-    }
-  },
   "author": "Yusuke Wada <yusuke@kamawada.com> (https://github.com/yusukebe)",
   "license": "MIT",
   "repository": {
