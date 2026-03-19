@@ -1,7 +1,7 @@
 {
   "name": "@hono/vite-build",
   "description": "Vite plugin to build your Hono app",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "types": "dist/index.d.mts",
   "module": "dist/index.mjs",
   "type": "module",

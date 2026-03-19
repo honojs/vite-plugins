@@ -80,3 +80,31 @@ describe('Build Plugin - preset option', () => {
     expect(outputContent).toContain('PatternRouter')
   })
 })
+
+describe('Build Plugin - external option', () => {
+  const testDir = './test/mocks/app'
+  const outputFile = `${testDir}/dist/index.js`
+
+  afterAll(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+  })
+
+  it('Should preserve external imports in the output instead of bundling them', async () => {
+    await build({
+      root: testDir,
+      plugins: [
+        buildPlugin({
+          entry: './src/server-external.ts',
+          output: 'index.js',
+          external: ['@hono/node-server'],
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+
+    const outputContent = readFileSync(outputFile, 'utf-8')
+    expect(outputContent).toContain('@hono/node-server')
+  })
+})
