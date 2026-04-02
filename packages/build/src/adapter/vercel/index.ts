@@ -8,7 +8,10 @@ import { defaultOptions } from '../../base.js'
 import { getEntryContent } from '../../entry/index.js'
 import type { VercelBuildConfigV3, VercelNodejsServerlessFunctionConfig } from './types.js'
 
-type VercelSourceRoute = Extract<NonNullable<VercelBuildConfigV3['routes']>[number], { src: string }>
+type VercelSourceRoute = Extract<
+  NonNullable<VercelBuildConfigV3['routes']>[number],
+  { src: string }
+>
 
 type VercelRouteConfig = Array<Omit<VercelSourceRoute, 'dest'> & { dest?: string }>
 
@@ -114,7 +117,10 @@ const getFunctionConfig = (
   }
 }
 
-const getRoutesForFunction = (functionName: string, configuredRoutes: VercelRouteConfig | undefined) => {
+const getRoutesForFunction = (
+  functionName: string,
+  configuredRoutes: VercelRouteConfig | undefined
+) => {
   if (configuredRoutes && configuredRoutes.length > 0) {
     return configuredRoutes
   }
@@ -208,9 +214,11 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
       return await getEntryContent({
         entry: Array.isArray(entry) ? entry : [entry],
         entryContentBeforeHooks: pluginOptions?.entryContentBeforeHooks,
-        entryContentAfterHooks: pluginOptions?.entryContentAfterHooks ?? functionEntryHooks.entryContentAfterHooks,
+        entryContentAfterHooks:
+          pluginOptions?.entryContentAfterHooks ?? functionEntryHooks.entryContentAfterHooks,
         entryContentDefaultExportHook:
-          pluginOptions?.entryContentDefaultExportHook ?? functionEntryHooks.entryContentDefaultExportHook,
+          pluginOptions?.entryContentDefaultExportHook ??
+          functionEntryHooks.entryContentDefaultExportHook,
         staticPaths: pluginOptions?.staticPaths,
         preset: pluginOptions?.preset,
       })
@@ -262,7 +270,12 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
       ])
 
       await enqueueConfigWrite(configPath, async () => {
-        await mergeVercelConfig(configPath, routesToAdd, pluginOptions?.vercel?.config, functionName)
+        await mergeVercelConfig(
+          configPath,
+          routesToAdd,
+          pluginOptions?.vercel?.config,
+          functionName
+        )
       })
     },
   }
