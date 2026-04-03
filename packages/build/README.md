@@ -10,6 +10,7 @@ Here are the modules included:
 - `@hono/vite-build/bun`
 - `@hono/vite-build/node`
 - `@hono/vite-build/netlify-functions`
+- `@hono/vite-build/vercel`
 
 ## Usage
 
@@ -124,6 +125,42 @@ export const defaultOptions = {
 ### Cloudflare Pages
 
 This plugin generates `_routes.json` automatically. The automatic generation can be overridden by creating a `public/_routes.json`. See [Create a `_routes.json` file](https://developers.cloudflare.com/pages/functions/routing/#create-a-_routesjson-file) on Cloudflare Docs for more details.
+
+### Vercel
+
+By default, the Vercel adapter emits a single function named `__hono` and a catch-all route.
+
+To emit multiple functions, add the Vercel adapter multiple times in `plugins`.
+
+```ts
+import { defineConfig } from 'vite'
+import build from '@hono/vite-build/vercel'
+
+export default defineConfig({
+  plugins: [
+    build({
+      entry: './src/server.ts',
+      vercel: {
+        name: 'api',
+        routes: [{ src: '^/api(?:/.*)?$' }],
+      },
+    }),
+    build({
+      entry: './src/auth.ts',
+      vercel: {
+        name: 'auth',
+        routes: [{ src: '^/auth(?:/.*)?$' }],
+        function: {
+          maxDuration: 30,
+        },
+      },
+    }),
+  ],
+})
+```
+
+If `vercel.routes` is omitted, the adapter generates `^/<function-name>(?:/.*)?$`.
+If `vercel.name` is omitted, the adapter uses `__hono`.
 
 ## Example project
 

@@ -452,4 +452,127 @@ describe('Build Plugin with Vercel Adapter', () => {
     // eslint-disable-next-line quotes
     expect(outputJsClientJs).toContain("console.log('foo')")
   })
+
+  it('Should copy static files on repeated builds in the same process', async () => {
+    const outputFooTxt = `${vercelDir}/output/static/foo.txt`
+
+    await build({
+      root: testDir,
+      plugins: [
+        vercelBuildPlugin({
+          entry,
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFooTxt)).toBe(true)
+    expect(readFileSync(outputFooTxt, 'utf-8')).toContain('foo')
+
+    rmSync(vercelDir, { recursive: true, force: true })
+
+    await build({
+      root: testDir,
+      plugins: [
+        vercelBuildPlugin({
+          entry,
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFooTxt)).toBe(true)
+    expect(readFileSync(outputFooTxt, 'utf-8')).toContain('foo')
+  })
+
+  it('Should build multiple Vercel functions with multiple plugin instances', async () => {
+    const fooOutputFile = `${vercelDir}/output/functions/foo.func/index.js`
+    const barOutputFile = `${vercelDir}/output/functions/bar.func/index.js`
+    const fooConfigFile = `${vercelDir}/output/functions/foo.func/.vc-config.json`
+    const barConfigFile = `${vercelDir}/output/functions/bar.func/.vc-config.json`
+    const configFile = `${vercelDir}/output/config.json`
+
+    await build({
+      root: testDir,
+      plugins: [
+        vercelBuildPlugin({
+          entry: './src/server.ts',
+          minify: false,
+          vercel: {
+            name: 'foo',
+            routes: [{ src: '^/foo(?:/.*)?$' }],
+            function: {
+              maxDuration: 10,
+            },
+          },
+        }),
+        vercelBuildPlugin({
+          entry: './src/server-fetch-with-websocket.ts',
+          minify: false,
+          vercel: {
+            name: 'bar',
+            routes: [{ src: '^/bar(?:/.*)?$' }],
+            function: {
+              maxDuration: 30,
+            },
+          },
+        }),
+      ],
+    })
+
+    expect(existsSync(fooOutputFile)).toBe(true)
+    expect(existsSync(barOutputFile)).toBe(true)
+    expect(existsSync(configFile)).toBe(true)
+
+    expect(readFileSync(fooOutputFile, 'utf-8')).toContain('/src/server.ts')
+    expect(readFileSync(barOutputFile, 'utf-8')).toContain('/src/server-fetch-with-websocket.ts')
+
+    const fooFnConfig = JSON.parse(readFileSync(fooConfigFile, 'utf-8'))
+    const barFnConfig = JSON.parse(readFileSync(barConfigFile, 'utf-8'))
+    expect(fooFnConfig.maxDuration).toBe(10)
+    expect(barFnConfig.maxDuration).toBe(30)
+
+    const routes = readFileSync(configFile, 'utf-8')
+    expect(routes).toContain('"src":"^/foo(?:/.*)?$","dest":"/foo"')
+    expect(routes).toContain('"src":"^/bar(?:/.*)?$","dest":"/bar"')
+    expect(routes.match(/"handle":"filesystem"/g)?.length).toBe(1)
+  })
+
+  it('Should generate default route patterns when vercel.routes is omitted', async () => {
+    const configFile = `${vercelDir}/output/config.json`
+
+    await build({
+      root: testDir,
+      plugins: [
+        vercelBuildPlugin({
+          entry: './src/server.ts',
+          minify: false,
+          vercel: {
+            name: 'foo',
+          },
+        }),
+        vercelBuildPlugin({
+          entry: './src/server-fetch-with-websocket.ts',
+          minify: false,
+          vercel: {
+            name: 'bar',
+          },
+        }),
+      ],
+    })
+
+    const routes = readFileSync(configFile, 'utf-8')
+    expect(routes).toContain('"src":"^/foo(?:/.*)?$","dest":"/foo"')
+    expect(routes).toContain('"src":"^/bar(?:/.*)?$","dest":"/bar"')
+  })
+
+  it('Should throw when vercel.name is empty', async () => {
+    expect(() =>
+      vercelBuildPlugin({
+        vercel: {
+          name: '',
+        },
+      })
+    ).toThrow('`vercel.name` is required and cannot be empty.')
+  })
 })
