@@ -1,5 +1,11 @@
 # @hono/vite-build
 
+## 1.11.0
+
+### Minor Changes
+
+- [#340](https://github.com/honojs/vite-plugins/pull/340) [`1f2b2fc308fe39b3bf940b948199f5fe1c184d65`](https://github.com/honojs/vite-plugins/commit/1f2b2fc308fe39b3bf940b948199f5fe1c184d65) Thanks [@josiahwiebe](https://github.com/josiahwiebe)! - feat: configure multiple function output for Vercel
+
 ## 1.10.1
 
 ### Patch Changes
