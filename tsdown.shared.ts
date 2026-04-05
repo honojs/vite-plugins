@@ -8,7 +8,9 @@ export const sharedConfig = {
   attw: {
     ignoreRules: ['cjs-resolves-to-esm', 'no-resolution'],
   },
-  unused: true,
+  unused: {
+    ignore: ['hono'],
+  },
   deps: {
     skipNodeModulesBundle: true,
   },
