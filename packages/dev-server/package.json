@@ -2,8 +2,8 @@
   "name": "@hono/vite-dev-server",
   "description": "Vite dev-server plugin for Hono",
   "version": "0.25.1",
-  "types": "dist/index.d.mts",
-  "module": "dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "module": "./dist/index.mjs",
   "type": "module",
   "scripts": {
     "test:unit": "vitest --run ./src",
@@ -19,55 +19,38 @@
   ],
   "exports": {
     ".": {
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      },
-      "import": {
-        "types": "./dist/index.d.mts",
-        "default": "./dist/index.mjs"
-      }
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./adapter/bun": {
+      "import": "./dist/adapter/bun.mjs",
+      "require": "./dist/adapter/bun.cjs"
+    },
+    "./adapter/cloudflare": {
+      "import": "./dist/adapter/cloudflare.mjs",
+      "require": "./dist/adapter/cloudflare.cjs"
+    },
+    "./adapter/node": {
+      "import": "./dist/adapter/node.mjs",
+      "require": "./dist/adapter/node.cjs"
     },
     "./conninfo": {
-      "require": {
-        "types": "./dist/conninfo.d.cts",
-        "default": "./dist/conninfo.cjs"
-      },
-      "import": {
-        "types": "./dist/conninfo.d.mts",
-        "default": "./dist/conninfo.mjs"
-      }
+      "import": "./dist/conninfo.mjs",
+      "require": "./dist/conninfo.cjs"
     },
-    "./cloudflare": {
-      "require": {
-        "types": "./dist/adapter/cloudflare.d.cts",
-        "default": "./dist/adapter/cloudflare.cjs"
-      },
-      "import": {
-        "types": "./dist/adapter/cloudflare.d.mts",
-        "default": "./dist/adapter/cloudflare.mjs"
-      }
+    "./dev-server": {
+      "import": "./dist/dev-server.mjs",
+      "require": "./dist/dev-server.cjs"
     },
-    "./node": {
-      "require": {
-        "types": "./dist/adapter/node.d.cts",
-        "default": "./dist/adapter/node.cjs"
-      },
-      "import": {
-        "types": "./dist/adapter/node.d.mts",
-        "default": "./dist/adapter/node.mjs"
-      }
+    "./types": {
+      "import": "./dist/types.mjs",
+      "require": "./dist/types.cjs"
     },
-    "./bun": {
-      "require": {
-        "types": "./dist/adapter/bun.d.cts",
-        "default": "./dist/adapter/bun.cjs"
-      },
-      "import": {
-        "types": "./dist/adapter/bun.d.mts",
-        "default": "./dist/adapter/bun.mjs"
-      }
-    }
+    "./utils": {
+      "import": "./dist/utils.mjs",
+      "require": "./dist/utils.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "author": "Yusuke Wada <yusuke@kamawada.com> (https://github.com/yusukebe)",
   "license": "MIT",
@@ -116,5 +99,6 @@
   "dependencies": {
     "@hono/node-server": "^1.19.11",
     "minimatch": "^9.0.3"
-  }
+  },
+  "main": "./dist/index.cjs"
 }
