@@ -1,14 +1,14 @@
 {
   "name": "@hono/vite-build",
   "description": "Vite plugin to build your Hono app",
-  "version": "1.11.0",
-  "types": "dist/index.d.ts",
-  "module": "dist/index.js",
+  "version": "1.11.1",
+  "types": "dist/index.d.mts",
+  "module": "dist/index.mjs",
   "type": "module",
   "scripts": {
     "test": "vitest --run",
-    "build": "rimraf dist && tsup && publint",
-    "watch": "tsup --watch",
+    "build": "yarn run -T tsdown",
+    "watch": "yarn run -T tsdown --watch",
     "prerelease": "yarn build",
     "release": "yarn publish"
   },
@@ -17,64 +17,36 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     },
     "./bun": {
-      "types": "./dist/adapter/bun/index.d.ts",
-      "import": "./dist/adapter/bun/index.js"
+      "types": "./dist/adapter/bun/index.d.mts",
+      "import": "./dist/adapter/bun/index.mjs"
     },
     "./node": {
-      "types": "./dist/adapter/node/index.d.ts",
-      "import": "./dist/adapter/node/index.js"
+      "types": "./dist/adapter/node/index.d.mts",
+      "import": "./dist/adapter/node/index.mjs"
     },
     "./cloudflare-pages": {
-      "types": "./dist/adapter/cloudflare-pages/index.d.ts",
-      "import": "./dist/adapter/cloudflare-pages/index.js"
+      "types": "./dist/adapter/cloudflare-pages/index.d.mts",
+      "import": "./dist/adapter/cloudflare-pages/index.mjs"
     },
     "./cloudflare-workers": {
-      "types": "./dist/adapter/cloudflare-workers/index.d.ts",
-      "import": "./dist/adapter/cloudflare-workers/index.js"
+      "types": "./dist/adapter/cloudflare-workers/index.d.mts",
+      "import": "./dist/adapter/cloudflare-workers/index.mjs"
     },
     "./netlify-functions": {
-      "types": "./dist/adapter/netlify-functions/index.d.ts",
-      "import": "./dist/adapter/netlify-functions/index.js"
+      "types": "./dist/adapter/netlify-functions/index.d.mts",
+      "import": "./dist/adapter/netlify-functions/index.mjs"
     },
     "./deno": {
-      "types": "./dist/adapter/deno/index.d.ts",
-      "import": "./dist/adapter/deno/index.js"
+      "types": "./dist/adapter/deno/index.d.mts",
+      "import": "./dist/adapter/deno/index.mjs"
     },
     "./vercel": {
-      "types": "./dist/adapter/vercel/index.d.ts",
-      "import": "./dist/adapter/vercel/index.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "types": [
-        "./dist/types"
-      ],
-      "bun": [
-        "./dist/adapter/bun/index.d.ts"
-      ],
-      "node": [
-        "./dist/adapter/node/index.d.ts"
-      ],
-      "cloudflare-pages": [
-        "./dist/adapter/cloudflare-pages/index.d.ts"
-      ],
-      "cloudflare-workers": [
-        "./dist/adapter/cloudflare-workers/index.d.ts"
-      ],
-      "netlify-functions": [
-        "./dist/adapter/netlify-functions/index.d.ts"
-      ],
-      "deno": [
-        "./dist/adapter/deno/index.d.ts"
-      ],
-      "vercel": [
-        "./dist/adapter/vercel/index.d.ts"
-      ]
+      "types": "./dist/adapter/vercel/index.d.mts",
+      "import": "./dist/adapter/vercel/index.mjs"
     }
   },
   "author": "Yusuke Wada <yusuke@kamawada.com> (https://github.com/yusukebe)",
@@ -95,11 +67,7 @@
   "devDependencies": {
     "@hono/node-server": "^1.19.11",
     "@types/node": "^24.10.0",
-    "glob": "^10.3.10",
     "hono": "^4.6.12",
-    "publint": "^0.1.12",
-    "rimraf": "^5.0.1",
-    "tsup": "^7.2.0",
     "vite": "^6.1.1",
     "vitest": "^2.1.1"
   },
