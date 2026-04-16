@@ -80,7 +80,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
   ignoreWatching: [/\.wrangler/, /\.mf/],
   handleHotUpdate: ({ server, modules }) => {
     // Force reload the page if any of the modules is SSR
-    const isSSR = modules.some((mod) => mod._ssrModule)
+    const isSSR = modules.some((mod) => mod.ssrModule)
     if (isSSR) {
       server.hot.send({ type: 'full-reload' })
       return []
