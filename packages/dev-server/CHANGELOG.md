@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.25.2
+
+### Patch Changes
+
+- [#353](https://github.com/honojs/vite-plugins/pull/353) [`81c9cbe1bae1d864a8a246480b234ff266058fa3`](https://github.com/honojs/vite-plugins/commit/81c9cbe1bae1d864a8a246480b234ff266058fa3) Thanks [@yuintei](https://github.com/yuintei)! - fix: use public ssrModule getter in handleHotUpdate
+
 ## 0.25.1
 
 ### Patch Changes
