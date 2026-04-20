@@ -130,7 +130,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'cf'>> = {
   ],
   ignoreWatching: [/\.wrangler/],
   handleHotUpdate: ({ server, modules }) => {
-    const isSSR = modules.some((mod) => mod._ssrModule)
+    const isSSR = modules.some((mod) => mod.ssrModule)
     if (isSSR) {
       server.hot.send({ type: 'full-reload' })
       return []
