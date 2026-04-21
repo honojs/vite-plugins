@@ -1,7 +1,7 @@
 {
   "name": "@hono/vite-dev-server",
   "description": "Vite dev-server plugin for Hono",
-  "version": "0.25.2",
+  "version": "0.25.3",
   "types": "./dist/index.d.cts",
   "module": "./dist/index.mjs",
   "type": "module",

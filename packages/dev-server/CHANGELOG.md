@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.25.3
+
+### Patch Changes
+
+- [#355](https://github.com/honojs/vite-plugins/pull/355) [`cbb97d65ee8ea143a842128cd36735d856f6c7b8`](https://github.com/honojs/vite-plugins/commit/cbb97d65ee8ea143a842128cd36735d856f6c7b8) Thanks [@yusukebe](https://github.com/yusukebe)! - fix: correct exporting adapters
+
 ## 0.25.2
 
 ### Patch Changes
