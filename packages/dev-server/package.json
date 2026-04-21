@@ -22,15 +22,15 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
-    "./adapter/bun": {
+    "./bun": {
       "import": "./dist/adapter/bun.mjs",
       "require": "./dist/adapter/bun.cjs"
     },
-    "./adapter/cloudflare": {
+    "./cloudflare": {
       "import": "./dist/adapter/cloudflare.mjs",
       "require": "./dist/adapter/cloudflare.cjs"
     },
-    "./adapter/node": {
+    "./node": {
       "import": "./dist/adapter/node.mjs",
       "require": "./dist/adapter/node.cjs"
     },
