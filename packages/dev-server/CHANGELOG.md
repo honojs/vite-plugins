@@ -1,5 +1,11 @@
 # @hono/vite-dev-server
 
+## 0.26.0
+
+### Minor Changes
+
+- [#358](https://github.com/honojs/vite-plugins/pull/358) [`ff50c579ea79c048c6dd0edfc61db53675562326`](https://github.com/honojs/vite-plugins/commit/ff50c579ea79c048c6dd0edfc61db53675562326) Thanks [@ryuapp](https://github.com/ryuapp)! - Dropping CommonJS and switching to an ESM-only package.
+
 ## 0.25.3
 
 ### Patch Changes
