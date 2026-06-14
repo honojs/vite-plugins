@@ -1,5 +1,6 @@
 import { build } from 'vite'
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import amplifyBuildPlugin from '../src/adapter/amplify'
 import bunBuildPlugin from '../src/adapter/bun'
 import cloudflarePagesPlugin from '../src/adapter/cloudflare-pages'
 import cloudflareWorkersPlugin from '../src/adapter/cloudflare-workers'
@@ -574,5 +575,91 @@ describe('Build Plugin with Vercel Adapter', () => {
         },
       })
     ).toThrow('`vercel.name` is required and cannot be empty.')
+  })
+})
+
+describe('Build Plugin with Amplify Adapter', () => {
+  const testDir = './test/mocks/app-static-files'
+  const amplifyDir = `${testDir}/.amplify-hosting`
+  const entry = './src/server.ts'
+
+  afterEach(() => {
+    rmSync(`${testDir}/dist`, { recursive: true, force: true })
+    rmSync(amplifyDir, { recursive: true, force: true })
+  })
+
+  it('Should build the project correctly with the plugin', async () => {
+    const outputFile = `${amplifyDir}/compute/default/index.js`
+    const manifestFile = `${amplifyDir}/deploy-manifest.json`
+
+    await build({
+      root: testDir,
+      plugins: [
+        amplifyBuildPlugin({
+          entry,
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(outputFile)).toBe(true)
+    expect(existsSync(manifestFile)).toBe(true)
+
+    const output = readFileSync(outputFile, 'utf-8')
+    expect(output).toContain('Hello World')
+    expect(output).toContain('serve(')
+
+    const manifest = JSON.parse(readFileSync(manifestFile, 'utf-8'))
+    expect(manifest.version).toBe(1)
+    expect(manifest.framework.name).toBe('hono')
+    expect(manifest.routes[0]).toEqual({
+      path: '/static/*',
+      target: { kind: 'Static', cacheControl: 'public, max-age=31536000, immutable' },
+    })
+    expect(manifest.routes[1]).toEqual({
+      path: '/*.*',
+      target: { kind: 'Static' },
+      fallback: { kind: 'Compute', src: 'default' },
+    })
+    expect(manifest.routes[2]).toEqual({ path: '/*', target: { kind: 'Compute', src: 'default' } })
+    expect(manifest.computeResources[0]).toEqual({
+      name: 'default',
+      runtime: 'nodejs22.x',
+      entrypoint: 'index.js',
+    })
+
+    const outputFooTxt = readFileSync(`${amplifyDir}/static/foo.txt`, 'utf-8')
+    expect(outputFooTxt).toContain('foo')
+  })
+})
+
+describe('Build Plugin with Amplify Adapter - with client build assets', () => {
+  const testDir = './test/mocks/app-static-files'
+  const amplifyDir = `${testDir}/.amplify-hosting`
+  const distDir = `${testDir}/dist`
+
+  beforeEach(() => {
+    // Simulate a prior client build that placed assets in dist/static/
+    mkdirSync(`${distDir}/static`, { recursive: true })
+    writeFileSync(`${distDir}/static/client.js`, 'console.log("client")')
+  })
+
+  afterEach(() => {
+    rmSync(distDir, { recursive: true, force: true })
+    rmSync(amplifyDir, { recursive: true, force: true })
+  })
+
+  it('Should copy client build assets to .amplify-hosting/static/static/', async () => {
+    await build({
+      root: testDir,
+      plugins: [
+        amplifyBuildPlugin({
+          entry: './src/server.ts',
+          minify: false,
+        }),
+      ],
+    })
+
+    expect(existsSync(`${amplifyDir}/static/static/client.js`)).toBe(true)
   })
 })

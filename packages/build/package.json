@@ -47,6 +47,10 @@
     "./vercel": {
       "types": "./dist/adapter/vercel/index.d.mts",
       "import": "./dist/adapter/vercel/index.mjs"
+    },
+    "./amplify": {
+      "types": "./dist/adapter/amplify/index.d.mts",
+      "import": "./dist/adapter/amplify/index.mjs"
     }
   },
   "author": "Yusuke Wada <yusuke@kamawada.com> (https://github.com/yusukebe)",
