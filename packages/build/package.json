@@ -55,6 +55,9 @@
     "type": "git",
     "url": "https://github.com/honojs/vite-plugins.git"
   },
+  "bugs": {
+    "url": "https://github.com/honojs/vite-plugins/issues"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
