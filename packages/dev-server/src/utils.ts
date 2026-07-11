@@ -1,3 +1,5 @@
+import { minimatch } from 'minimatch'
+
 /**
  * Safely parse the URL path from a given string.
  * Returns the pathname if parsing is successful, otherwise returns undefined.
@@ -12,6 +14,33 @@ export const safeParseUrlPath = (value: string): string | undefined => {
   } catch {
     return undefined
   }
+}
+
+/**
+ * Check whether a request URL matches any of the exclude patterns.
+ * Each pattern is tested against both the full URL (including the query string)
+ * and the query-stripped pathname, so path-based patterns also match
+ * requests such as `/app/client.ts?tsr-shared=1`.
+ *
+ * @example
+ * isExcluded('/app/client.ts?tsr-shared=1', [/.*\.ts$/]) // returns true
+ * isExcluded('/about?tab=1', [/.*\.ts$/]) // returns false
+ */
+export const isExcluded = (url: string, patterns: (string | RegExp)[]): boolean => {
+  const pathname = safeParseUrlPath(url)
+  for (const pattern of patterns) {
+    if (pattern instanceof RegExp) {
+      if (pattern.test(url) || (pathname !== undefined && pattern.test(pathname))) {
+        return true
+      }
+    } else if (
+      minimatch(url, pattern) ||
+      (pathname !== undefined && minimatch(pathname, pattern))
+    ) {
+      return true
+    }
+  }
+  return false
 }
 
 /**

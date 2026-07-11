@@ -1,11 +1,15 @@
 import { getRequestListener } from '@hono/node-server'
-import { minimatch } from 'minimatch'
 import type { Plugin as VitePlugin, ViteDevServer, Connect } from 'vite'
 import fs from 'fs'
 import type http from 'http'
 import path from 'path'
 import type { Env, Fetch, EnvFunc, Adapter, LoadModule } from './types.js'
-import { createBasePathGuard, createBasePathRewriter, safeParseUrlPath } from './utils.js'
+import {
+  createBasePathGuard,
+  createBasePathRewriter,
+  isExcluded,
+  safeParseUrlPath,
+} from './utils.js'
 
 export type DevServerOptions = {
   entry?: string
@@ -68,7 +72,6 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
     /.*\.mdx?$/,
     /^\/@.+$/,
     /\?t\=\d+$/,
-    /[?&]tsr-split=[^&]*(&t=[^&]*)?$/, // Support for TanStack Router code splitting
     /^\/favicon\.ico$/,
     /^\/static\/.+/,
     /^\/node_modules\/.*/,
@@ -76,6 +79,7 @@ export const defaultOptions: Required<Omit<DevServerOptions, 'env' | 'adapter' |
     /.*\.vue$/,
     /.*\.js$/,
     /.*\.jsx$/,
+    /.*\.mjs$/,
   ],
   ignoreWatching: [/\.wrangler/, /\.mf/],
   handleHotUpdate: ({ server, modules }) => {
@@ -152,16 +156,8 @@ export function devServer(options?: DevServerOptions): VitePlugin {
           }
 
           const exclude = options?.exclude ?? defaultOptions.exclude
-          for (const pattern of exclude) {
-            if (req.url) {
-              if (pattern instanceof RegExp) {
-                if (pattern.test(req.url)) {
-                  return next()
-                }
-              } else if (minimatch(req.url?.toString(), pattern)) {
-                return next()
-              }
-            }
+          if (req.url && isExcluded(req.url, exclude)) {
+            return next()
           }
 
           const pathname = req.url ? safeParseUrlPath(req.url) : undefined
