@@ -1,5 +1,13 @@
 # @hono/vite-dev-server
 
+## 0.26.1
+
+### Patch Changes
+
+- [#363](https://github.com/honojs/vite-plugins/pull/363) [`8af17d452e877f578bb57654963cf6efe2f823fa`](https://github.com/honojs/vite-plugins/commit/8af17d452e877f578bb57654963cf6efe2f823fa) Thanks [@vhespanha](https://github.com/vhespanha)! - fix: include `.vite/*` to exclude list.
+
+- [#367](https://github.com/honojs/vite-plugins/pull/367) [`244ee5d0752de62afd663d9c4c2f59135f6289db`](https://github.com/honojs/vite-plugins/commit/244ee5d0752de62afd663d9c4c2f59135f6289db) Thanks [@yusukebe](https://github.com/yusukebe)! - fix(dev-server): match exclude patterns against query-stripped pathname
+
 ## 0.26.0
 
 ### Minor Changes
