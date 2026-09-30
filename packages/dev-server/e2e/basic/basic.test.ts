@@ -96,6 +96,15 @@ test.describe('basic', () => {
     expect(content).toBe('Hello Vite!')
   })
 
+  test('Should accept a Response from another Fetch API implementation', async ({ request }) => {
+    const response = await request.get(`http://localhost:${port}/ponyfill-response`)
+
+    expect(response.status()).toBe(201)
+    expect(response.statusText()).toBe('Created')
+    expect(response.headers()['x-response-implementation']).toBe('whatwg-node')
+    expect(await response.text()).toBe('Created')
+  })
+
   test('Should return a vite error page - /invalid-response', async ({ page }) => {
     const response = await page.goto(`http://localhost:${port}/invalid-response`)
     expect(response?.status()).toBe(500)

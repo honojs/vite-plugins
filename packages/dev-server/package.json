@@ -46,6 +46,7 @@
   "devDependencies": {
     "@playwright/test": "^1.58.0",
     "@types/node": "^24.10.0",
+    "@whatwg-node/node-fetch": "^0.9.0",
     "hono": "^4.4.11",
     "miniflare": "^3.20240701.0",
     "playwright": "^1.58.0",

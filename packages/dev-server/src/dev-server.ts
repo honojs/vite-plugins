@@ -227,15 +227,21 @@ export function devServer(options?: DevServerOptions): VitePlugin {
                 },
               }
               const requestForApp = rewriteRequestForBase ? rewriteRequestForBase(request) : request
-              const response = await app.fetch(requestForApp, env, executionContext)
+              const appResponse = await app.fetch(requestForApp, env, executionContext)
 
-              /**
-               * If the response is not instance of `Response`, throw it so that it can be handled
-               * by our custom errorHandler and passed through to Vite
-               */
-              if (!(response instanceof Response)) {
-                throw response
+              // Reject invalid return values while accepting compatible Response implementations.
+              if (!hasResponseInterface(appResponse)) {
+                throw appResponse
               }
+
+              const response =
+                appResponse instanceof Response
+                  ? appResponse
+                  : new Response(appResponse.body, {
+                      headers: appResponse.headers,
+                      status: appResponse.status,
+                      statusText: appResponse.statusText,
+                    })
 
               if (
                 options?.injectClientScript !== false &&
@@ -281,6 +287,52 @@ export function devServer(options?: DevServerOptions): VitePlugin {
     handleHotUpdate: options?.handleHotUpdate ?? defaultOptions.handleHotUpdate,
   }
   return plugin
+}
+
+const hasResponseInterface = (response: unknown): boolean => {
+  if (typeof response !== 'object' || response === null) {
+    return false
+  }
+
+  if (!('status' in response) || typeof response.status !== 'number') {
+    return false
+  }
+
+  if (
+    !('headers' in response) ||
+    typeof response.headers !== 'object' ||
+    response.headers === null
+  ) {
+    return false
+  }
+
+  const headers = response.headers
+  if (
+    !('get' in headers) ||
+    typeof headers.get !== 'function' ||
+    !(Symbol.iterator in headers) ||
+    typeof headers[Symbol.iterator] !== 'function'
+  ) {
+    return false
+  }
+
+  if (!('body' in response)) {
+    return false
+  }
+
+  const body = response.body
+  if (body === null) {
+    return true
+  }
+
+  if (typeof body !== 'object') {
+    return false
+  }
+
+  return (
+    ('getReader' in body && typeof body.getReader === 'function') ||
+    (Symbol.asyncIterator in body && typeof body[Symbol.asyncIterator] === 'function')
+  )
 }
 
 const getAdapterFromOptions = async (
