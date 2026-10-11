@@ -59,6 +59,23 @@ describe('ssgPlugin', () => {
     expect(fs.existsSync(path.resolve(outDir, 'assets'))).toBe(false)
   })
 
+  it('Should load server modules that import CSS', async () => {
+    await build({
+      plugins: [
+        ssgPlugin({
+          entry: './test/css-app.ts',
+        }),
+      ],
+      build: {
+        outDir,
+        emptyOutDir: true,
+      },
+    })
+
+    expect(fs.existsSync(outputFile)).toBe(true)
+    expect(fs.readFileSync(outputFile, 'utf-8')).toBe('<html><body><h1>Hello!</h1></body></html>')
+  })
+
   it('Should keep other inputs politely', async () => {
     expect(fs.existsSync(entryFile)).toBe(true)
 

@@ -67,6 +67,9 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
           ...config.resolve,
           builtins: [...config.resolve.builtins, /^node:/],
         },
+        // The server never listens: in middleware mode, Vite sets its plugins up (`buildStart`)
+        // when it is created, which plugins such as `vite:css` need before a module loads.
+        server: { middlewareMode: true, hmr: false },
         plugins: [],
         build: { ssr: true },
         mode: config.mode,
