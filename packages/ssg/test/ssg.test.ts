@@ -59,6 +59,24 @@ describe('ssgPlugin', () => {
     expect(fs.existsSync(path.resolve(outDir, 'assets'))).toBe(false)
   })
 
+  it('Should resolve bare Node.js builtin modules', async () => {
+    await build({
+      plugins: [
+        ssgPlugin({
+          entry: './test/builtin-app.ts',
+        }),
+      ],
+      build: {
+        outDir,
+        emptyOutDir: true,
+      },
+    })
+
+    const output = path.resolve(outDir, 'index.txt')
+    expect(fs.existsSync(output)).toBe(true)
+    expect(fs.readFileSync(output, 'utf-8')).toBe('found')
+  })
+
   it('Should keep other inputs politely', async () => {
     expect(fs.existsSync(entryFile)).toBe(true)
 

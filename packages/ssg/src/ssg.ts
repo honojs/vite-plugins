@@ -65,7 +65,9 @@ export const ssgBuild = (options?: SSGOptions): Plugin => {
       const server = await createServer({
         resolve: {
           ...config.resolve,
-          builtins: [...config.resolve.builtins, /^node:/],
+          // `config.resolve` is the client environment's: its `builtins` would replace the
+          // server's default (Node.js builtin modules, with or without `node:`).
+          builtins: undefined,
         },
         plugins: [],
         build: { ssr: true },
