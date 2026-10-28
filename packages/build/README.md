@@ -102,6 +102,7 @@ type BuildOptions = {
   minify?: boolean
   emptyOutDir?: boolean
   preset?: 'hono' | 'hono/tiny' | 'hono/quick' '@hono/hono'
+  preparedRouter?: { paths: string[] }
 }
 ```
 
@@ -119,6 +120,44 @@ export const defaultOptions = {
   preset: 'hono',
 }
 ```
+
+### Precompile routing paths
+
+With Hono 4.9.11 or later, opt in to `PreparedRegExpRouter` by listing the paths your application registers:
+
+```ts
+import { defineConfig } from 'vite'
+import build from '@hono/vite-build/cloudflare-workers'
+
+export default defineConfig({
+  plugins: [
+    build({
+      entry: './src/index.ts',
+      preparedRouter: {
+        paths: ['/', '/users/:id', '/users/:id/posts/:postId'],
+      },
+    }),
+  ],
+})
+```
+
+The plugin computes the routing matchers during the build and embeds them in the bundle. It uses the application's installed Hono for both compilation and runtime, so their internal router formats stay in sync. Application entry modules are not executed to discover routes.
+
+The option applies to bundled ESM `RegExpRouter` instances from the installed Hono package, including those created by the default Hono preset. Each instance creates its own matcher tables on its first match. Mounted sub-app routers do not allocate those tables unless they are also queried directly. Explicit `RegExpRouter` instances still reject route and middleware registration after their first match. Existing custom routers and the `hono/tiny` and `hono/quick` presets retain their behavior. Without this option, older Hono versions remain supported.
+
+Custom `getPath` routing keys such as `constructor`, `toString`, and `__proto__` retain ordinary wildcard matching.
+
+Precompilation conservatively supports simple URI path segments, identifier-style parameter names, optional final parameters, and final `/*` wildcards. If the manifest contains unrecognized path syntax, custom parameter patterns, interior wildcards, or dynamic paths whose literal prefixes overlap a wildcard's prefix, the plugin emits a warning and keeps the original Hono router for that build. This preserves method-specific handlers and parameter captures when a shared prepared table cannot safely represent them. For example, `/users/:id/*` with `/users/:name` uses the original router; `/static/*` with `/users/:id` can still be precompiled.
+
+For requests whose decoded paths contain line terminators, the router also checks the paths actually registered for that method or `ALL`. These checks use regular expressions compiled during the build, preserving ordinary method matching without including the runtime compiler.
+
+When using several build plugin instances in one Vite build, pass the same complete path list to every instance that enables `preparedRouter`. Include the paths needed by all of their applications.
+
+Include every registered path, including middleware, static-file hooks, sub-app paths, and their mounted paths. For example, mounting a sub-app with `/users/:id` at `/api` requires both `/users/:id` and `/api/users/:id`. Global `*` matching is added automatically. When paths are precompiled, registering an unlisted path fails when the application initializes its router.
+
+Trailing wildcards must occupy a complete path segment, as in `/foo/*`. The build rejects `/foo*` and similar patterns because precompiled tables can otherwise skip handlers when paths belong to different HTTP methods. Disable `preparedRouter` for applications using these patterns.
+
+For manifests eligible for precompilation, all paths must be compatible with a single regular-expression router, even when they belong to different HTTP methods or app instances. For example, `/:id` and `/:name` cannot be combined. Unsupported simple path combinations fail the build. Use the ordinary router for applications with paths that are only known at runtime. Hono must be bundled for this optimization to take effect.
 
 ## Platform specific things
 

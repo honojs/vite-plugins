@@ -4,6 +4,8 @@ import { readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { getEntryContent } from './entry/index.js'
 import type { GetEntryContentOptions } from './entry/index.js'
+import { createPreparedRouter } from './prepared-router.js'
+import type { PreparedRouterOptions } from './prepared-router.js'
 
 export type BuildOptions = {
   /**
@@ -26,12 +28,19 @@ export type BuildOptions = {
    * @default 'webworker'
    */
   ssrTarget?: 'node' | 'webworker'
+  /**
+   * Precompile routing paths with the application's Hono (>= 4.9.11).
+   */
+  preparedRouter?: PreparedRouterOptions
 } & Omit<GetEntryContentOptions, 'entry'>
 
 export const defaultOptions: Required<
   Omit<
     BuildOptions,
-    'entryContentAfterHooks' | 'entryContentBeforeHooks' | 'entryContentDefaultExportHook'
+    | 'entryContentAfterHooks'
+    | 'entryContentBeforeHooks'
+    | 'entryContentDefaultExportHook'
+    | 'preparedRouter'
   >
 > = {
   entry: ['src/index.ts', './src/index.tsx', './app/server.ts'],
@@ -57,6 +66,7 @@ const buildPlugin = (options: BuildOptions): Plugin => {
   let config: ResolvedConfig
   const output = options.output ?? defaultOptions.output
   const preset = options.preset ?? defaultOptions.preset
+  const preparedRouter = createPreparedRouter(options.preparedRouter)
 
   return {
     name: '@hono/vite-build',
@@ -68,7 +78,12 @@ const buildPlugin = (options: BuildOptions): Plugin => {
         return resolvedVirtualEntryId
       }
     },
+    transform: preparedRouter.transform,
     async load(id) {
+      const prepared = await preparedRouter.load.call(this, id)
+      if (prepared) {
+        return prepared
+      }
       if (id === resolvedVirtualEntryId) {
         const staticPaths: string[] = options.staticPaths ?? []
         const direntPaths = []

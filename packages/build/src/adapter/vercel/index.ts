@@ -6,6 +6,7 @@ import { resolve } from 'node:path'
 import type { BuildOptions } from '../../base.js'
 import { defaultOptions } from '../../base.js'
 import { getEntryContent } from '../../entry/index.js'
+import { createPreparedRouter } from '../../prepared-router.js'
 import type { VercelBuildConfigV3, VercelNodejsServerlessFunctionConfig } from './types.js'
 
 type VercelSourceRoute = Extract<
@@ -196,6 +197,7 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
 
   const virtualEntryId = `${VIRTUAL_ENTRY_PREFIX}${functionName}`
   const resolvedVirtualEntryId = `\0${virtualEntryId}`
+  const preparedRouter = createPreparedRouter(pluginOptions?.preparedRouter)
 
   return {
     name: '@hono/vite-build/vercel',
@@ -205,7 +207,12 @@ const vercelBuildPlugin = (pluginOptions?: VercelBuildOptions): Plugin => {
         return resolvedVirtualEntryId
       }
     },
+    transform: preparedRouter.transform,
     async load(id) {
+      const prepared = await preparedRouter.load.call(this, id)
+      if (prepared) {
+        return prepared
+      }
       if (id !== resolvedVirtualEntryId) {
         return
       }
