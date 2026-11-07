@@ -174,7 +174,12 @@ export function devServer(options?: DevServerOptions): VitePlugin {
             loadModule = async (server, entry) => {
               let appModule
               try {
-                appModule = await server.ssrLoadModule(entry)
+                const runner = server.environments?.ssr?.runner
+                if (runner) {
+                  appModule = await runner.import(entry)
+                } else {
+                  appModule = await server.ssrLoadModule(entry)
+                }
               } catch (e) {
                 if (e instanceof Error) {
                   server.ssrFixStacktrace(e)
