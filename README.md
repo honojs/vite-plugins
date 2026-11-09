@@ -7,6 +7,7 @@ This is a monorepo managing Vite Plugins for Hono.
 - [@hono/vite-dev-server](./packages/dev-server/)
 - [@hono/vite-build](./packages/build/)
 - [@hono/vite-ssg](./packages/ssg/)
+- [@hono/vite-jsx](./packages/jsx/)
 
 ## How to contribute
 
