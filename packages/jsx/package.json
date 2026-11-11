@@ -1,0 +1,61 @@
+{
+  "name": "@hono/vite-jsx",
+  "description": "Vite plugin for hono/jsx",
+  "version": "0.0.0",
+  "types": "./dist/index.d.mts",
+  "module": "./dist/index.mjs",
+  "type": "module",
+  "scripts": {
+    "test:unit": "vitest --run ./test",
+    "test:e2e": "playwright test",
+    "test": "yarn test:unit && yarn test:e2e",
+    "build": "yarn run -T tsdown",
+    "watch": "yarn run -T tsdown --watch",
+    "prerelease": "yarn build && yarn test",
+    "release": "yarn publish"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "author": "ashunar0 (https://github.com/ashunar0)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/honojs/vite-plugins.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "homepage": "https://github.com/honojs/vite-plugins",
+  "keywords": [
+    "hono",
+    "jsx",
+    "hmr",
+    "vite-plugin"
+  ],
+  "dependencies": {
+    "magic-string": "^1.4.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "@types/node": "^24.10.0",
+    "hono": "^4.13.16",
+    "vite": "^8.3.6",
+    "vitest": "^4.1.12"
+  },
+  "peerDependencies": {
+    "hono": ">=4.13.1",
+    "vite": ">=8.0.0"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
