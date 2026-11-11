@@ -148,8 +148,8 @@ test.describe('HMR', () => {
   })
 
   for (const [title, name, from] of [
-    ['in another file', 'useCustom.ts', "const [value, setValue] = useState('')"],
-    ['in the same file', 'Hooks.tsx', "const [value] = useState('local-v1')"],
+    ['in another file', 'useCustom.ts', 'const [value, setValue] = useState(\'\')'],
+    ['in the same file', 'Hooks.tsx', 'const [value] = useState(\'local-v1\')'],
   ]) {
     test(`Should reload the page when a hook is added to a custom hook ${title}`, async ({
       page,
